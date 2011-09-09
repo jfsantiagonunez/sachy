@@ -1,0 +1,28 @@
+ihttp://help.github.com/create-a-repo/
+
+Create the README file
+
+In the prompt, type the following code:
+
+$ mkdir ~/Hello-WorldCreates a directory for your project called "Hello-World" in your user directory
+$ cd ~/Hello-WorldChanges the current working directory to your newly created directory
+$ git initSets up the necessary Git files
+Initialized empty Git repository in /Users/your_user_directory/Hello-World/.git/
+$ touch READMECreates a file called “README” in your Hello-World directory
+Open the new README file found in your Hello-World directory in a text editor and add the text “Hello World!” When you are finished, save and close the file.
+
+Commit your README
+
+Now that you have your README set up, it’s time to commit it. A commit is essentially a snapshot of all the files in your project at a particular point in time. In the prompt, type the following code:
+
+More about commits
+
+$ git add READMEStages your README file, adding it to the list of files to be committed
+$ git commit -m 'first commit'Commits your files, adding the message "first commit"
+The code above executes actions locally, meaning you still haven’t done anything on GitHub yet. To connect your local repository to your GitHub account, you will need to set a remote for your repo and push your commits to it:
+
+More about remotes
+
+$ git remote add origin git@github.com:username/Hello-World.gitSets the origin for the Hello-World repo
+$ git push origin masterSends your commit to GitHub
+Now if you look at your repository on GitHub, you will see your README has been added to it.
