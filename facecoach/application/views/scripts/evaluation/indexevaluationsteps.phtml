@@ -1,0 +1,24 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{
+		echo $this->table('Goal [' . $this->goalTitle . ']<br/> Evaluation Report',
+				array(
+					'nameStep' => 'Category',
+					'strength' => 'Strengths',
+					'weakness' => 'Weaknesses'
+				),
+				$this->evaluationSteps ,
+				array(
+					array('controller' => 'evaluation', 'action' => 'editstep'),
+					array('controller' => 'evaluation', 'action' => 'delete')
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'keyStep','ASC','keyStep'); 
+		}
+		?>

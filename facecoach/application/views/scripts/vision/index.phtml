@@ -1,0 +1,16 @@
+<p><b>My Vision</b>    
+<?php 
+if ( isset( $this->idUser ) )
+{
+?>
+<a href="<?php echo $this->url(array('controller' => 'vision', 'action' => 'edit'  , 'idUser' => $this->idUser )
+				, 'default', true);?>"><img src="img/icons/edit.png"/></a>
+<?php	}	else {	} ?>	
+
+</p>
+<i>
+<?php 
+
+	echo $this->vision;
+?>
+</i>

@@ -1,0 +1,78 @@
+
+	<?php   
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		   if ( isset($this->goalTitle ))
+		   {
+		   ?>
+	
+		   <div id="subcontent">
+				<h2>Goal : <?php echo $this->goalTitle; ?> </h2>
+				<h3>Strategy : <?php echo $this->strategyTitle; ?> </h3>
+			</div>
+			<?php 
+		    }
+		    
+			if (isset($this->idStrategy))
+			{
+				$url = '<a href="'.$this->url(array('controller' => 'task', 
+				'action' => 'add', 'idStrategy' => $this->idStrategy )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>';
+			}
+			else
+			{
+				$url = 'Summary';
+			}
+			
+			echo $this->table('In Progress Tasks ' . $url ,
+				array(
+					'titleTask' => 'Title',
+					'descTask' => 'Description',
+					'important' => 'Importance',
+					'urgent' => 'Urgency'
+				),
+				$this->inprogresstasks ,
+				array(
+					array('controller' => 'task', 'action' => 'edit', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'task', 'action' => 'delete', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'event', 'action' => 'index' )
+				),
+				array('img/icons/edit.png','img/icons/delete.png','img/icons/event.png'),
+				'idTask','DES','idTask');
+			echo "<br/><br/>";
+			echo $this->table('To Do Tasks ' . $url ,
+				array(
+					'titleTask' => 'Title',
+					'descTask' => 'Description',
+					'important' => 'Importance',
+					'urgent' => 'Urgency'
+				),
+				$this->todotasks ,
+				array(
+					array('controller' => 'task', 'action' => 'edit', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'task', 'action' => 'delete', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'event', 'action' => 'index' )
+				),
+				array('img/icons/edit.png','img/icons/delete.png','img/icons/event.png'),
+				'idTask','DES','idTask');
+			echo "<br/><br/>";
+			echo $this->table('Completed Tasks ' . $url ,
+				array(
+					'titleTask' => 'Title',
+					'descTask' => 'Description',
+					'important' => 'Importance',
+					'urgent' => 'Urgency'
+				),
+				$this->completedtasks ,
+				array(
+					array('controller' => 'task', 'action' => 'edit', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'task', 'action' => 'delete', 'idStrategy' => $this->idStrategy ),
+					array('controller' => 'event', 'action' => 'index' )
+				),
+				array('img/icons/edit.png','img/icons/delete.png','img/icons/event.png'),
+				'idTask','DES','idTask');
+	} ?>

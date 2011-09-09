@@ -1,0 +1,25 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{
+		echo $this->table('You are the Coacher of these users. <br/>Select to view their evaluations',
+				array(
+					'lastname' => 'Lastname',
+					'firstname' => 'Firstname'
+					
+				),
+				$this->evaluations ,
+				array(
+					array('controller' => 'evaluation','action' => 'index')
+				),
+				array('img/icons/evaluate.png'),
+				'idUser','ASC','idUser'); 
+				
+		}
+
+		?>

@@ -1,0 +1,37 @@
+<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{	
+			
+		echo $this->table('My Coachers',
+				array(
+					'lastname' => 'Last Name',
+					'firstname' => 'First Name'
+				),
+				$this->mycoachers ,
+				array(
+					array('controller' => 'user', 'action' => 'unselectcoacher')
+				),
+				array('img/icons/delete.png'),
+				'idCoacher','ASC','idCoacher'); 
+		
+		echo "<br/><br/>";
+		
+		echo $this->table('Other Coachers',
+				array(
+					'lastname' => 'Last Name',
+					'firstname' => 'First Name'
+				),
+				$this->othercoachers ,
+				array(
+					array('controller' => 'user', 'action' => 'selectcoacher' )
+				),
+				array('img/icons/edit.png'),
+				'idUser','ASC','idUser'); 
+		}
+		
+		?>
+

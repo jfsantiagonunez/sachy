@@ -1,0 +1,26 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		 echo $this->table('Calendars <a href="'.$this->url(array('controller' => 'calendar', 
+				'action' => 'add', 'idUser' => $this->idUser  )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'title' => 'Title',
+					'email' => 'Email',
+					'password' => 'Password',
+					'notification' => 'Notification'
+				),
+				$this->calendars ,
+				array(
+					array('controller' => 'calendar', 'action' => 'edit', 'idUser' => $this->idUser ),
+					array('controller' => 'calendar', 'action' => 'delete', 'idUser' => $this->idUser )
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'idCalendar','ASC','idCalendar'); 
+	}
+?>

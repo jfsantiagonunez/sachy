@@ -1,0 +1,24 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{
+		echo $this->table('Dairy Logs <a href="'.$this->url(array('controller' => 'logdairy', 
+				'action' => 'add', 'idUser' => $this->idUser )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'logDate' => 'Date',
+					'logText' => 'Text'
+				),
+				$this->logs ,
+				array(
+					array('controller' => 'logdairy', 'action' => 'delete')
+				),
+				array('img/icons/delete.png'),
+				'idTblLogDairy','ASC','idTblLogDairy'); 
+		}
+		?>

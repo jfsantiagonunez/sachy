@@ -1,0 +1,41 @@
+		
+			<div id="login">
+				<p>Please login</p>
+				<p style="clear:both"></p>
+			
+				<?php
+				
+				
+				$auth = Zend_Auth::getInstance();
+				
+				
+				if($auth->hasIdentity()) {
+					
+					?>
+					Welcome <?php echo $auth->getIdentity()->titleUser ?> - 
+
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout'), 'default', true) ?>">Log out</a>
+					<?php
+					
+				}
+				else{		
+					 		
+				?>
+				   
+					<form method="post" id="loginform" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'user', 'action' => 'login'), 'default', true) ?>">
+						
+						<input type="text" name="username" id="username" value="Username" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('loginform').submit();" />
+						<br/>
+						<input type="password" name="password" id="password" value="Password" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('loginform').submit();" />
+						<!--  <a href="javascript:document.getElementById('loginform').submit();">Login</a>    -->
+						<input type="submit" value="Login"/>
+					</form>
+					<br/>
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'forgotpassword'), 'default', true) ?>">Forgot Password</a>
+					<br/><br/>
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'newuser'), 'default', true) ?>">New User ?</a>
+
+				<?php }?>
+				
+			</div>
+			

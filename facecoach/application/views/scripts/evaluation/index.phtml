@@ -1,0 +1,62 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{
+			/*
+			echo $this->table('Goal [' . $this->goalTitle . ']<br/>Evaluations <a href="'.$this->url(array('controller' => 'evaluation', 
+				'action' => 'evaluate', 'idGoal' => $this->idGoal )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'username' => 'Evaluator'
+					,'timestamp' => 'Done On'
+					,'weaknesses' => 'Weaknesses'
+					, 'strengths' => 'Strengths'
+				),
+				$this->evaluations ,
+				array(
+					array('controller' => 'evaluation','action' => 'indexevaluationsteps'),
+					array('controller' => 'evaluation', 'action' => 'delete')
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'idEvaluation','ASC','idEvaluation'); 
+				
+			echo ('<br/><a href="'.$this->url(array('controller' => 'evaluation', 
+					'action' => 'createstrategies', 'idGoal' => $this->idGoal )
+					, 'default', true).'">Create Strategies</a>');
+					*/
+			foreach($this->evaluationblock as $evaluation)
+			{
+				$idGoal = $evaluation['idGoal'];
+				$goalTitle = $evaluation['goalTitle'];
+				$evaluations = $evaluation['evaluations'];
+				echo $this->table('Goal [' . $goalTitle . ']<br/>Evaluations <a href="'.$this->url(array('controller' => 'evaluation', 
+						'action' => 'evaluate', 'idGoal' => $idGoal )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>',
+					array(
+						'username' => 'Evaluator'
+						,'timestamp' => 'Done On'
+						,'weaknesses' => 'Weaknesses'
+						, 'strengths' => 'Strengths'
+					),
+					$evaluations ,
+						array(
+						array('controller' => 'evaluation','action' => 'indexevaluationsteps'),
+						array('controller' => 'evaluation', 'action' => 'delete')
+					),
+					array('img/icons/edit.png','img/icons/delete.png'),
+					'idEvaluation','ASC','idEvaluation'); 
+				
+				echo ('<br/><a href="'.$this->url(array('controller' => 'evaluation', 
+					'action' => 'createstrategies', 'idGoal' => $idGoal )
+					, 'default', true).'">Create Strategies</a>');
+				echo('<br/><br/>');
+			}
+			
+		}
+
+		?>

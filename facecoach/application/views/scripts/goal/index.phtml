@@ -1,0 +1,35 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{	
+			?>
+	
+		   <div id="subcontent">
+				<h2>My Vision : <?php echo $this->visionTitle; ?> </h2>
+			</div>
+			<?php 
+			
+		echo $this->table('Goals <a href="'.$this->url(array('controller' => 'goal', 
+				'action' => 'add', 'idUser' => $this->idUser )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+				  /*  'idGoal' => 'id',*/
+					'titleGoal' => 'Title',
+					'descGoal' => 'Description'
+				),
+				$this->goals ,
+				array(
+					array('controller' => 'goal', 'action' => 'edit'),
+					array('controller' => 'evaluation','action' => 'index'),
+					array('controller' => 'goal', 'action' => 'delete'),
+					array('controller' => 'strategy', 'action' => 'index')
+				),
+				array('img/icons/edit.png','img/icons/evaluate.png','img/icons/delete.png','img/icons/strategy.png'),
+				'idGoal','ASC','idGoal'); 
+		}
+		?>

@@ -1,0 +1,6 @@
+<h3>Please choose a chapter</h3>
+<ol>
+	<li><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'edit' , 'idUser' => $this->idUser ), 'default', true); ?>">Edit user account</a></li>
+	<li><a href="<?php echo $this->url(array('controller' => 'calendar', 'action' => 'index', 'idUser' => $this->idUser), 'default', true); ?>">Manage Calendars</a></li>
+	<li><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'coacherslist', 'idUser' => $this->idUser), 'default', true); ?>">Select Coacher</a></li>
+	</ol>

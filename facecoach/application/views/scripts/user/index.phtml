@@ -1,0 +1,13 @@
+<?php 
+	$auth = Zend_Auth::getInstance();
+		
+	if($auth->hasIdentity()) {
+		echo $auth->getIdentity()->titleUser;
+	}
+	else
+	{			
+		// Do the login
+		//echo $this->action('printerrorlogin','user',null,array(''));
+		echo $this->partial('user/login.phtml'); 
+	}
+?>		

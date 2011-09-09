@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl">
+<head>
+	<title>My Goals</title>
+	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';?>" />
+	<?php
+		echo $this->headLink()->appendStylesheet('css/main.css', 'screen, projection');
+	?>
+</head>
+<body>
+
+	
+	<!-- Heading with login/logout -->
+	<div id="menu">
+		<div id="menu-content-wrapper">
+			<div class="left">
+				<p>
+				<!--  <img src="img/MyGoals.png" class="logo" align="middle"/> -->
+				<labelmenu>My Goals</labelmenu>
+				</p>
+			</div>
+			<div class="right">
+				<p>
+				<!-- Check Identity -->
+				Welcome 
+				<?php	
+				$auth = Zend_Auth::getInstance();
+				if($auth->hasIdentity()) { ?>
+					<?php echo $auth->getIdentity()->lastname . ' , ' . $auth->getIdentity()->firstname ?> - 
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout'), 'default', true) ?>">Log out</a>
+				<?php					
+				} else {				
+				?> 
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'index'), 'default', true) ?>">Login</a>   
+				<?php
+				 } ?>
+				<a href="/MyGoals/public/help">Help</a>								
+				</p>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Rest of the page -->
+	<div id="content-wrapper">
+	
+		<!-- Menu of this action -->
+
+	   <div id="heading">
+			<div class="left">				
+			</div>
+			<div class="right">
+				
+			</div>
+		<p style="clear:both"></p>
+		</div>
+		
+		<!-- Left Toolbar to browse through MyGoals functionality -->
+		<div class="left">
+			<div id="properties">
+			<ul class="aspects">
+					<li class="li-vision">
+						<a 
+						<?php if ($this->escape($this->action) == 'Vision') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Vision', 'action' => 'index'), 'default', true); ?>">My Vision</a></li>
+					<li class="li-goal">
+						<a
+						<?php if ($this->escape($this->action) == 'Goal') echo 'class="active"'; ?> 
+						href="<?php echo $this->url(array('controller' => 'Goal', 'action' => 'index'), 'default', true); ?>">Goals</a></li>
+					<li class="li-strategy">
+						<a 
+						<?php if ($this->escape($this->action) == 'Strategy') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Strategy', 'action' => 'index'), 'default', true); ?>">Strategies</a></li>
+					<li class="li-task">
+						<a 
+						<?php if ($this->escape($this->action) == 'Task') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Task', 'action' => 'index'), 'default', true); ?>">Tasks</a></li>
+					<li class="li-event">
+						<a 
+						<?php if ($this->escape($this->action) == 'Event') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Event', 'action' => 'index'), 'default', true); ?>">Calendar Events</a></li>
+			</ul>
+			</div>
+			
+			<div id="properties">
+			<ul class="aspects">
+					<li class="li-evaluation">
+						<a 
+						<?php if ($this->escape($this->action) == 'Evaluation') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Evaluation', 'action' => 'coacherindex'), 'default', true); ?>">Evaluation</a></li>
+					<li class="li-logdiary">
+						<a 
+						<?php if ($this->escape($this->action) == 'LogDairy') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Logdairy', 'action' => 'index'), 'default', true); ?>">Log Dairy</a></li>
+					<li class="li-stats">
+						<a 
+						<?php if ($this->escape($this->action) == 'Statistic') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Statistic', 'action' => 'index'), 'default', true); ?>">Statistics</a></li>						
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'Setting') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Setting', 'action' => 'index'), 'default', true); ?>">Settings</a></li>						
+			</ul>
+			</div>
+		</div>
+		
+		<!-- Content of the current action -->
+		<div class="right">
+			<div id="content">
+				<h1><?php echo $this->titleView ?></h1>
+				<br/>
+				<?php echo $this->layout()->content;?>
+			</div>
+		
+			<!-- Marketing -->
+			<div id="legenda" style="padding-bottom:3px;" >
+				<h3 style="font-size:14px;">My Goals</h3>
+				<p style="font-size:11px; margin:0">Version 0.1 Feb 2011 | Developed by <a href="mailto:jfsantiagonunez@gmail.com">Jose Santiago</a> for Sachy</p>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

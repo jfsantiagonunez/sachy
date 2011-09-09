@@ -1,0 +1,10 @@
+
+		<?php
+		if(isset($this->error)){
+		?>
+		<div class="error"><?php echo $this->error; ?></div>
+		<?php } ?>
+		<h2>Goal [<?php echo $this->goalTitle?>]</h2>
+		<h2><?php echo $this->subtitleView ?></h2>
+		<h3><?php echo $this->subtitleView2 ?></h3>
+		<?php echo $this->form ?>
