@@ -1,9 +1,9 @@
 [production]
 database.adapter = "Mysqli"
-database.host = "localhost"
-database.username = "root"
-database.password = "waldo1"
-database.dbname = "MyGoals"
+database.host = "db372576193.db.1and1.com"
+database.username = "dbo372576193"
+database.password = "14waldo0970"
+database.dbname = "db372576193"
 phpSettings.display_startup_errors = 0
 phpSettings.display_errors = 0
 includePaths.library = APPLICATION_PATH "/../library"
