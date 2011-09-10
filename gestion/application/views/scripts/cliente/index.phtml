@@ -1,0 +1,44 @@
+
+
+		<?php
+		if (isset($this->NoLoginMessage))
+		{
+			echo $this->NoLoginMessage;
+		}
+		else
+		{	
+		?>
+		
+		<form method="post" id="loginform" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'cliente', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="cliente" id="cliente" value="Nombre Cliente o Nif" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('loginform').submit();" />
+		<input type="submit" value="Busqueda"/></p>
+		</form>
+
+		<?php 
+		
+		$list = array('nombre' => 'Nombre',	'nif' => 'NIF');
+		
+		if (isset($this->consumo)) $list['consumo'] = 'Consumo';
+				
+		echo $this->table($this->tituloBusqueda .'<a title="Agregar Nuevo Cliente" href="'.$this->url(array('controller' => 'cliente', 
+				'action' => 'add' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				$list,
+				$this->clientes ,
+				array(
+					array('controller' => 'cliente', 'action' => 'edit'),
+					array('controller' => 'cliente', 'action' => 'indexdescuento'),
+					array('controller' => 'cliente', 'action' => 'delete'),
+					array('controller' => 'albaran', 'action' => 'index'),
+					array('controller' => 'factura', 'action' => 'index'),
+					array('controller' => 'albaran', 'action' => 'indexmovimientos')
+				),
+				array('img/icons/edit.png " title="Editar Datos Cliente',
+					'img/icons/descuento.png" title="Editar Descuentos',
+					'img/icons/delete.png" title="Borrar Cliente',
+					'img/icons/albaran.png" title="Sus Albaranes',
+					  'img/icons/factura.png" title="Sus Facturas',
+					  'img/icons/stock.png" title="Consumo por Productos'),
+				'idCliente','ASC','idCliente'); 
+		}
+		?>

@@ -1,0 +1,38 @@
+<?php 
+	
+
+	$auth = Zend_Auth::getInstance();
+		
+	if($auth->hasIdentity()) {
+		
+		if (isset($this->settings))
+		{
+			echo $this->table('Configs <a href="'.$this->url(array('controller' => 'setting', 
+				'action' => 'add' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+				 
+					'idKey' => 'Config',
+					'value' => 'Valor'
+				),
+				$this->settings ,
+				array(
+					array('controller' => 'setting', 'action' => 'edit')
+				),
+				array('img/icons/edit.png'),
+				'idKey','ASC','idKey'); 
+		}
+		?>
+
+
+ 
+
+<?php 
+	}
+	else
+	{			
+		// Do the login
+		echo $this->action('printerrorlogin','user',null,array(''));
+		echo $this->partial('user/login.phtml'); 
+	}
+?>		

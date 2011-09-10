@@ -1,0 +1,44 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+
+		echo '<form method="post" id="cambiopago"  action="'.$this->url(array('controller' => 'recibo', 'action' => 'index'), 'default', true) .'">';			
+		echo '<table class="dbtableref"><tr>'; 
+		echo '<td>De fecha</td>';		
+		echo '<td><input id="anterior" type="text" value="'. $this->anterior.'" name="anterior" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td>A fecha</td>';	
+		echo '<td><input id="posterior" type="text" value="'. $this->posterior.'" name="posterior" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td><input type="submit" value="Cambiar"/></td></tr></table></form><br/><br/>';	
+	}		
+
+	if (isset($this->recibos))
+	{
+			echo $this->table('Facturas Con Vencimiento <a title="Imprimir este listado de recibos" href="'.$this->url(array('controller' => 'recibo', 
+				'action' => 'imprimir', 'anterior' => $this->anterior , 'posterior' => $this->posterior )
+				, 'default', true).'"><img src="img/icons/imprimir.png"/></a>',
+				array(
+					'numerofactura' => 'Factura',
+					'fecha' => 'Fecha',
+					'nombre' => 'Cliente',
+					'total' => 'Importe',
+					'vencimiento' => 'Vencimiento',
+					'condicionespago' => 'Tipo Pago'
+				),
+				$this->recibos ,
+				array(array('controller' => 'recibo', 'action' => 'imprimirrecibo' ),
+					  array('controller' => 'recibo', 'action' => 'norecibo')),
+				array('img/icons/imprimir.png" title="Imprimir Recibo','img/icons/delete2.png" title="No generar Recibo'),
+				'idFactura','ASC','idFactura'); 
+			
+	}
+	else
+	{
+		echo 'No hay recibos con vencimientos en esas fechas. Prueba otro rango de fechas';
+	}
+?>
+	

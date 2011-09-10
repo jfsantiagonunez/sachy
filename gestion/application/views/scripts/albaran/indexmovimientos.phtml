@@ -1,0 +1,32 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		
+		if (isset($this->movimientos))
+		{
+			
+			echo $this->table($this->tituloBusqueda ,
+				array(
+				'calidad' => 'Calidad',
+				'color' => 'Color',
+				'tipoenvase' => 'Tipo Envase',
+				'consumo' => 'Consumo'
+				),
+				$this->movimientos ,
+				array(
+					array('controller' => 'cliente', 'action' => 'index'),
+					array('controller' => 'albaran', 'action' => 'index'),
+					
+				),
+				array('img/icons/cliente.png','img/icons/albaran.png'),
+				'idReferencia','ASC','idReferencia'); 
+		}
+		
+		
+	}?>
+	

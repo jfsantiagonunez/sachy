@@ -1,0 +1,91 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		?>
+		<div id="subcontent">
+		<h3>Nuevo Albaran</h3>
+		<form method="post" id="nuevoalbaranquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'albaran', 'action' => 'index'), 'default', true) ?>">			
+		<p>
+		<?php if (isset($this->selectEntrada)) echo $this->selectEntrada;
+		if (isset($this->selectTienda)) echo $this->selectTienda;
+		?>
+		<input type="text" name="cliente" id="cliente" value="Nombre Cliente" style="width:200px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('nuevoalbaranquery').submit();" />
+		<input type="submit" value="Nuevo"/></p>
+		</form>
+		<?php 			
+			echo '<h2>' . $this->subtitleView. '</h2><br/>';
+			
+			$countclientes = count($this->clientes);
+	 		if ($countclientes > 1 )
+    		{
+ 
+				echo $this->table('Clientes',
+					array(
+					'nombre' => 'Nombre',
+					'nif' => 'NIF'
+					),
+					$this->clientes ,
+					array(
+						array('controller' => 'albaran', 'action' => 'elegircliente', 'entrada' => $this->entrada, 'idDeposito' => $this->idDeposito)
+					),
+					array('img/icons/cliente.png'),
+					'idCliente','ASC','idCliente'); 
+				echo '<br/>';
+			}
+
+		if (isset($this->messages[0])) echo( $this->messages[0]);
+		?>
+	
+		<form method="post" id="transferenciatiendas" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'albaran', 'action' => 'transferencia'), 'default', true) ?>">			
+		<p>Movimiento entre Tiendas		
+		
+		<?php 
+		if (isset($this->selectTienda)) echo $this->selectTienda;
+		echo '->';
+		if (isset($this->selectTiendaEntrada)) echo $this->selectTiendaEntrada;
+		?>
+		<input type="submit" value="Transferencia"/></p>
+		</form>	
+		<form method="post" id="transvase" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'albaran', 'action' => 'transvase'), 'default', true) ?>">			
+		<p>Transvase material		
+		<?php 
+		if (isset($this->selectTienda)) echo $this->selectTienda;
+		?>
+		<input type="submit" value="Transvase"/></p>
+		</form>
+		</div>
+		<br/>
+		<div id="subcontent">
+		<h3>Busquedas</h3>
+		<form method="post" id="numeroalbaranquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'albaran', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="busqueda" id="busqueda" value="Numero Albaran o Nombre Cliente" style="width:200px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('numeroalbaranquery').submit();" />
+		<input type="submit" value="Busca"/></p>
+		</form>
+		<?php 
+		if (isset($this->albaranes))
+		{
+			echo $this->table($this->tituloBusqueda,
+				array(
+					'estado' => 'Acc',
+					'numeroalbaran' => 'Albaran',
+					'fecha' => 'Fecha',
+					'nombre' => 'Cliente',
+					'entrada' => 'E/S',
+					'tienda' => 'Tienda'
+				),
+				$this->albaranes ,
+				array(
+					array('controller' => 'factura', 'action' => 'index')
+				),
+				array('img/icons/factura.png" title="Factura relacionada'),
+				'idAlbaran','ASC','idAlbaran','albaran'); 
+			echo '<br/>';
+		}
+		echo '</div>';
+	}?>
+	

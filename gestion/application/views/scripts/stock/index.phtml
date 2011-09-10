@@ -1,0 +1,72 @@
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{	
+	?>
+		
+		<form method="post" id="calidadquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'stock', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="calidad" id="calidad" value="Calidad" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('calidadquery').submit();" />
+		<input type="submit" value="Busqueda"/></p>
+		</form>
+
+		<?php 
+		if (isset($this->totals))
+		{
+			echo '<div id="subcontent">';
+			echo '<table class="dbtable"><caption>Valoracion Stock</caption><thead><tr>';
+
+			$keys = array_keys($this->locations);
+					
+			foreach($keys as $key)
+			{
+				echo '<th>'.$this->locations[$key].'</th>';
+			}
+			echo '</tr></thead><tbody><tr>';
+			foreach($keys as $key)
+			{
+				echo '<td>'.$this->totals['total'.$key].'</td>';
+			}
+			echo '</tr></tbody></table><br/></div>';
+		}
+		if (isset($this->existencias))
+		{
+			echo $this->table($this->tituloBusqueda,
+				$this->columnas,
+				$this->existencias ,
+				array(
+					array('controller' => 'stock', 'action' => 'editexistencia'),
+					array('controller' => 'cliente', 'action' => 'index'),
+					array('controller' => 'albaran', 'action' => 'index'),
+					
+				),
+				array('img/icons/edit.png" title="Modificar Existencias',
+					'img/icons/cliente.png" title="Clientes que consumen esta referencia',
+					'img/icons/albaran.png" title="Albaranes que incluyen esta referencia'),
+				'idReferencia','ASC','idReferencia'); 
+			echo '<br/>';
+		}
+			
+		if (isset($this->incorrectos))
+		{
+			echo $this->table('Existencias en estado Incorrecto (existencia negativa)',
+				$this->columnas,
+				$this->incorrectos ,
+				array(
+					array('controller' => 'stock', 'action' => 'editexistencia'),
+					array('controller' => 'cliente', 'action' => 'index'),
+					array('controller' => 'albaran', 'action' => 'index'),
+					
+				),
+				array('img/icons/edit.png" title="Modificar Existencias',
+				'img/icons/cliente.png" title="Clientes que consumen esta referencia',
+				'img/icons/albaran.png" title="Albaranes que incluyen esta referencia'),
+				'idReferencia','ASC','idReferencia'); 
+			echo '<br/>';
+		}
+	}
+	?>

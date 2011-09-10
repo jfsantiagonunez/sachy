@@ -1,0 +1,96 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		?>
+		<div id="subcontent">
+		<h3>Nueva Factura</h3>
+		<form method="post" id="nuevofacturaquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'factura', 'action' => 'index'), 'default', true) ?>">			
+		<p>
+		<input type="text" name="cliente" id="cliente" value="Nombre Cliente" style="width:200px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('nuevoalbaranquery').submit();" />
+		<input type="submit" value="Nuevo"/></p>
+		</form>
+		
+		<?php 			
+			echo '<h2>' . $this->subtitleView. '</h2><br/>';
+			
+			$countclientes = count($this->clientes);
+	 		if ($countclientes > 1 )
+    		{
+ 
+				echo $this->table('Clientes',
+					array(
+					'nombre' => 'Nombre',
+					'nif' => 'NIF'
+					),
+					$this->clientes ,
+					array(
+						array('controller' => 'factura', 'action' => 'elegircliente')
+					),
+					array('img/icons/cliente.png" title="Elegir este cliente para facturar'),
+					'idCliente','ASC','idCliente'); 
+				echo '<br/>';
+			}?>
+		</div>
+		
+		<div id="subcontent">
+		<h3>Albaranes Pendientes Facturar</h3>
+
+		<?php 
+		if (isset($this->albaranespendientes))
+		{
+			echo $this->table('',
+				array(
+					'estado' => 'Acc',
+					'numeroalbaran' => 'Albaran',
+					'fecha' => 'Fecha',
+					'nombre' => 'Cliente',
+					'entrada' => 'E/S',
+					'tienda' => 'Tienda'
+				),
+				$this->albaranespendientes ,
+				array(
+					array('controller' => 'factura', 'action' => 'elegiralbaran'),
+					array('controller' => 'factura', 'action' => 'ignoraralbaran')
+				),
+				array('img/icons/factura.png" title="Facturar este albaran',
+					 'img/icons/delete.png" title="Ignorar y No Facturar este albaran'),
+				'idAlbaran','ASC','idAlbaran','albaran'); 
+			echo '<br/>';
+		}
+
+		?>
+		</div>
+		<div id="subcontent">
+		<h3>Busquedas</h3>
+		<form method="post" id="numerofacturaquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'factura', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="busqueda" id="busqueda" value="Numero factura o Nombre Cliente" style="width:200px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('numeroalbaranquery').submit();" />
+		<input type="submit" value="Busca"/></p>
+		</form>
+		<?php 
+		if (isset($this->facturas))
+		{
+			echo $this->table($this->tituloBusqueda,
+				array(
+					'estado' => 'Acc',
+					'numerofactura' => 'Factura',
+					'fecha' => 'Fecha',
+					'nombre' => 'Cliente',
+					'iva' => 'Iva',
+					'total' => 'Total'
+				),
+				$this->facturas ,
+				array(
+					array('controller' => 'albaran', 'action' => 'index')
+				),
+				array('img/icons/albaran.png" title="Ver albaranes de esta factura'),
+				'idFactura','ASC','idFactura','factura'); 
+			echo '<br/>';
+		}
+		echo '</div>';
+	}?>
+	

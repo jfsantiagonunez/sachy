@@ -1,0 +1,30 @@
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{	
+
+		if (isset($this->depositos))
+		{
+			echo $this->table('Depositos <a href="'.$this->url(array('controller' => 'user', 
+				'action' => 'adddeposito' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'tienda' => 'Deposito'
+				),
+				$this->depositos ,
+				array(
+					array('controller' => 'user', 'action' => 'editdeposito'),
+					array('controller' => 'user', 'action' => 'deletedeposito'),
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'idDeposito','ASC','idDeposito'); 
+			echo '<br/>';
+		}
+			
+	}
+	?>

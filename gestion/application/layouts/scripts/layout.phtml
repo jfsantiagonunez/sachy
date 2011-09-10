@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl">
+<head>
+	<title>Pinturas Santiago</title>
+	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';?>" />
+	<?php
+		echo $this->headLink()->appendStylesheet('css/main.css', 'screen, projection');
+		if ($this->dojo()->isEnabled()){
+
+    		$this->dojo()->setLocalPath('js/dojo.js')
+                 ->addStyleSheetModule('dijit.themes.tundra');
+                 echo $this->dojo();
+            $this->dojo()->setLocalPath('js/dojo.gestion.js');
+                	
+            
+		}
+	?>
+
+</head>
+<body >
+
+	
+	<!-- Heading with login/logout -->
+	<div id="menu">
+		<div id="menu-content-wrapper">
+			<div class="left">
+				<p>
+				<labelmenu>Pinturas Santiago</labelmenu>
+				</p>
+			</div>
+			<div class="right">
+				<p>
+				<!-- Check Identity -->
+				Bienvenido  
+				<?php	
+				$auth = Zend_Auth::getInstance();
+				if($auth->hasIdentity()) { ?>
+					<?php echo $auth->getIdentity()->lastname . ' , ' . $auth->getIdentity()->firstname . ' (' . $auth->getIdentity()->tienda . ')'?> - 
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout'), 'default', true) ?>">Log out</a>
+				<?php					
+				} else {				
+				?> 
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'index'), 'default', true) ?>">Login</a>   
+				<?php
+				 } ?>							
+				</p>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Rest of the page -->
+	<div id="content-wrapper">
+	
+		<!-- Menu of this action -->
+
+	   <div id="heading">
+			<div class="left">				
+			</div>
+			<div class="right">
+				
+			</div>
+		<p style="clear:both"></p>
+		</div>
+		
+		<!-- Left Toolbar to browse through MyGoals functionality -->
+		<div class="left">
+			<div id="properties">
+			<ul class="aspects">
+					<li class="li-cliente">
+						<a 
+						<?php if ($this->escape($this->action) == 'Cliente') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Cliente', 'action' => 'index'), 'default', true); ?>">Clientes</a></li>
+					<li class="li-albaran">
+						<a
+						<?php if ($this->escape($this->action) == 'Albaran') echo 'class="active"'; ?> 
+						href="<?php echo $this->url(array('controller' => 'Albaran', 'action' => 'index'), 'default', true); ?>">Albaran</a></li>
+					<li class="li-factura">
+						<a 
+						<?php if ($this->escape($this->action) == 'Factura') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Factura', 'action' => 'index'), 'default', true); ?>">Factura</a></li>
+					<li class="li-stock">
+						<a 
+						<?php if ($this->escape($this->action) == 'Stock') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Stock', 'action' => 'index'), 'default', true); ?>">Stock</a></li>
+					<li class="li-factura">
+						<a 
+						<?php if ($this->escape($this->action) == 'Recibo') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Recibo', 'action' => 'index'), 'default', true); ?>">Vencimiento</a></li>
+			</ul>
+			</div>
+			
+			<?php if($auth->hasIdentity() && ( $auth->getIdentity()->admin == '1' ) ) {?>
+			<div id="properties">
+			<ul class="aspects">
+			
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'Productos') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'catalogo', 'action' => 'index'), 'default', true); ?>">Catalogo Productos</a></li>						
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'Marcas y Categorias') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'catalogo', 'action' => 'indexmarcaycategoria'), 'default', true); ?>">Marcas y Categorias</a></li>						
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'Depositos') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'user', 'action' => 'indexstocklocation'), 'default', true); ?>">Tiendas</a></li>						
+			
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'User') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'user', 'action' => 'index'), 'default', true); ?>">Usuarios</a></li>						
+					<li class="li-setts">
+						<a 
+						<?php if ($this->escape($this->action) == 'Setting') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'setting', 'action' => 'index'), 'default', true); ?>">Settings</a></li>						
+			</ul>
+			</div>
+			<?php }?>
+		</div>
+		
+		<!-- Content of the current action -->
+		<div class="right">
+			<div id="content">
+				<h1><?php echo $this->titleView ?></h1>
+				<br/>
+				<?php echo $this->layout()->content;?>
+			</div>
+		
+			<!-- Marketing -->
+			<div id="legenda" style="padding-bottom:3px;" >
+				<h3 style="font-size:14px;">Gestion Pinturas Santiago</h3>
+				<p style="font-size:11px; margin:0">Version 1.2 Sep 2011 | Desarrollado por <a href="mailto:jfsantiagonunez@gmail.com">Jose Santiago</a></p>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

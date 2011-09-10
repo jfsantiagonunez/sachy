@@ -1,0 +1,59 @@
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{	
+	?>
+		
+		<form method="post" id="calidadquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'catalogo', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="calidad" id="calidad" value="Calidad" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('calidadquery').submit();" />
+		<input type="submit" value="Busqueda"/></p>
+		</form>
+
+		<?php 
+		if (isset($this->calidades))
+		{
+			echo $this->table('Calidades <a title="Nueva Calida" href="'.$this->url(array('controller' => 'catalogo', 
+				'action' => 'addcalidad' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'calidad' => 'Calidad',
+					'descripcion' => 'Descripcion',
+					'marca' => 'Marca',
+					'categoria' => 'Categoria'
+				),
+				$this->calidades ,
+				array(
+					array('controller' => 'catalogo', 'action' => 'editcalidad'),
+					array('controller' => 'catalogo', 'action' => 'deletecalidad'),
+				),
+				array('img/icons/edit.png" title="Editar Calidad','img/icons/delete.png" title="Borrar Calidad'),
+				'calidad','ASC','calidad'); 
+			echo '<br/>';
+		}
+			
+		if (isset($this->referencias))
+		{
+			echo $this->table('Referencias <a title="Nueva Referencia" href="'.$this->url(array('controller' => 'catalogo', 
+				'action' => 'addreferencia' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'calidad' => 'Calidad',
+					'color' => 'Color',
+					'tipoenvase' => 'TipoEnvase',
+					'precio' => 'Precio'
+				),
+				$this->referencias ,
+				array(
+					array('controller' => 'catalogo', 'action' => 'editreferencia'),
+					array('controller' => 'catalogo', 'action' => 'deletereferencia'),
+				),
+				array('img/icons/edit.png" title="Editar Referencia','img/icons/delete.png" title="Borrar Referencia'),
+				'idReferencia','ASC','idReferencia'); 
+		}
+	}
+	?>

@@ -1,0 +1,49 @@
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{	
+	?>
+		
+
+		<?php 
+		if (isset($this->categorias))
+		{
+			echo $this->table('Categorias <a href="'.$this->url(array('controller' => 'catalogo', 
+				'action' => 'addcategoria' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'categoria' => 'Categoria'
+				),
+				$this->categorias ,
+				array(
+					array('controller' => 'catalogo', 'action' => 'editcategoria'),
+					array('controller' => 'catalogo', 'action' => 'deletecategoria'),
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'idCategoria','ASC','idCategoria'); 
+			echo '<br/>';
+		}
+			
+		if (isset($this->marcas))
+		{
+			echo $this->table('Marcas <a href="'.$this->url(array('controller' => 'catalogo', 
+				'action' => 'addmarca' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'marca' => 'Marca'
+				),
+				$this->marcas ,
+				array(
+					array('controller' => 'catalogo', 'action' => 'editmarca'),
+					array('controller' => 'catalogo', 'action' => 'deletemarca'),
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'idMarca','ASC','idMarca'); 
+		}
+	}
+	?>

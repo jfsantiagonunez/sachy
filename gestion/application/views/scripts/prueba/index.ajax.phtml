@@ -1,0 +1,42 @@
+<div id="movimientos2">
+
+<?php
+	require_once(APPLICATION_PATH . '/models/ModelAlbaran.php');
+	$model = new ModelAlbaran();
+	$albaran ='3573';
+	$movimientos = $model->queryMovimientos('idAlbaran','3573');
+	if (isset($movimientos))
+	{
+				$listactions = array();
+				$listicons = array();
+				$tableview = $this->subtitleView;
+
+				$tableview .= '<a href="'.$this->url(array('controller' => 'albaran', 
+						'action' => 'addmovimiento' , 'idAlbaran' => $this->albaran['idAlbaran'] )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>';
+					$listactions = array(
+						array('controller' => 'albaran', 'action' => 'editmovimiento','idAlbaran' => $albaran),
+						array('controller' => 'albaran', 'action' => 'deletemovimiento','idAlbaran' => $albaran)
+						);
+					$listicons = array();
+					$listicons = array('img/icons/edit.png','img/icons/delete.png','img/icons/factura.png');
+			echo $this->table($tableview ,
+				array(
+					'calidad' => 'Calidad',
+					'color' => 'Color',
+					'tipoenvase' => 'Env.',
+					'descripcion' => 'Descripcion',
+					'tcantidad' => '#',
+					'precio' => 'Euros',
+					'descuento' => '%',
+					'tprecio' => 'Valor',
+				),
+				$movimientos ,
+				$listactions,
+				$listicons,
+				'idMovimiento','ASC','idMovimiento'); 
+			}
+	
+?>
+</div>
+
