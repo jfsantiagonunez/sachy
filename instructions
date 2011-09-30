@@ -1,5 +1,9 @@
 ihttp://help.github.com/create-a-repo/
 
+Git Clone
+git clone git@github.com:jfsantiagonunez/sachy.git
+
+
 Create the README file
 
 In the prompt, type the following code:
