@@ -503,6 +503,7 @@ class FacturaController extends BaseController
 	public function imprimirFactura($documento)
 	{
 		// Load Zend_Pdf class 
+		$this->_helper->layout->disableLayout();
 		require_once('Zend/Pdf.php'); 
 		$pdf = new Zend_Pdf(); 
 
