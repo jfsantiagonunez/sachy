@@ -1,0 +1,33 @@
+<?php 
+	$auth = Zend_Auth::getInstance();
+		
+	if($auth->hasIdentity()) {
+		
+		if (isset($this->users))
+		{
+			echo $this->table('Users <a href="'.$this->url(array('controller' => 'user', 
+				'action' => 'adduser' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+				 
+					'username' => 'User Name',
+					'firstname' => 'First Name',
+					'lastname' => 'Last Name'
+				),
+				$this->users ,
+				array(
+					array('controller' => 'user', 'action' => 'edituser'),
+					array('controller' => 'user', 'action' => 'deleteuser')
+				),
+				array('img/icons/edit.png','img/icons/delete.png'),
+				'userId','ASC','userId'); 
+		}
+		
+	}
+	else
+	{			
+		// Do the login
+		echo $this->action('printerrorlogin','user',null,array(''));
+		echo $this->partial('user/login.phtml'); 
+	}
+?>		

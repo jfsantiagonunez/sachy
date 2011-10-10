@@ -1,0 +1,57 @@
+
+<div id="listadomovimientos">
+	<form method="post" id="finalizardocumento" action="<?php echo $this->url(array('controller' => $this->controller, 'action' => 'finalizardocumento', $this->idKey => $this->idkeyvalue), 'default', true); ?>">			
+	<table align="center"><tbody><tr>
+	<?php if (isset($this->movimientos) && ($this->movimientos->count() > 0 ) && ( $this->objeto['estado'] == '0' ) ) { ?>
+		<td><input type="submit" name="finaldocumento" value="Imprimir & Guardar"/></td>
+		<td><input type="submit" name="finaldocumento" value="Solo Guardar"/></td>
+	<?php } if ( $this->objeto['estado'] == '1' ) {?>
+		<td><input type="submit" name="finaldocumento" value="Volver a Imprimir"/></td>
+		<td><input type="submit" name="finaldocumento" value="Facturar"/></td>
+	<?php 	}	?>	
+		<td><input type="submit" name="finaldocumento" value="Salir"/></td>
+		</tr></tbody></table></form>
+	<?php
+	
+	if (isset($this->movimientos))
+	{
+		$listactions = array();
+		$listicons = array();
+		$tableview = $this->subtitleView;
+		if ($this->objeto['estado'] == '0')
+		{
+								
+			$tableview =  '';
+			$listactions = array(
+					array('controller' => $this->controller, 'action' => 'editmovimiento', $this->idKey => $this->idkeyvalue),
+					array('controller' => $this->controller, 'action' => 'deleteajaxmovimiento',$this->idKey => $this->idkeyvalue)
+					);
+			$listicons = array();
+			$listicons = array('img/icons/edit.png" title="Cambiar Cantidades','img/icons/delete.png" title="Borrar Movimiento');
+		}
+		else
+		{
+			$this->titleView = 'Vista Albaran';
+			$tableview = 'Listado Movimientos';
+		}
+		
+		echo $this->table($tableview ,
+				array(
+					'calidad' => 'Calidad',
+					'color' => 'Color',
+					'tipoenvase' => 'Env.',
+					'descripcion' => 'Descripcion',
+					'tcantidad' => '#',
+					'precio' => 'Euros',
+					'descuento' => '%',
+					'tprecio' => 'Valor',
+				),
+				$this->movimientos ,
+				$listactions,
+				$listicons,
+				'idMovimiento','ASC','idMovimiento'); 
+	}
+
+?>
+</div>
+

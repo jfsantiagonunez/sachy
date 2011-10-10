@@ -1,0 +1,45 @@
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{	
+	?>
+		
+		<form method="post" id="winequery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'catalogue', 'action' => 'index'), 'default', true) ?>">			
+		<p><input type="text" name="searchwine" id="searchwine" value="Search wine, grape, region, year" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('winequery').submit();" />
+		<input type="submit" value="Search"/></p>
+		</form>
+
+		
+		<?php 
+		echo '<a title="Import" href="'.$this->url(array('controller' => 'catalogue',
+								'action' => 'import' )
+								, 'default', true).'"><img src="img/icons/add.png"/></a>';
+		
+		if (isset($this->wines))
+		{
+			echo $this->table('Wines <a title="New Wine" href="'.$this->url(array('controller' => 'catalogue', 
+				'action' => 'addwine' )
+				, 'default', true).'"><img src="img/icons/add.png"/></a>',
+				array(
+					'winename' => 'Wine',
+					'year' => 'Year',
+					'grape' => 'Grape(s)',
+					'region' => 'Region'
+				),
+				$this->wines ,
+				array(
+					array('controller' => 'catalogue', 'action' => 'editwine'),
+					array('controller' => 'catalogue', 'action' => 'deletewine'),
+				),
+				array('img/icons/edit.png" title="Edit Wine','img/icons/delete.png" title="Delete Wine'),
+				'wineId','ASC','wineId'); 
+			echo '<br/>';
+		}
+			
+	}
+	?>
