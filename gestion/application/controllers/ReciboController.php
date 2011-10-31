@@ -71,52 +71,20 @@ class ReciboController extends BaseController
 					'default', true);
     }
     
-    function fecha2($rango)
+    function fecha($rango)
     {
-    	$hoy = date("Y-m-d");
     	
+	$valor = time();
     	if ( $rango == '0')
     	{
     		//$hoy->sub( DateInterval::createFromDateString( '5 days'));
     	}
     	else
     	{
-    		$hoy = date("Y-m-d" , strtotime(date("Y-m-d", strtotime($hoy)) . " +5 day"));
-    		//$hoy->add( DateInterval::createFromDateString( '5 days'));
+	// Sumar 5 dias
+	    		$valor += (5*24*60*60);
     	}
-       	
-    	$day = (int) date('d',$hoy);
-       	$seg = round($day/5);
-       	if ($seg==0)
-       		$day = 1;
-       	else
-       		$day = 5*$seg;
-       	
-       	if ( $rango == '0')
-       	{
-       		$day++;
-       	}
-       	$hoy = date("Y-m-d", mktime(0, 0, 0, date("m")  , $day, date("Y")));
-		//$hoy->setDate(date_format($hoy, 'Y'),date_format($hoy, 'm'),$day);
-		return $hoy;	
-       //return date_format($hoy, 'Y-m-d');
-    	
-    }
-    
- 	function fecha($rango)
-    {
-    	$valor = time();
-    	
-    	if ( $rango == '0')
-    	{
 
-    	}
-    	else
-    	{
-    		// Sumar 5 dias
-    		$valor += (5*24*60*60);
-    		
-    	}
        	
     	$day = (int) date('d',$valor);
        	$seg = round($day/5);
@@ -129,14 +97,16 @@ class ReciboController extends BaseController
        	{
        		$day++;
        	}
-       	$hoy = date("Y-m-d", mktime(0, 0, 0, date("m")  , $day, date("Y")));
+       	
+			
+    $hoy = date("Y-m-d", mktime(0, 0, 0, date("m")  , $day, date("Y")));
 
-		return $hoy;	
-    	
+    		return $hoy;	
     }
     
 	public function imprimirAction()
 	{
+		$this->_helper->layout->disableLayout();
 		require_once('Zend/Pdf.php'); 
 		$pdf = new Zend_Pdf(); 
 
@@ -206,6 +176,7 @@ class ReciboController extends BaseController
 		
 		$yinit = 775;	  	$y = $yinit; 	$lh = 20; $xc = 50;	
 		
+		$this->_helper->layout->disableLayout();
 		require_once('Zend/Pdf.php'); 
 		$pdf = new Zend_Pdf(); 
 

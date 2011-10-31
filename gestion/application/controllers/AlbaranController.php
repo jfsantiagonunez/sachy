@@ -578,7 +578,7 @@ class AlbaranController extends BaseController
     
 		public function imprimirAlbaran($albaran)
 		{
-			//$this->_helper->layout->disableLayout();
+			$this->_helper->layout->disableLayout();
 			// Load Zend_Pdf class 
 			require_once('Zend/Pdf.php'); 
 			$pdf = new Zend_Pdf(); 
