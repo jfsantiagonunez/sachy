@@ -1,19 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl">
+<!DOCTYPE html >
+<html>
 <head>
 	<title>Pinturas Santiago</title>
-	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';?>" />
+	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'] . $this->baseUrl().'/';?>" />
+	<link type="text/css" rel="stylesheet" media="screen" href="css/main.css">
+	
+	<script src="js/dojo.js" djConfig="parseOnLoad: true, locale:'es', baseUrl: 'js/'"></script>
+	<script> dojo.registerModulePath("dijit", "dijit");</script> 
+	<script> dojo.registerModulePath("dojo", "dojo");</script> 
+	<script> dojo.registerModulePath("custom", "custom");</script> 
+	<script> dojo.registerModulePath("dojox", "dojox");</script> 
+	<style>@import "js/dijit/themes/tundra/tundra.css";</style>
 	<?php
-		echo $this->headLink()->appendStylesheet('css/main.css', 'screen, projection');
 		if ($this->dojo()->isEnabled()){
-
-    		$this->dojo()->setLocalPath('js/dojo.js')
-                 ->addStyleSheetModule('dijit.themes.tundra');
-                 echo $this->dojo();
-            $this->dojo()->setLocalPath('js/dojo.gestion.js');
-                	
-            
+                 echo $this->dojo();          
 		}
 	?>
 

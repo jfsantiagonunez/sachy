@@ -59,7 +59,7 @@ echo '<form action="'.$url.$this->escape($this->controller).'/addmovimientoajax/
 $element = new Zend_Dojo_Form_Element_FilteringSelect('calidad');
             $element->setAutoComplete(false)
 			->setStoreId('autocompleter')
-			->setStoreType('custom.AutocompleteCalidad')
+			->setStoreType('js.custom.AutocompleteCalidad')
 			->setStoreParams(array('url'=>$url.'stock/autocompletecalidad'))
 			->setAttrib('searchAttr', 'calidad')
 			->setLabel('Calidad')
@@ -69,7 +69,7 @@ echo $element.'</td><td id="tdref">';
 $element2 = new Zend_Dojo_Form_Element_FilteringSelect('color');
             $element2->setAutoComplete(false)
 			->setStoreId('autocompleter2')
-			->setStoreType('custom.AutocompleteColor')
+			->setStoreType('js.custom.AutocompleteColor')
 			->setStoreParams(array('url'=>$url.'stock/autocompletecolor'))
 			->setAttrib('searchAttr', 'color')
 			->setLabel('Color')
@@ -79,7 +79,7 @@ echo $element2.'</td><td id="tdref">';
 $element3 = new Zend_Dojo_Form_Element_FilteringSelect('tipoenvase');
             $element3->setAutoComplete(false)
 			->setStoreId('autocompleter3')
-			->setStoreType('custom.AutocompleteTipoenvase')
+			->setStoreType('js.custom.AutocompleteTipoenvase')
 			->setStoreParams(array('url'=>$url.'stock/autocompletetipoenvase'))
 			->setAttrib('searchAttr', 'tipoenvase')
 			->setLabel('TipoEnvase')
