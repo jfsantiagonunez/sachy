@@ -1,3 +1,6 @@
+<script>
+        dojo.require("dijit.form.DateTextBox");
+</script>
 
 	<?php
 	if (isset($this->NoLoginMessage))
@@ -10,9 +13,9 @@
 		echo '<form method="post" id="cambiopago"  action="'.$this->url(array('controller' => 'recibo', 'action' => 'index'), 'default', true) .'">';			
 		echo '<table class="dbtableref"><tr>'; 
 		echo '<td>De fecha</td>';		
-		echo '<td><input id="anterior" type="text" value="'. $this->anterior.'" name="anterior" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td><input id="anterior" type="text" value="'. $this->anterior.'" style="width:110px" name="anterior" dojoType="dijit.form.DateTextBox" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
 		echo '<td>A fecha</td>';	
-		echo '<td><input id="posterior" type="text" value="'. $this->posterior.'" name="posterior" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td><input id="posterior" type="text" value="'. $this->posterior.'" style="width:110px" name="posterior" dojoType="dijit.form.DateTextBox" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
 		echo '<td><input type="submit" value="Cambiar"/></td></tr></table></form><br/><br/>';	
 	}		
 
