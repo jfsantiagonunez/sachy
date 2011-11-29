@@ -15,8 +15,8 @@ class UserController extends BaseController
     {
         /* Load DB_model */
 
-		require_once(APPLICATION_PATH . '/models/ModelUser.php');
-		$this->model = new ModelUser();		
+		require_once(APPLICATION_PATH . '/models/ModelLeitmotif.php');
+		$this->model = new ModelLeitmotif();		
 		$this->titleView = "Gestion Usuarios";
     }
 

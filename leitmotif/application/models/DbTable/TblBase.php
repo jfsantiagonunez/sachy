@@ -1,6 +1,7 @@
 <?php
 
-	class DbTable_TblBase extends Zend_Db_Table_Abstract {
+	class TblBase extends Zend_Db_Table_Abstract {
+		
 		/* table name */
 		protected $_name = 'TblBase';
 		protected $_pk = 'pk';  // unique name
@@ -107,7 +108,7 @@
 		// Returns Id if succesfull
 		public function insertData(array $data)
 	    {
-
+			
 			if ($this->_checkduplicateswhencreate == 1)
 			{
 				$exists = $this->selectPKs($data);
@@ -117,7 +118,7 @@
 					return null;
 				}
 			}
-			
+			$data[$this->_id] = $this->uuid();
 			/* check if all the posted fields are valid db fiels */
 			$fields = $this->info(Zend_Db_Table_Abstract::COLS);
 			foreach($data as $field => $value) {
@@ -143,6 +144,18 @@
 			$where = $this->getAdapter()->quoteInto($this->_id . ' = ?', $id);
 
 			return $this->delete($where);
+		}
+		
+		function uuid($prefix = '')
+		{
+			$chars = md5(uniqid(mt_rand(), true));
+			$uuid  = substr($chars,0,8) . '-';
+			$uuid .= substr($chars,8,4) . '-';
+			$uuid .= substr($chars,12,4) . '-';
+			$uuid .= substr($chars,16,4) . '-';
+			$uuid .= substr($chars,20,12);
+			//print($uuid . '<br/>');
+			return $prefix . $uuid;
 		}
 		
 	}

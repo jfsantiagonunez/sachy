@@ -1,4 +1,5 @@
 <?php
+require_once(APPLICATION_PATH . '/controllers/BaseController.php');
 
 class LeitmotifController extends BaseController
 {
@@ -13,115 +14,190 @@ class LeitmotifController extends BaseController
     {
         /* Load DB_model */
 
-		require_once(APPLICATION_PATH . '/models/ModelUser.php');
-		$this->model = new ModelUser();		
-		$this->titleView = "Gestion Usuarios";
+		require_once(APPLICATION_PATH . '/models/ModelLeitmotif.php');
+		$this->model = new ModelLeitmotif();		
+		$this->titleView = "Leitmotif Levels";
     }
 
-   public function indexAction()
+    public function indexAction()
     {
    		$this->indexbaseAction();
     }
     
-    public function indexsubaction()
-    {   
-    	$this->titleView='Gestion Clientes';
-    	$tableid = $this->model->getTableId();
+    public function indexsubaction($idUser)
+    {     	
+ 		$params = $this->getRequest()->getParams();
+
+    	$this->view->output = $this->returnleitmotif($params,$idUser);
     	
-       	if($this->getRequest()->isPost())
-       	{
-       		
-    		$data = $this->getRequest()->getPost();
-    		if ( isset($data['cliente']))
-    		{
-    			return $this->_helper->redirector->gotoRoute(array(
-					'controller' => 'cliente' , 'action' => 'index', 'cliente' => $data['cliente'] ),
-					'default', true);
-    		}
-    	}
-    	else
-    	{
-    		$value = $this->getRequest()->getParam('cliente');
-    	   	if ( isset($value))
-    		{
-    			$this->view->tituloBusqueda = 'Clientes que coinciden con ['.$value.']';
-    			$this->view->clientes = $this->model->query($tableid,$value);
-    			return;
-    		}
-    		
-    		$value = $this->getRequest()->getParam('idReferencia');
-    	   	if ( isset($value))
-    		{
-    			$this->view->consumo = '1';
-    			$ref = $this->modelAlbaran->queryID('TblReferencia',$value)->toArray();
-    			$this->view->tituloBusqueda = 'Clientes que consumen ['.$ref['calidad'].'-'.$ref['color'].'-'.$ref['tipoenvase'].'](unidades) en '.date('Y');
-    			$this->view->clientes = $this->modelAlbaran->queryReferenciasClientes($value);
-    			return;
-    		}
-    		$this->view->tituloBusqueda = 'Todos Clientes';
-			$this->view->clientes = $this->model->queryAll($tableid);
-    		
-    	}
-    }
+   	}
     
-	
-	public function createForm($idkey,$idValue,$fk,$fkvalue)
-	{
-		if ($idkey == 'idCliente')
-		{
-			require_once(APPLICATION_PATH . '/forms/cliente.php');
-			$form = new Form_Cliente();
-			$form->initWith($idValue);
-			return $form;
-		}
-		else if ($idkey == 'idDescuento')
-		{
-			require_once(APPLICATION_PATH . '/forms/descuento.php');
-			return new Form_Descuento();
-		}
-		
-	}
-	
-	public function indexdescuentoAction()
-	{
+   	public function returnleitmotif(array $params,$idUser)
+   	{
+   		// Posibilities
+   		// + (A) No parameters. Show level 0 for this idUser
+   		//       (Criteria , idUser & level =0 )
+   		//
+   		// + (B) idLeitmotif , $step = -1. Show upper for this idLeitmotif.
+   		//   We could just show the parent. But better show all the leitmotif with at higher level with the same parent!!!
+   		//       (Criteria idUser and level (idLeitmotif.level-1) )
+   		//
+   		// + (C) idLeitmotif, $step = 1. Show children leitmotifs for this idLeitmotif
+   		//       (Criteria idParent=idLeitmotif )
+   		//
+   		// + (D) level. Show all leitmotif at that level
+   		//       (Criteria idUser & level )
+   		//
+   		// + (E) idLeitmotif. Just that leitmotif
+   		//       (Criteria idLeitmotif)
+   		
+   		$step = $params['step'];
+   		$idLeitmotif = $params['idLeitmotif'];
+   		$level = $params['level'];
+   		$parent = $params['idUp']; // The id of the List. Will be used to embedded the id of the parent of that list,
+   					   // in order to use it for create elements.
+   		//print_r($params);
+   		$leitmotifs = array();
+   		 
+   		if (isset($level))
+   		{   // Case E. All leitmotifs at that level
+   			$leitmotifs = $this->model->queryLeitmotifPerUser($level,$idUser)->toArray();
+   			$parent = "Notallowed";
+   		}
+   		else if (isset($idLeitmotif))
+   		{
+   			$thisLeitmotif = $this->model->queryID('TblLeitmotif', $idLeitmotif);
+   			$level = $thisLeitmotif['level'];
+   			$levelnum = (int) $level;
+   			
+   			if ( isset($step) )
+   			{
+	   			
+	   			// Just query above or below that level or bel
+	   			$stepnum =(int)$step;
+	   			// Level of the results
+	   			$level = $levelnum + $stepnum;
+	   			
+	   			if ( $stepnum > 0 )
+	   			{ // Case C. Return Children of a leitmotif
+	   				
+	   				$leitmotifs = $this->model->queryChildrenLeitmotifs($idLeitmotif)->toArray();
+	   				$parent = $idLeitmotif;
+	   				
+	   			}
+	   			else
+	   			{ // Case B. Return parent (and then other leitmotifs at that level of the same parent!!!) of a leitmotif
+	   				// Get the grant-parent
+	   				if ($parent != '0')
+	   				{
+	   					$grantparent = $this->model->queryId('TblLeitmotif',$parent);
+	   					
+	   					$idgrantparent = $grantparent['idUp'];
+	   					if ($idgrantparent != '0')
+	   					{
+	   						$leitmotifs = $this->model->queryChildrenLeitmotifs($idgrantparent)->toArray();
+	   						$parent = $idgrantparent;
+	   					}
+	   					else
+	   					{
+	   						$leitmotifs = $this->model->queryLeitmotifPerUser($level,$idUser)->toArray();
+	   						
+	   					}
+	   				}
+	   				else
+	   				{
+	   					$leitmotifs = $this->model->queryLeitmotifPerUser($level,$idUser)->toArray();
+	   				}
+	   				
+	   				
+	   			}
+	   			   			
+   			}
+   			else
+   			{  // Case E. Specific query of that leitmotif
+   				$leitmotifs[]=$thisLeitmotif;
+   			}
+   		}
+   		else
+   		{
+   			// Case A. No parameters. Mostrar Mision
+   			$level="0";
+   			$parent="0";
+   			$leitmotifs = $this->model->queryLeitmotifPerUser($level,$idUser)->toArray();
+   		}
+   		
+   		// Before call this. make sure we set the $level !!!! 		
+   		return $this->model->buildOutput($leitmotifs,$level,$parent) ;
+   	}
+   	
+   	public function retrieveAction()
+   	{
+   		$auth = Zend_Auth::getInstance();
+   		if($auth->hasIdentity())
+   		{
+   			//$this->_helper->viewRenderer->setNoRender();
+   			$this->_helper->layout->disableLayout();
+   			$params = $this->getRequest()->getParams();
+   			
+   			$idUser = $auth->getIdentity()->idUser;
+   			print( $this->returnleitmotif($params,$idUser) );
+  
+   		}
+   		
+   	}
+   	
+   	public function addeditleitmotifAction()
+   	{
+   		//$this->_helper->viewRenderer->setNoRender();
+   		$this->_helper->layout->disableLayout();
+   		$data = array();
+   		
+   		if($this->getRequest()->isGet())
+   		{ 	
+   			//print ('GET');
+   			$data = $this->getRequest()->getParams();
+   			//print_r($data);
+   		}
+   		else if($this->getRequest()->isPost())
+   		{ 
+   			//print ('POST');
+   			$data = $this->getRequest()->getPost();
+   			//print_r($data);
+   		}
+   		else if ($this->getRequest()->isXmlHttpRequest())
+   		{
+   			//print ('AJAX');
+   		}
+   		else
+   		{
+   			//print ('MMMM');
+   		}
 
-		$value = $this->getRequest()->getParam('idCliente');
-		if (isset($value))
-		{
-			$this->view->idCliente = $value;
-			$cliente = $this->model->queryID('TblCliente',$value);
-			$this->view->titleView='Gestion Descuentos Cliente <br/>[' . $cliente['nombre'] .']';
-			$this->view->descuentos = $this->model->queryFK('TblDescuento',$value);
-		}
-	}
-	
-	public function adddescuentoAction()
-	{
-		$idCliente = $this->getRequest()->getParam('idCliente');
-		if (isset($idCliente))
-		{
-			$this->save('idDescuento','add','indexdescuento','idCliente',$idCliente);
-		}
-		else
-		{
-			echo 'NO CLIENTE';
-		}
-	}
-	
-	public function editdescuentoAction()
-	{
-		$idCliente = $this->getRequest()->getParam('idCliente');
-		if (isset($idCliente))
-		{
-			$this->save('idDescuento','edit','indexdescuento','idCliente',$idCliente);
-		}
-		else
-		{
-			echo 'NO CLIENTE';
-		}
-	}
-    
-
-    
+   		if (isset($data) )
+   		{ 		
+   			return $this->model->createUpdateLeitmotif($data);
+   		}
+   		  		
+   	}
+   	
+   	public function deleteajaxAction()
+   	{
+   		$auth = Zend_Auth::getInstance();
+   		if($auth->hasIdentity())
+	   	{
+	   		$this->_helper->viewRenderer->setNoRender();
+	   		$this->_helper->layout->disableLayout();
+	   	
+	   		$data = $this->getRequest()->getParams();
+	   	
+	   		$idValue = $data['idLeitmotif'];
+	   		if (isset($idValue))
+	   		{
+	   			$this->model->delete('idLeitmotif',$idValue);
+	   		}
+   		}
+   	
+   	}
+   
 }
 ?>

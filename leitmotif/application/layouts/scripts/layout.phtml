@@ -1,21 +1,23 @@
 <!DOCTYPE html>
+<html>
 <head>
-	<meta charset="UTF-8" /meta>
+	<meta charset="UTF-8" />
 	<title>Leitmotif</title>
 	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';?>" />
 	<?php
 		echo $this->headLink()->appendStylesheet('css/main.css', 'screen, projection');
-		if ($this->dojo()->isEnabled()){
 
-    		$this->dojo()->setLocalPath('js/dojo.js')
-                 ->addStyleSheetModule('dijit.themes.tundra');
-                 echo $this->dojo();
-            $this->dojo()->setLocalPath('js/dojo.gestion.js');      
-		}
 	?>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script src="custom/leitmotif.js"></script> 
 </head>
-<body >
-	<?php echo $this->layout()->content;?>
+<body>
+	<header><h1>Leitmotif</h1></header>
+	
+	<div>
+		<?php echo $this->layout()->content;?>
+	</div>
+
 </body>
 
 </html>

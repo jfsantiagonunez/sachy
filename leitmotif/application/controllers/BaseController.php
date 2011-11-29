@@ -21,7 +21,8 @@ class BaseController extends Zend_Controller_Action
     	$auth = Zend_Auth::getInstance();
     	if($auth->hasIdentity()) 
     	{
-			$this->indexsubaction();
+    		$iduser = $auth->getIdentity()->idUser;
+			$this->indexsubaction($iduser);
 			
     	}
     	else
