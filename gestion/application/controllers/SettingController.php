@@ -38,8 +38,6 @@ class SettingController extends BaseController
 		$this->view->settings = $this->model->queryAll($tableid);	
 
 
-		
-		$this->view->form = $this->getForm();
     }
     
 	public function createForm($idkey,$idValue,$fk,$fkvalue)
