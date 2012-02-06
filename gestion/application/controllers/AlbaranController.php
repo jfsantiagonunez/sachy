@@ -369,7 +369,12 @@ class AlbaranController extends BaseController
 	}
 	
 	public function generateAlbaran($datalbaran)
-	{			
+	{	
+		$cliente = $this->modelCliente->queryID('TblCliente',$datalbaran['idCliente']);
+		if ($cliente['numrefproveedor']!=null)
+		{
+			$datalbaran['comentario']='Numero Proveedor : '.$cliente['numrefproveedor'];
+		}		
     	$albaran = $this->model->createAlbaran($datalbaran);
     	
     	if (isset($albaran))
