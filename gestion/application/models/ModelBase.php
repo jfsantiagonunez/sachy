@@ -146,8 +146,10 @@
 			$vencimientos = array();
 			$vencimientos[0] = '0 dias';
 			$vencimientos[30] = '30 dias';
+			$vencimientos[45] = '45 dias';
 			$vencimientos[60] = '60 dias';
 			$vencimientos[70] = '70 dias';
+			$vencimientos[75] = '75 dias';
 			$vencimientos[85] = '85 dias';
 			$vencimientos[120] = '120 dias';
 			return $vencimientos;

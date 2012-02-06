@@ -249,8 +249,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
        			$day = (int) date('d',$ven);
        			$seg = round($day/5);
        			if ($seg==0)
-       				$day = 1;
-       		
+       				$day = 1;       		
        			else
        				$day = 5*$seg;
 				
@@ -258,15 +257,12 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
        			//echo 'Venc 2'.$data['vencimiento'];
 			}
        		
-			
-
 			$factura = $this->getTable('TblFactura')->insertData($data);
 			
 			if (isset($factura))
 			{
 				//echo 'Numero Factura' . $factura;
-				return $factura;
-				
+				return $factura;				
 			}
 			else
 			{

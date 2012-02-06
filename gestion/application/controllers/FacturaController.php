@@ -546,7 +546,9 @@ class FacturaController extends BaseController
 		$thx2 = 20;
 		$thy2 = 695;
 		$page->drawText($documento['numerofactura'], $thx2, $thy2, 'UTF-8');
-		$page->drawText($documento['fecha'], $thx2 + 75, $thy2, 'UTF-8');
+		$date = new Zend_Date($documento['fecha']);
+		$dateprint= $date->toString('dd-MM-YYYY');
+		$page->drawText($dateprint, $thx2 + 75, $thy2, 'UTF-8');
 					
 		if ($cliente['numrefproveedor']!='')
 			$page->drawText( $cliente['numrefproveedor'], 175, $thy2, 'UTF-8'); 
@@ -580,8 +582,12 @@ class FacturaController extends BaseController
 		$page->drawText('VALENCIA',250,$sy,'UTF-8');
 		$page->drawText(sprintf("%6.02f",$documento['total']),425,$sy,'UTF-8');
 		$sy2 = 240;
-		$page->drawText($documento['fecha'],200,$sy2,'UTF-8');
-		$page->drawText($documento['vencimiento'],400,$sy2,'UTF-8');
+		$date = new Zend_Date($documento['fecha']);
+		$dateprint= $date->toString('dd-MM-YYYY');
+		$page->drawText($dateprint,200,$sy2,'UTF-8');
+		$vencimiento = new Zend_Date($documento['vencimiento']);
+		$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
+		$page->drawText($vencimientoprint,400,$sy2,'UTF-8');
 		
 		//$page->drawText($documento['cantidadletra1'],175,203,'UTF-8');
 		//$page->drawText($documento['cantidadletra2'],105,203-12,'UTF-8');

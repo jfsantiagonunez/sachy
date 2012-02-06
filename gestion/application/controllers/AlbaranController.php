@@ -25,10 +25,6 @@ class AlbaranController extends BaseController
 		//$this->modelStock = new ModelStock();
 		require_once(APPLICATION_PATH . '/models/ModelCliente.php');
 		$this->modelCliente = new ModelCliente();
-
-		//$ajaxContext = $this->_helper->getHelper('AjaxContext');
-    	//$ajaxContext->addActionContext('addmovimientoajax', 'html')
-        //        ->initContext();
 		
 		$auth  = Zend_Auth::getInstance(); 
     	if($auth->hasIdentity())
@@ -607,8 +603,9 @@ class AlbaranController extends BaseController
 			$thx3 = 185 ; //comentario, orden cliente
 			$thy3 = 535; // orden cliente
 			$lh = 12;
-			
-			$page->drawText($albaran['fecha'], $thx, $thy, 'UTF-8');
+			$date = new Zend_Date($albaran['fecha']);
+			$dateprint= $date->toString('dd-MM-YYYY');
+			$page->drawText($dateprint, $thx, $thy, 'UTF-8');
 			$page->drawText($albaran['numeroalbaran'], $thx + 85, $thy, 'UTF-8');
 			
 			$page->drawText($cliente['nombre'], $thx2, $thy2, 'UTF-8'); 

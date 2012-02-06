@@ -36,7 +36,11 @@
 			}
 			else
 			{
-				echo '<table class="dbtableref"><tbody><tr><td>' .  $this->factura['fecha'] . '</td><td>'.$this->factura['condicionespago'].'</td><td>Vencimiento</td><td>'.$this->factura['vencimiento'].'</td></tr></tbody></table>';
+				$date = new Zend_Date($this->factura['fecha']);
+				$dateprint= $date->toString('dd-MM-YYYY');
+				$vencimiento = new Zend_Date($this->factura['vencimiento']);
+				$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
+				echo '<table class="dbtableref"><tbody><tr><td>' .  $dateprint . '</td><td>'.$this->factura['condicionespago'].'</td><td>Vencimiento</td><td>'.$vencimientoprint.'</td></tr></tbody></table>';
 			}
 			echo '<br/>';
 			if ( isset($this->descuentos) && ($this->descuentos->count()>0))
