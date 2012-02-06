@@ -78,6 +78,7 @@ class ReciboController extends BaseController
     	if ( $rango == '0')
     	{
     		//$hoy->sub( DateInterval::createFromDateString( '5 days'));
+    		
     	}
     	else
     	{

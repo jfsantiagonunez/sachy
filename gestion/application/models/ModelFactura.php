@@ -235,7 +235,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 			
 			$data['condicionespago']=$cliente['condicionespago'];
 			
-			if ( (strcmp($cliente['condicionespago'],'contado')==0) || 
+			if ( (strcasecmp($cliente['condicionespago'],'contado')==0) || 
 				(intval($cliente['vencimiento'])==0) )
 			{
 				$data['vencimiento']=date('Y-m-d');

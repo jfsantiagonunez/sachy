@@ -130,14 +130,14 @@
 		public function getTipoPago()
 		{
 			$listtipopago = array();
-			$listtipopago['cheque'] = 'cheque';
-			$listtipopago['pagare'] = 'pagare';
-			$listtipopago['giro'] = 'giro';
-			$listtipopago['transferencia'] = 'transferencia';
-			$listtipopago['confirming'] = 'confirming';
-			$listtipopago['contado'] = 'contado';
-			$listtipopago['cheque'] = 'cheque';
-			$listtipopago['tarjetacredito'] = 'tarjetacredito';
+			$listtipopago['cheque'] = 'Cheque';
+			$listtipopago['pagare'] = 'Pagare';
+			$listtipopago['giro'] = 'Giro';
+			$listtipopago['transferencia'] = 'Transferencia';
+			$listtipopago['confirming'] = 'Confirming';
+			$listtipopago['contado'] = 'Contado';
+			$listtipopago['cheque'] = 'Cheque';
+			$listtipopago['tarjetacredito'] = 'Tarjeta Credito';
 			return $listtipopago;
 		}
 		
@@ -147,6 +147,7 @@
 			$vencimientos[0] = '0 dias';
 			$vencimientos[30] = '30 dias';
 			$vencimientos[60] = '60 dias';
+			$vencimientos[70] = '70 dias';
 			$vencimientos[85] = '85 dias';
 			$vencimientos[120] = '120 dias';
 			return $vencimientos;
