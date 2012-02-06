@@ -1,8 +1,0 @@
-Only hacker master can touch this.
-
-<form method="post" id="sqltextForm" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'base', 'action' => 'sql'), 'default', true) ?>">
-<p><input type="text" name="sqltext" id="sqltext" value="Don't touch if you do not know" style="height:100px; width:500px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('sqltextForm').submit();" />
-<input type="submit" value="Search"/></p>
-</form>
-
-[ <?php echo $this->result;?> ]

@@ -132,6 +132,7 @@
 			$listtipopago = array();
 			$listtipopago['cheque'] = 'cheque';
 			$listtipopago['pagare'] = 'pagare';
+			$listtipopago['giro'] = 'giro';
 			$listtipopago['transferencia'] = 'transferencia';
 			$listtipopago['confirming'] = 'confirming';
 			$listtipopago['contado'] = 'contado';
