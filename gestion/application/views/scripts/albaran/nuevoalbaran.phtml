@@ -2,6 +2,8 @@
 function addclienteordenalbaran() {
     var form = dojo.byId("clienteorden");
 
+    if (form == null ) return;
+    
     dojo.connect(form, "onsubmit", function(event) {
         //Stop the submit event since we want to control form submission.
         dojo.stopEvent(event);
@@ -30,6 +32,8 @@ dojo.addOnLoad(addclienteordenalbaran);
 function addcomentarioalbaran() {
     var form = dojo.byId("comentarioalbaran");
 
+    if (form == null ) return;
+    
     dojo.connect(form, "onsubmit", function(event) {
         //Stop the submit event since we want to control form submission.
         dojo.stopEvent(event);
@@ -141,6 +145,10 @@ dojo.addOnLoad(addcomentarioalbaran);
 			{
 				echo $this->partial('base/nuevomovimiento.phtml',$this->paramspartial);
 			}
-		}
+			else
+			{
+				//echo '<div id="errorajax"></div>';
+			}
+		 }
 	}?>
 	
