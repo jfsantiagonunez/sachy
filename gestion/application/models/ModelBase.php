@@ -118,12 +118,14 @@
 			$movimientos = $this->getTable($tableId)->fetchAll($query);	
 			foreach ($movimientos as $movimiento)
 			{
-				$movimiento['tprecio'] = round(floatval($movimiento['tcantidad']) * floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,2) ;
+				$preciocondescuento = round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,2);
+				$movimiento['tprecio'] = round(floatval($movimiento['tcantidad']) * $preciocondescuento,2) ;
 				if (floatval($movimiento['tipoenvase']) > 1 )
 				{
 					$movimiento['tprecio'] *= floatval($movimiento['tipoenvase']);
 				}
 			}
+			
 			return $movimientos;
 		}
 		
@@ -154,5 +156,51 @@
 			$vencimientos[120] = '120 dias';
 			return $vencimientos;
 		}
+		
+		
+		
+		public function contabilizarObjeto($key,$objeto,$idObjeto)
+		{
+	
+			$sett = $this->getTable('TblSetting')->selectID('iva');
+			$tipoiva = floatval($sett['value']);
+			$movimientos = $this->queryMovimientos($key,$idObjeto);
+			
+			$bruto = 0;
+			
+			
+			foreach ($movimientos as $entry)
+			{
+				$brutomov = floatval($entry['tcantidad']) * floatval($entry['precio'] );
+				
+				if (floatval($entry['tipoenvase']) > 1 )
+				{
+					$brutomov *= floatval($entry['tipoenvase']);
+				}
+				
+				$descuentomov = round( $brutomov * floatval($entry['descuento'])/100 , 2);
+				$totalmov = $brutomov - $descuentomov;
+				
+				$bruto += $totalmov;
+			}
+			
+			// Actualizar el objeto como terminado
+			$objeto['estado'] = '1';
+						
+			$objeto['bruto']=$bruto;
+			$descuentoaplicar=floatval($objeto['descuentoaplicartotal']);
+			$descuento=round($descuentoaplicar*$bruto/100,2);
+			$objeto['descuento']=$descuento;
+			$baseimp=$bruto-$descuento;			
+			$objeto['baseimponible']=$baseimp;
+			$iva = round( $baseimp * $tipoiva/100,2);
+			$objeto['iva'] = $iva;
+			$objeto['tipoiva'] = $tipoiva;
+			$objeto['total']=$baseimp+$iva;
+			$objeto->save();
+			
+			return;	
+		}
+		
 	}
 ?>

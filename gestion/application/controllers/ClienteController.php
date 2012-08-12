@@ -99,6 +99,7 @@ class ClienteController extends BaseController
 		}
 	}
 	
+	
 	public function adddescuentoAction()
 	{
 		$idCliente = $this->getRequest()->getParam('idCliente');
@@ -125,6 +126,10 @@ class ClienteController extends BaseController
 		}
 	}
     
-    
+	public function deletedescuentoAction()
+    {
+    	$idCliente = $this->getRequest()->getParam('idCliente');
+    	$this->delete('idDescuento','indexdescuento','idCliente',$idCliente);
+    }
 }
 ?>

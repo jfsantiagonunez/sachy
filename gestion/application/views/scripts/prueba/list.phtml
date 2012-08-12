@@ -1,3 +1,60 @@
 <?php
 include('listmovimientos.ajax.phtml');
 ?>
+
+
+		if (isset($this->factura))
+		{
+			if (isset($this->movimientos))
+			{
+				$tableview = $this->subtitleView;
+				if ($this->factura['estado'] == '0')
+				{
+					$tableview .= '<a title="Agregar referencia" href="'.$this->url(array('controller' => 'factura', 
+						'action' => 'addmovimiento' , 'idFactura' => $this->factura['idFactura'] )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>';
+				}
+				$acciones = array();
+				$iconos = array();
+				if ($this->factura['estado']=='0')
+				{
+					$acciones = array(
+						array('controller' => 'factura', 'action' => 'editmovimiento','idFactura' => $this->factura['idFactura']),
+						array('controller' => 'factura', 'action' => 'deletemovimiento','idFactura' => $this->factura['idFactura']));
+					$iconos = array('img/icons/edit.png" title="Editar esta referencia',
+									'img/icons/delete.png" title="Eliminar esta referencia');
+				}
+				
+			echo $this->table($tableview ,
+				array(
+					'calidad' => 'Calidad',
+					'color' => 'Color',
+					'tipoenvase' => 'Env.',
+					'tcantidad' => '#',
+					'precio' => 'Euros',
+					'descuento' => '%',
+					'tprecio' => 'Valor',
+					'descripcion' => 'Descripcion'
+				),
+				$this->movimientos ,
+				$acciones,
+				$iconos,
+				'idMovimiento','ASC','idMovimiento'); 
+			}
+			?>	
+			<!-- Tabla para finalizar -->
+			<form method="post" id="finalizardocumento" action="<?php echo $this->url(array('controller' => 'factura', 'action' => 'finalizardocumento', 'idFactura' => $this->factura['idFactura']), 'default', true); ?>">			
+			<table align="center"><tbody><tr>
+			<?php if (isset($this->movimientos) && ($this->movimientos->count() > 0 ) && ( $this->factura['estado'] == '0' ) ) { ?>
+				<td><input type="submit" name="finaldocumento" value="Imprimir & Guardar"/></td>
+				<td><input type="submit" name="finaldocumento" value="Solo Guardar"/></td>
+			<?php  } if ( $this->factura['estado'] == '1' ) {?>
+				<td><input type="submit" name="finaldocumento" value="Recalcular & Imprimir"/></td>
+				<td><input type="submit" name="finaldocumento" value="Volver a Imprimir"/></td>
+			<?php 	}	?>	
+			<td><input type="submit" name="finaldocumento" value="Salir"/></td>
+			</tr></tbody></table></form> 
+			<?php 
+			
+		}
+	}?>

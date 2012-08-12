@@ -13,12 +13,16 @@
 			echo $this->table(' Descuentos <a href="'.$this->url(array('controller' => 'cliente', 
 				'action' => 'adddescuento' , 'idCliente' => $this->idCliente )
 				, 'default', true).'"><img src="img/icons/add.png"/></a>',
-				array('descuento' => 'Descuento',	'descripcion' => 'Aplicable'),
+				array('tipoDescuento' => 'Tipo Descuento',
+					  'descuento' => 'Descuento',
+					  'calidad'	=> 'Calidad',
+					  'descripcion' => 'Aplicable'),
 				$this->descuentos ,
 				array(
-					array('controller' => 'cliente', 'action' => 'editdescuento', 'idCliente' => $this->idCliente)
+					array('controller' => 'cliente', 'action' => 'editdescuento', 'idCliente' => $this->idCliente),
+					array('controller' => 'cliente', 'action' => 'deletedescuento', 'idCliente' => $this->idCliente)
 				),
-				array('img/icons/edit.png'),
+				array('img/icons/edit.png','img/icons/delete.png'),
 				'idDescuento','ASC','idDescuento'); 
 		}
 	}

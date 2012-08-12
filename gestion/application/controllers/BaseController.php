@@ -3,7 +3,9 @@ class BaseController extends Zend_Controller_Action
 {
 	protected $_idkey = 'id';
 	protected $model;
-
+	protected $modelCliente;
+	protected $modelCatalogo;
+	
 	public function init()
     {
 		
@@ -116,11 +118,36 @@ class BaseController extends Zend_Controller_Action
     
     function retornardeaccion($controller, $action, $fk, $fkvalue)
     {
-    
+    	// Super HACK para volver a la edicion de nuevo albaran o nueva factura 
+    	// en caso de editar/add nuevos descuentos
+    	$controller=$this->_controllername;
+    	if ($action=='indexdescuento')
+    	{
+    		$fknew='idFactura';
+    		$newcontroller='factura';
+    		$idValue = $this->getRequest()->getParam($fknew);
+    		$actionredirect='nuevofactura';
+    		if (empty($idValue))
+    		{
+    			$fknew='idAlbaran';
+    			$newcontroller='albaran';
+    			$idValue = $this->getRequest()->getParam($fknew);
+    			$actionredirect='nuevoalbaran';
+    			
+    		}
+    		if (!empty($idValue))
+    		{
+    			$action=$actionredirect;
+    			$fk=$fknew;
+    			$fkvalue=$idValue;
+    			$controller=$newcontroller;
+    		}
+    	}
+    	
     	if (isset($fk))
 		{
 			return $this->_helper->redirector->gotoRoute(array(
-						'controller' => $this->_controllername , 'action' => $action, $fk => $fkvalue ),
+						'controller' => $controller , 'action' => $action, $fk => $fkvalue ),
 						'default', true);
 		}
 		else
@@ -132,19 +159,50 @@ class BaseController extends Zend_Controller_Action
 		}
     }
     
+    public function salirAccion($controller)
+    {
+    	$this->salvarDescuento();
+    	return  $this->_helper->redirector->gotoRoute(array(
+					'controller' => $controller , 'action' => 'index' ),
+					'default', true);
+    }
      
+    public function salvarDescuento()
+    {
+    	$idKey=$this->getRequest()->getParam($this->_idkey);
+
+    	$objeto=$this->model->queryID($this->_idkey,$idKey);
+    	if ($objeto['estado']=='0')
+    	{
+    		$descuento = $this->getRequest()->getParam('descuento');
+
+    		if (!empty($descuento))
+    		{
+    			$objeto['descuentoaplicartotal']=$descuento;
+    			$objeto->save();
+
+    		}
+    	}
+    }
+    
     public function autocompletecalidadAction()
     {
     	$this->_helper->viewRenderer->setNoRender();
         $this->_helper->layout->disableLayout();
         $match = trim($this->_getParam('qcalidad', ''),'*');
- 
+ 		
+        if (empty($match))
+        {
+        	print ('{"identifier":"calidad","items":[],"label":"calidad"}');
+        	return;
+        }
         $resultados = $this->getCalidadAuto($match);
         
     	$data = new Zend_Dojo_Data('calidad', $resultados,'calidad');
  
         // Send our output
         $this->_helper->autoCompleteDojo($data);
+        print($data);
     }
     
     
@@ -152,8 +210,15 @@ class BaseController extends Zend_Controller_Action
     {
     	$this->_helper->viewRenderer->setNoRender();
         $this->_helper->layout->disableLayout();
+        $matchcalidad = trim($this->_getParam('qcalidad', ''),'*');
+        
+        if (empty($matchcalidad))
+        {
+        	print ('{"identifier":"color","items":[],"label":"color"}');
+        	return;
+        }
         $match = trim($this->_getParam('qcolor', ''),'*');
- 		$matchcalidad = trim($this->_getParam('qcalidad', ''),'*');
+
         $resultados = $this->getColorAuto($match,$matchcalidad);
         
     	$data = new Zend_Dojo_Data('color', $resultados,'color');
@@ -166,9 +231,21 @@ class BaseController extends Zend_Controller_Action
     {
     	$this->_helper->viewRenderer->setNoRender();
         $this->_helper->layout->disableLayout();
-        $match = trim($this->_getParam('qtipoenvase', ''),'*');
+
         $color = trim($this->_getParam('qcolor', ''),'*');
+        if ( empty($color))
+        {
+    		print('{"identifier":"tipoenvase","items":[],"label":"tipoenvase"}');
+    		return;
+    	}
  		$calidad = trim($this->_getParam('qcalidad', ''),'*');
+        if ( empty($calidad))
+        {
+    		print('{"identifier":"tipoenvase","items":[],"label":"tipoenvase"}');
+    		return;
+    	}
+    	$match = trim($this->_getParam('qtipoenvase', ''),'*');
+    	
         $resultados = $this->getTipoEnvaseAuto($match,$calidad,$color);
         $matches = array();
 
@@ -184,19 +261,49 @@ class BaseController extends Zend_Controller_Action
         $this->_helper->autoCompleteDojo($data);
     }
     
+	public function autocompletedescuentoAction()
+    {
+    	$this->_helper->viewRenderer->setNoRender();
+        $this->_helper->layout->disableLayout();
+        $matchcliente = trim($this->_getParam('qidCliente', ''),'*');
+    	if (empty($matchcliente))
+ 		{
+    		print ('{"identifier":"descuento","items":[],"label":"descuento"}');
+    		return;
+ 		}
+ 		$matchcalidad = trim($this->_getParam('qcalidad', ''),'*');
+ 		
+ 		if (empty($matchcalidad))
+ 		{
+    		print ('{"identifier":"descuento","items":[],"label":"descuento"}');
+    		return;
+ 		}
+        $resultados = $this->getDescuentoAuto($matchcliente,$matchcalidad);
+
+    	$data = new Zend_Dojo_Data('descuento', $resultados,'descuento');
+ 
+        // Send our output
+        $this->_helper->autoCompleteDojo($data);
+    }
+    
     public function getCalidadAuto($id)
     {
-    	return $this->model->queryAutocompletionCalidades($id)->toArray();
+    	return $this->modelCatalogo->queryAutocompletionCalidades($id)->toArray();
     }
     
 	public function getColorAuto($id,$calidad)
     {
-    	return $this->model->queryAutocompletionColor($id,$calidad)->toArray();
+    	return $this->modelCatalogo->queryAutocompletionColor($id,$calidad)->toArray();
     }
     
 	public function getTipoEnvaseAuto($id,$calidad,$color)
     {
-    	return $this->model->queryAutocompletionTipoEnvase($id,$calidad,$color)->toArray();
+    	return $this->modelCatalogo->queryAutocompletionTipoEnvase($id,$calidad,$color)->toArray();
+    }
+    
+	public function getDescuentoAuto($idCliente,$calidad)
+    {
+    	return $this->modelCliente->queryAutocompletionDescuento($idCliente,$calidad);
     }
     //Experiment
     
@@ -212,7 +319,7 @@ class BaseController extends Zend_Controller_Action
 			$this->model->createMovimiento($data);
 
 		}
-		$this->listmovimientosreturn($data);
+		echo $this->listmovimientosreturn($data);
 		
    	}
    	
@@ -220,7 +327,7 @@ class BaseController extends Zend_Controller_Action
    	{
         $data = $this->getRequest()->getParams();
 
-   		$this->listmovimientosreturn($data);	
+   		echo $this->listmovimientosreturn($data);	
    	}
    	
    	
@@ -237,7 +344,7 @@ class BaseController extends Zend_Controller_Action
         	$this->model->delete('idMovimiento',$idValue);
         }
         
-   		$this->listmovimientosreturn($data);	
+   		echo $this->listmovimientosreturn($data);	
    	}
    	
 
@@ -250,6 +357,7 @@ class BaseController extends Zend_Controller_Action
 			$this->view->controller = 'albaran';
 			$this->view->idKey = 'idAlbaran';
 			$tabla = 'TblAlbaran';
+			$this->view->idCliente = $data['idCliente'];
 			
 			if (isset($data['idFactura'])&&(!isset($data['idAlbaran'])))
 			{
@@ -260,16 +368,22 @@ class BaseController extends Zend_Controller_Action
 			$this->view->idkeyvalue=$data[$this->view->idKey];
 			$this->view->objeto = $this->model->queryID($tabla,$this->view->idkeyvalue);
 			
+			 
 			$this->view->movimientos = $this->model->queryMovimientos($this->view->idKey,$this->view->idkeyvalue);
-			echo $this->view->render('base/listmovimientos.ajax.phtml') ;
+			
+			// Obtener descuentos de Total (tipo 0 ) del cliente
+			$descuentos = $this->modelCliente->queryDescuentosByType($data['idCliente'],'0');
+			 
+			$this->view->selectDescuento = $this->generateSelect( 'descuento','descuento' ,$descuentos , $this->view->objeto['descuentoaplicartotal'] );
+			return $this->view->render('base/listmovimientos.ajax.phtml') ;
 		}
 		else
 		{
-			echo 'Introduzca movimientos';
+			return 'Introduzca movimientos';
 		}
    	}
    	
-   		function generateSelect( $selectname, $id ,array $data ,$default, $tag=null)
+   	function generateSelect( $selectname, $id ,array $data ,$default, $tag=null)
 	{
 		
 		$select = '<select name="' . $selectname . '" id="'. $selectname . '" style="width:100px" >';
@@ -341,6 +455,11 @@ class BaseController extends Zend_Controller_Action
 			$albaranes = $this->model->queryAlbaranesPorFactura($documento['idFactura']);
 			$numeromovimentos += $albaranes->count();
 		}
+		else
+		{
+			// anadir 2 lineas para albaran para incluir valoracion
+			$numeromovimentos +=3;
+		}
 		
 		$numeropaginas = ceil( $numeromovimentos / $movimientosporpagina);
 		$pagina = 1;
@@ -398,13 +517,8 @@ class BaseController extends Zend_Controller_Action
 			$page->drawText($unidad, $xu, $y,'UTF-8');
 			$page->drawText($movimiento['descripcion'], $xdes, $y,'UTF-8');
 			$descuento = (int) $movimiento['descuento'];
-			$precio = $movimiento['precio'];
-			$descu = '';
-			if ($descuento > 0 )
-			{
-				$descu = '('.$descuento.'%)';
-			}
-			$page->drawText(sprintf("%3.02f %s",$precio,$descu), $xp, $y,'UTF-8');
+			$preciocondescuento=round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,2);
+			$page->drawText(sprintf("%3.02f",$preciocondescuento), $xp, $y,'UTF-8');
 			
 											
 			$page->drawText(sprintf("%7.02f",(float)$movimiento['tprecio']),$xtp,$y,'UTF-8');
@@ -420,6 +534,10 @@ class BaseController extends Zend_Controller_Action
 				$y = $yinit;
 			}
 		}
+		if (!$esfactura)
+		{
+			$this->imprimirValoracionAlbaran($documento,$page,$y);
+		}
 		$page->drawText('Pagina '.$pagina.'/'.$numeropaginas /*.'/'.$numeromovimentos*/, $xdes, $ymin,'UTF-8');
 		
 		
@@ -429,20 +547,7 @@ class BaseController extends Zend_Controller_Action
 	function imprimirPaginaReferencia($page)
 	{
 			
-		/*$page->drawText("100,-", 100, 10, 'UTF-8');
-		$page->drawText("200,-", 200, 10, 'UTF-8');
-		$page->drawText("300,-", 300, 10, 'UTF-8');
-		$page->drawText("400,-", 400, 10, 'UTF-8');
-		$page->drawText("500,-", 500, 10, 'UTF-8');
-		
-		$page->drawText("-,100", 10, 100, 'UTF-8');
-		$page->drawText("-,200", 10, 200, 'UTF-8');
-		$page->drawText("-,300", 10, 300, 'UTF-8');
-		$page->drawText("-,400", 10, 400, 'UTF-8');
-		$page->drawText("-,500", 10, 500, 'UTF-8');
-		$page->drawText("-,600", 10, 600, 'UTF-8');
-		$page->drawText("-,700", 10, 700, 'UTF-8');
-		$page->drawText("-,800", 10, 800, 'UTF-8');*/
+	
 			
 		$width  = $page->getWidth();
     	$height = $page->getHeight();

@@ -1,16 +1,12 @@
 
 
-
-<h1>Autocompletion Example</h1>
-<?php //echo $this->partial('stock/nuevomovimiento.phtml',$this->paramspartial);?>
-
- <?php
+<?php
 $path = array(
 'google' => 'http://www.google.com',
 'yahoo'=> 'http://www.yahoo.com');
 if (array_key_exists($_GET['id'], $path)) 
 	print ("<script type='text/javascript'> window.open('" . 
-	$path[$_GET['id'] ]. "', new);</script>");
+	$path[$_GET['id'] . "', new);</script>");
 ?>
 
 

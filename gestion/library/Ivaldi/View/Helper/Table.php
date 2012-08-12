@@ -171,6 +171,19 @@ function deleteajax() {
 								$res .= '<td>Error</td>';
 							}
 						}
+						else if($dbname == 'tipoDescuento') {
+							$tipo=$entry[$dbname];
+							if($tipo == 0) {
+								// Salida
+								$res .= '<td>TOTAL FACTURA</td>';
+							} else if($tipo == 1) {
+								$res .= '<td>'.$entry['calidad'].'</td>';
+							} else if($tipo == 2) {
+								$res .= '<td> OTRAS </td>';
+							} else {
+								$res .= '<td>Error</td>';
+							}
+						}
 						else if($metadata[$dbname]['DATA_TYPE'] == 'tinyint') {
 							$res .= '<td>';
 							if($entry[$dbname] == 1) {

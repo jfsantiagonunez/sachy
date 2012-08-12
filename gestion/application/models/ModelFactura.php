@@ -234,6 +234,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 			$data['fecha'] = date('Y-m-d');
 			
 			$data['condicionespago']=$cliente['condicionespago'];
+			$data['descporc']='0';
 			
 			if ( (strcasecmp($cliente['condicionespago'],'contado')==0) || 
 				(intval($cliente['vencimiento'])==0) )
@@ -320,15 +321,18 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 	
 		}
 		
-		public function contabilizarFactura($idFactura)
+		
+		
+		/*public function contabilizarFactura($idFactura)
 		{
+
 			$factura = $this->getTable('TblFactura')->selectID($idFactura);
 			$sett = $this->getTable('TblSetting')->selectID('iva');
 			$tipoiva = floatval($sett['value']);
 			$movimientos = $this->queryMovimientos('idFactura',$idFactura);
-			$total = 0;
+			
 			$bruto = 0;
-			$descacc = 0;
+			
 			
 			foreach ($movimientos as $entry)
 			{
@@ -342,29 +346,26 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 				$descuento = round( $brutomov * floatval($entry['descuento'])/100 , 2);
 				$totalmov = $brutomov - $descuento;
 				
-				$descacc += $descuento;
-				$bruto += $brutomov;
-				
-				$total += $totalmov;
+				$bruto += $totalmov;
 			}
 			
 			// Actualizar el albaran como terminado
 			$factura['estado'] = '1';
-			$factura['tipoiva'] = $tipoiva;
-			
-			$iva = round( $total * $tipoiva/100,2);
-			
+						
 			$factura['bruto']=$bruto;
-			$factura['descuento']=$descacc;
-			$factura['descporc']=round($descacc*100/$bruto,0);
-			$factura['baseimponible']=$total;
+			$descuentoaplicar=float($factura['descuentoaplicartotal']);
+			$descuento=round($descuentoaplicar*$bruto/100,2);
+			$factura['descuento']=$descuento;			
+			$factura['baseimponible']=$total-$descuento;
+			$iva = round( $total * $tipoiva/100,2);
 			$factura['iva'] = $iva;
+			$factura['tipoiva'] = $tipoiva;
 			$factura['total']=$total+$iva;
 			$factura->save();
 			
 			return;	
-		}
-
+		}*/
+		
 		public function setalbaranfacturable($idAlbaran,$estado)
 		{
 			$albaran = $this->getTable('TblAlbaran')->selectID($idAlbaran);

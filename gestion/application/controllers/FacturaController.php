@@ -207,7 +207,7 @@ class FacturaController extends BaseController
 					'default', true);
 	}
 	
-	public function nuevofacturaAction()
+	public function nuevofactura2Action()
 	{
 		$this->view->titleView='Creando Factura';
 		$this->view->subtitleView = 'Revisar Referencias';
@@ -232,6 +232,42 @@ class FacturaController extends BaseController
        	
 	}
     
+	
+	public function nuevofacturaAction()
+	{
+		$this->view->titleView='Creando Factura';
+		$this->view->subtitleView = 'Revisar Referencias';
+		
+
+       	// Get movimientos
+       	$idFactura = $this->getRequest()->getParam('idFactura');
+       	
+       	$factura = $this->model->queryID('TblFactura',$idFactura);
+       	$this->view->cliente = $this->modelCliente->queryID($this->modelCliente->getTableId(),$factura['idCliente']);
+       	$this->view->factura = $factura ;
+
+       	//$this->view->movimientos = $this->model->queryMovimientos('idFactura',$idFactura);
+       	$this->view->albaranespendientes = $this->model->queryAlbaranesPendientes($factura['idCliente']);
+       	$this->view->albarabesestafactura = $this->model->queryAlbaranesPorFactura($factura['idFactura']);
+       	$this->view->descuentos = $this->modelCliente->queryFK('TblDescuento',$factura['idCliente']);
+       	$this->view->idCliente = $factura['idCliente'];
+
+       	$listtipopago = $this->model->getTipoPago();
+		$vencimientos = $this->model->getDiasPago();
+		
+		$this->view->selectTipopago = $this->generateSelect( 'condicionespago','condicionespago' , $listtipopago , $factura['condicionespago']);
+       	
+		$this->view->paramspartial = array();		
+    	$this->view->paramspartial['idKey'] = 'idFactura';
+    	$this->view->paramspartial['idValue'] = $idFactura;
+    	$this->view->paramspartial['controller'] = 'factura';
+    	$this->view->paramspartial['entrada'] = '0';
+    	$this->view->paramspartial['idCliente'] = $factura['idCliente'];
+    	
+		$this->view->listadodiv= $this->listmovimientosreturn($factura->toArray());
+		
+	}
+	
 	public function elegirclienteAction()
 	{
 		$idCliente = $this->getRequest()->getParam('idCliente');
@@ -244,7 +280,9 @@ class FacturaController extends BaseController
 	{
 		$idAlbaran = $this->getRequest()->getParam('idAlbaran');
 		$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
-		$datfactura = array('idAlbaran'=>$idAlbaran,'idCliente'=>$albaran['idCliente']);
+		$datfactura = array('idAlbaran'=>$idAlbaran,
+							'idCliente'=>$albaran['idCliente'],
+							'descuentoaplicartotal'=>$albaran['descuentoaplicartotal']);
 				
 		return $this->generatefactura($datfactura,$albaran);
 	}
@@ -335,8 +373,8 @@ class FacturaController extends BaseController
 		$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
 		$albaran['idFactura'] = $idFactura;	
 		$albaran->save();
-		$descuento = $this->modelCliente->getDefaultDescuento($albaran['idCliente']);
-		echo $descuento;
+		//$descuento = $this->modelCliente->getDefaultDescuento($albaran['idCliente']);
+		//echo $descuento;
 		//Registrar movimientos
 		$res = $this->model->updateMovimientosConFactura($idFactura,$idAlbaran,$descuento);
 		
@@ -399,8 +437,8 @@ class FacturaController extends BaseController
 		$finaldocumento = $this->getRequest()->getParam('finaldocumento');
 		switch ($finaldocumento)
 		{
-			case 'Salir':
-				$this->salirAction();
+			case 'Salir':				
+				$this->salirAccion('factura');
 				break;
 			case 'Solo Guardar':
 				return $this->gestionarfactura(true,false);
@@ -430,7 +468,8 @@ class FacturaController extends BaseController
 			// Si el estado no es terminado, ignoramos la accion y lo registramos en el stock, ANYWAY
 			if ( ($estado == '0') || ($generariva == true ) )
 			{
-				$this->model->contabilizarFactura($idFactura);
+				$factura['descuentoaplicartotal']=$this->getRequest()->getParam('descuento');
+				$this->model->contabilizarObjeto('idFactura',$factura,$idFactura);
 			}
 			
 			if ( $imprimir )
@@ -440,16 +479,9 @@ class FacturaController extends BaseController
 			
 		}
 		
-		$this->salirAction();	
+		$this->salirAccion('factura');	
 	}
 	
-	public function salirAction()
-	{
-		return  $this->_helper->redirector->gotoRoute(array(
-					'controller' => 'factura' , 'action' => 'index' ),
-					'default', true);
-	}
-		
 	
    	public function indexmovimientosAction()
     {   
@@ -475,7 +507,7 @@ class FacturaController extends BaseController
     	{
     		$this->model->setalbaranfacturable($idAlbaran,'0');
     	}
-    	$this->salirAction();
+    	$this->salirAccion('factura');
     }
     
     public function cambiopagofacturaAction()
@@ -565,7 +597,7 @@ class FacturaController extends BaseController
 		$sx = 20;
 		$sy = 315;
 		$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
-		$page->drawText(sprintf("%2.0f",$documento['descporc']),110,$sy,'UTF-8');
+		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),110,$sy,'UTF-8');
 		$page->drawText(sprintf("%5.02f",$documento['descuento']),145,$sy,'UTF-8');
 		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),220,$sy,'UTF-8');
 		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),305,$sy,'UTF-8');

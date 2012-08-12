@@ -94,8 +94,8 @@ dojo.addOnLoad(addcomentarioalbaran);
 		
 		if (isset($this->cliente))
 		{
-			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;
-	margin: 5px 0 5px 0;"><h3><tr><td>' . $this->cliente['nombre'] . '</td><td align="center">'.$this->entradatext.'-'.$this->tienda.'</td><td align="right">' . $this->albaran['numeroalbaran']  .'</td></tr></table></h3>';
+			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;margin: 5px 0 5px 0;"><h3><tr>
+			<td id="idCliente">'.$this->cliente['idCliente'].'</td><td>' . $this->cliente['nombre'] . '</td><td align="center">'.$this->entradatext.'-'.$this->tienda.'</td><td align="right">' . $this->albaran['numeroalbaran']  .'</td></tr></table></h3>';
 	
 			// Annadir form para comentario y orden pedido
 			
@@ -122,6 +122,7 @@ dojo.addOnLoad(addcomentarioalbaran);
 	        	echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody><tr>';
 				echo '<td><input id="comentario" type="text" value="'.$comentario.'" name="comentario" onfocus="javascript:this.value=\'\'" style="width:500px;"/></td>';						
 				echo '<td><input type="submit" value="Salvar C"></td></tr></tbody></table></form>';
+				
 				echo '<div id="errorajax"></div>';
 			}
 			else
@@ -129,10 +130,12 @@ dojo.addOnLoad(addcomentarioalbaran);
 	        	echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody>';
 				echo '<tr><td>Orden Cliente : </td><td>'.$this->albaran['ordencliente'].'</td></tr>';
 				echo '<tr><td>Comentario : </td><td>'.$this->albaran['comentario'].'</td></tr>';
+				echo '<tr><td>Descuento : </td><td>'.$this->albaran['descuentoaplicartotal'].'</td></tr>';
 				echo '</tbody></table>';
 			}	
-	        echo '</div>'; 	
-					
+	        echo '</div>';
+	        
+	        
 		}
 		else
 		{
@@ -150,5 +153,36 @@ dojo.addOnLoad(addcomentarioalbaran);
 				//echo '<div id="errorajax"></div>';
 			}
 		 }
+		 echo '<div id="listadomovimientos">'.$this->listadodiv.'</div>';
+		 
+		 if ($this->albaran['estado']=='0')
+		{
+			 echo '<div id="subcontent">'; 	
+			if ( isset($this->descuentos) && ($this->descuentos->count()>0))
+			{
+				echo $this->table('Descuentos Cliente <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente']  )
+						, 'default', true).'" title="Agregar mas Descuentos"><img src="img/icons/add.png"/></a>',
+				array(
+					'descuento' => 'Descuento',
+					'tipoDescuento' => 'Tipo',
+					'descripcion' => 'Aplicable'
+				),
+				$this->descuentos ,
+				array(
+					array('controller' => 'cliente', 'action' => 'editdescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente'] 
+					)
+				),
+				array('img/icons/edit.png" title="Editar descuento'),
+				'idDescuento','ASC','idDescuento','factura'); 
+			}
+			else
+			{
+				echo 'No hay descuentos definidos para este cliente. <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente']  )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>';
+			}
+			echo '</div>';
+		}
 	}?>
 	

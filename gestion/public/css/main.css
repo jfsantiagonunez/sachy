@@ -551,7 +551,7 @@ table.dbtableref td{
 }
 
 
-div#widget_calidad, div#widget_color ,select#salida, select#descuento, input#cantidad{
+div#widget_calidad, div#widget_color ,select#salida, div#widget_descuento, input#cantidad{
 	margin:0;
 	font-size:0.9em;
 	padding-left: 0px;

@@ -31,6 +31,7 @@ class PruebaController extends BaseController
     
     public function indexAction()
     {
+    	return;
     	require_once(APPLICATION_PATH . '/forms/movimientoestricto.php');
 
 			$done = $this->getRequest()->getParam('Agregar');

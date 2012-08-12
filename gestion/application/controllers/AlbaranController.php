@@ -47,8 +47,6 @@ class AlbaranController extends BaseController
     	
     	$tipos = array('0'=>'salida','1'=>'entrada');  	
     	$this->view->selectEntrada = $this->generateSelect( 'entrada','entrada' ,$tipos , '0' );
-    	//require_once(APPLICATION_PATH . '/forms/albaran.php');
-    	//$this->view->formalbaran = new Form_Albaran();
     	
        	if($this->getRequest()->isPost())
        	{
@@ -167,7 +165,7 @@ class AlbaranController extends BaseController
     }
     
 	
-	public function createForm($tableid,$idValue,$fk,$fkvalue)
+	/*public function createForm($tableid,$idValue,$fk,$fkvalue)
 	{
 		if ($tableid == 'idMovimiento')
 		{
@@ -219,7 +217,7 @@ class AlbaranController extends BaseController
 			
 			return $form;
 		}
-	}
+	}*/
 	
 	public function editAction()
 	{
@@ -229,62 +227,7 @@ class AlbaranController extends BaseController
 					'default', true);
 	}
 	
-	public function nuevoalbaranAction2()
-	{
-		$this->view->titleView='Creando Albaran';
-		$this->view->subtitleView = 'Introducir Referencias';
 
-
-		if($this->getRequest()->isPost())
-       	{
-       		$data = $this->getRequest()->getPost();
-    		
-			// Determinar siguiente paso en funcion del numero de clientes encontrados.
-			
-			if (isset($data['cliente']))
-			{
-				$this->view->entrada = $data['entrada'];
-       			$this->view->idDeposito = $data['idDeposito'];
-       		
-				// Viene de Nuevo Albaran en Albaran/Index
-    			$this->view->clientes = $this->modelCliente->query($this->modelCliente->getTableId(),$data['cliente']);
-    		
-    			$countclientes = count($this->view->clientes);
-    			if ( ( $countclientes == 0 ) || (!isset($this->view->clientes)))
-    			{
-    				$this->view->subtitleView = 'Cliente No encontrado. Refina tu busqueda';
-    			} 
-    			else if ($countclientes > 1 )
-    			{
-    				$this->view->subtitleView = 'Muchos clientes encontrados. Selecciona uno';
-    			}
-    			else if ($countclientes == 1 )
-    			{
-    				$this->view->cliente = $this->view->clientes[0];
-    				$idCliente = $this->view->cliente['idCliente'];
-    				$datalbaran = array('idCliente'=>$idCliente,'entrada'=>$data['entrada'],'idDeposito'=>$data['idDeposito']);
-    				return $this->generateAlbaran($datalbaran);
-    				
-    			}
-    			return;
-			}
-       	}
-       	else
-       	{
-       		
-       		// Get movimientos
-       		$idAlbaran = $this->getRequest()->getParam('idAlbaran');
-       		
-       		$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
-       		$this->view->cliente = $this->modelCliente->queryID($this->modelCliente->getTableId(),$albaran['idCliente']);
-       		$this->view->albaran = $albaran ;
-       		$this->view->entradatext = 'salida';
-       		if ( $albaran['entrada'] == '1' )
-       			$this->view->entradatext = 'entrada';
-       		$this->view->tienda = $this->modelCatalogo->getTienda($albaran['idDeposito']);
-       		$this->view->movimientos = $this->model->queryMovimientos('idAlbaran',$idAlbaran);
-       	}
-	}
     
 	public function nuevoalbaranAction()
 	{
@@ -320,6 +263,7 @@ class AlbaranController extends BaseController
     				$this->view->cliente = $this->view->clientes[0];
     				$idCliente = $this->view->cliente['idCliente'];
     				$datalbaran = array('idCliente'=>$idCliente,'entrada'=>$data['entrada'],'idDeposito'=>$data['idDeposito']);
+    				
     				return $this->generateAlbaran($datalbaran);
     				
     			}
@@ -355,8 +299,8 @@ class AlbaranController extends BaseController
     		$this->view->paramspartial['entrada'] = $albaran['entrada'];
     		$this->view->paramspartial['idCliente'] = $albaran['idCliente'];
 
-			$this->listmovimientosreturn($albaran->toArray());
-			       		
+			$this->view->listadodiv= $this->listmovimientosreturn($albaran->toArray());
+			$this->view->descuentos = $this->modelCliente->queryFK('TblDescuento',$albaran['idCliente']);
        	}
 	}
 	public function elegirclienteAction()
@@ -374,7 +318,8 @@ class AlbaranController extends BaseController
 		if ($cliente['numrefproveedor']!=null)
 		{
 			$datalbaran['comentario']='Numero Proveedor : '.$cliente['numrefproveedor'];
-		}		
+		}
+		$datalbaran['descuentoaplicartotal']='0';		
     	$albaran = $this->model->createAlbaran($datalbaran);
     	
     	if (isset($albaran))
@@ -427,10 +372,11 @@ class AlbaranController extends BaseController
 	public function finalizardocumentoAction()
 	{
 		$finaldocumento = $this->getRequest()->getParam('finaldocumento');
+		
 		switch ($finaldocumento)
 		{
 			case 'Salir':
-				$this->salirAction();
+				$this->salirAccion('albaran');
 				break;
 			case 'Solo Guardar':
 				return $this->gestionaralbaran(true,false);
@@ -450,17 +396,11 @@ class AlbaranController extends BaseController
 		}	
 	}
 
-	public function salirAction()
-	{
-		return  $this->_helper->redirector->gotoRoute(array(
-					'controller' => 'albaran' , 'action' => 'index' ),
-					'default', true);
-	}
 	
 	public function gestionaralbaran($contabilizarstock,$imprimir)
 	{
 		$idAlbaran = $this->getRequest()->getParam('idAlbaran');
-		
+
 		if (isset($idAlbaran))
 		{
 			$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
@@ -471,7 +411,10 @@ class AlbaranController extends BaseController
 			// Si el estado no es terminado, ignoramos la accion y lo registramos en el stock, ANYWAY
 			if ($estado == '0')
 			{
+				$albaran['descuentoaplicartotal']=$this->getRequest()->getParam('descuento');
 				$this->model->registrarStock($idAlbaran);
+				$this->model->contabilizarObjeto('idAlbaran',$albaran,$idAlbaran);
+				
 			}
 			
 			if ( $imprimir )
@@ -481,7 +424,7 @@ class AlbaranController extends BaseController
 			
 		}
 		
-		$this->salirAction();	
+		$this->salirAccion('albaran');	
 	}
 	
 	
@@ -529,7 +472,7 @@ class AlbaranController extends BaseController
  
     			}
     		}
-    		$this->salirAction();
+    		$this->salirAccion('albaran');
        	}
        	
     }
@@ -549,7 +492,7 @@ class AlbaranController extends BaseController
     				
     				return $this->generateAlbaran($datalbaran);						
     		}
-    		$this->salirAction();
+    		$this->salirAccion('albaran');
        	}
        	
     }
@@ -591,6 +534,7 @@ class AlbaranController extends BaseController
 			$this->imprimirCabeceraAlbaran($albaran,$cliente,$page);
 			$this->imprimirMovimientos($albaran,$cliente,'idAlbaran',$page,$pdf);
 			//$this->imprimirPaginaReferencia($page);
+			// $this->imprimirValoracionAlbaran($albaran); Esto es imprimido desde imprimirMovimientos
 			$this->view->pdfData = $pdf->render(); 
 			$this->view->numeroalbaran = $albaran['numeroalbaran'];	
 			
@@ -625,6 +569,27 @@ class AlbaranController extends BaseController
 		}
 
 	
-		
+		public function imprimirValoracionAlbaran($documento,$page,$sy)
+		{
+			$sx = 50;
+			$page->drawText("------------------------------------------------------------------------------------",$sx,$sy,'UTF-8');
+			$sy -=12;
+			$page->drawText("Bruto",$sx,$sy,'UTF-8');
+			$page->drawText("%",125,$sy,'UTF-8');
+			$page->drawText("Descuento",180,$sy,'UTF-8');
+			$page->drawText("Base Imponible",250,$sy,'UTF-8');
+			$page->drawText("Iva %",350,$sy,'UTF-8');
+			$page->drawText("Total Iva",400,$sy,'UTF-8');
+			$page->drawText("Total",500,$sy,'UTF-8');	
+			
+			$sy -=12;
+			$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
+			$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']).' %',125,$sy,'UTF-8');
+			$page->drawText(sprintf("%5.02f",$documento['descuento']),180,$sy,'UTF-8');
+			$page->drawText(sprintf("%6.02f",$documento['baseimponible']),250,$sy,'UTF-8');
+			$page->drawText(sprintf("%2.0f",$documento['tipoiva']).' %',350,$sy,'UTF-8');
+			$page->drawText(sprintf("%5.02f",$documento['iva']),400,$sy,'UTF-8');
+			$page->drawText(sprintf("%6.02f",$documento['total']),500,$sy,'UTF-8');		
+		}
 }
 ?>

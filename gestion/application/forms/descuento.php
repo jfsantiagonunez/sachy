@@ -11,13 +11,31 @@
 					'required' => true
 			));
 			
-			$this->addElement('text', 'descripcion', array(
-					'label' => 'Indicar a que calidades es aplicable',
+			
+			$list = array();	
+			$list['0'] = 'Toda Factura';
+			$list['1'] = 'Por Calidad';
+			$list['2'] = 'Otras Calidades';
+				
+			$this->addElement('select','tipoDescuento', array(
+					'label' => 'Descuentos',
+					'multiOptions'             => $list,
+    				'required'                 => true,
+    				'registerInArrayValidator' => false)
+			);
+			
+			$this->addElement('text', 'calidad', array(
+					'label' => 'Calidad (SOLO Para Descuentos Por Calidad)!!!',
 					'required' => false
 			));
 			
 			$this->addElement('submit', 'submit', array(
 					'label' => 'Save'
+			));
+			
+			$this->addElement('text', 'descripcion', array(
+					'label' => 'VIEJA REFERENCIA A DESCRIPCION . NO USAR<.SOLO PARA VISUALIZAR',
+					'required' => false
 			));
 		}
 	}

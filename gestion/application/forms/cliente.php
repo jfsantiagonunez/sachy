@@ -106,14 +106,7 @@ class HrSeparator extends Zend_Form_Decorator_HtmlTag
 					'label' => 'Condiciones Pago'
 			));
 			
-			$list = array();			
-			$this->addElement('select','idDescuento', array(
-					'label' => 'Descuento por defecto',
-					'multiOptions'             => $list,
-    				'required'                 => false,
-    				'registerInArrayValidator' => false)
-			);
-			
+		
 			require_once(APPLICATION_PATH . '/models/ModelBase.php');
 			$model = new ModelBase();
 			$listtipopago = $model->getTipoPago();
@@ -175,16 +168,7 @@ class HrSeparator extends Zend_Form_Decorator_HtmlTag
 		
 		public function initWith($idCliente)
 		{
-			require_once(APPLICATION_PATH . '/models/ModelCliente.php');
-			$model = new ModelCliente();
-			$list = $model->queryToDisplay('TblDescuento',$idCliente);
-			
-			$this->addElement('select','idDescuento', array(
-					'label' => 'Descuento por defecto',
-					'multiOptions'             => $list,
-    				'required'                 => false,
-    				'registerInArrayValidator' => false)
-			);
+
 		}
 		
 	}

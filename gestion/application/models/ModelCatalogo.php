@@ -99,6 +99,8 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 			
 		}
 		
+		
+		
 		public function queryAutocompletionTipoEnvase($keyword,$calidad,$color)
 		{
 			$select = $this->getTable('TblReferencia')->select()

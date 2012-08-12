@@ -7,12 +7,11 @@
 		echo $this->NoLoginMessage;
 	}
 	else
-	{
-		
+	{	
 		if (isset($this->cliente))
 		{
 			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;
-	margin: 5px 0 5px 0;"><h3><tr><td>' . $this->cliente['nombre'] . '</td><td align="right">' . $this->factura['numerofactura']  .'</td></tr></table></h3>';
+	margin: 5px 0 5px 0;"><h3><tr><td id="idCliente">'.$this->cliente['idCliente'].'</td><td>' . $this->cliente['nombre'] . '</td><td align="right">' . $this->factura['numerofactura']  .'</td></tr></table></h3>';
 			echo '<br/>';
 			if ($this->factura['estado']=='0')
 			{
@@ -33,6 +32,30 @@
 					echo '<td><input id="vencimiento" type="text" value="'. $this->factura['vencimiento'].'" name="vencimiento" style="width:110px" name="posterior" dojoType="dijit.form.DateTextBox" /></td>';
 				}
 				echo '<td><input type="submit" value="Cambiar"/></td></tr></table></form>';	
+				echo '<br/>';
+				if ( isset($this->descuentos) && ($this->descuentos->count()>0))
+				{
+					echo $this->table('Descuentos Cliente <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idFactura' => $this->factura['idFactura'],'idCliente' => $this->factura['idCliente']  )
+						, 'default', true).'" title="Agregar mas Descuentos"><img src="img/icons/add.png"/></a>',
+						array(	'descuento' => 'Descuento',
+							'tipoDescuento' => 'Tipo',
+							'descripcion' => 'Aplicable'),
+							$this->descuentos ,
+						array(
+							array('controller' => 'cliente', 'action' => 'editdescuento' , 
+									'idFactura' => $this->factura['idFactura'],
+									'idCliente' => $this->factura['idCliente'] 
+								)),
+						array('img/icons/edit.png" title="Editar descuento'),
+							'idDescuento','ASC','idDescuento','factura'); 
+				}
+				else
+				{
+					echo 'No hay descuentos definidos para este cliente. <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idFactura' => $this->factura['idFactura'],'idCliente' => $this->factura['idCliente']  )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>';
+				}
 			}
 			else
 			{
@@ -40,42 +63,21 @@
 				$dateprint= $date->toString('dd-MM-YYYY');
 				$vencimiento = new Zend_Date($this->factura['vencimiento']);
 				$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
-				echo '<table class="dbtableref"><tbody><tr><td>' .  $dateprint . '</td><td>'.$this->factura['condicionespago'].'</td><td>Vencimiento</td><td>'.$vencimientoprint.'</td></tr></tbody></table>';
+				echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody>';
+				echo '<tr><td>Fecha</td><td>' .  $dateprint . '</td><td>Vencimiento</td><td>'.$vencimientoprint.'</td></tr>';
+				echo '<tr><td>Condiciones Pago</td><td>'.$this->factura['condicionespago'].'</td></tr>';
+				echo '<tr><td>Bruto</td><td>'.$this->factura['bruto'].'</td><td>Base Imponible</td><td>'.$this->factura['baseimponible'].'</td></tr>';
+				echo '<tr><td>Descuento %</td><td>'.$this->factura['descuentoaplicartotal'].'</td><td>Descuento</td><td>'.$this->factura['descuento'].'</td></tr>';
+				echo '<tr><td>Iva</td><td>'.$this->factura['iva'].'</td><td>Total</td><td>'.$this->factura['total'].'</td></tr>';
+				echo '</tbody></table>';
 			}
-			echo '<br/>';
-			if ( isset($this->descuentos) && ($this->descuentos->count()>0))
-			{
-				echo $this->table('Descuentos Cliente <a href="'.$this->url(array('controller' => 'cliente', 
-						'action' => 'adddescuento' , 'idFactura' => $this->factura['idFactura'],'idCliente' => $this->factura['idCliente']  )
-						, 'default', true).'" title="Agregar mas Descuentos"><img src="img/icons/add.png"/></a>',
-				array(
-					'descuento' => 'Descuento',
-					'descripcion' => 'Aplicable'
-				),
-				$this->descuentos ,
-				array(
-					array('controller' => 'cliente', 'action' => 'editdescuento' , 'idFactura' => $this->factura['idFactura'],'idCliente' => $this->factura['idCliente'] 
-					)
-				),
-				array('img/icons/edit.png" title="Editar descuento'),
-				'idDescuento','ASC','idDescuento','factura'); 
-			}
-			else
-			{
-				echo 'No hay descuentos definidos para este cliente. <a href="'.$this->url(array('controller' => 'cliente', 
-						'action' => 'adddescuento' , 'idFactura' => $this->factura['idFactura'],'idCliente' => $this->factura['idCliente']  )
-						, 'default', true).'"><img src="img/icons/add.png"/></a>';
-			}
-			echo '<br/></div>';
+			
+			echo '</div>';
 		}
-		else
-		{
 
-		}
 		?>
 		<div id="subcontent">
 		
-
 		<?php 
 		if (isset($this->albarabesestafactura))
 		{
@@ -104,10 +106,10 @@
 		{
 			echo 'No hay albaranes includidos</h3>';
 		}
-		echo '<br/>';
+
 		if ($this->factura['estado']=='0')
 		{
-
+			echo '<br/>';
 			if ( isset($this->albaranespendientes)&&($this->albaranespendientes->count()>0))
 			{
 			echo $this->table('Albaranes Pendientes del mismo Cliente',
@@ -130,67 +132,16 @@
 			{
 				echo 'No hay mas albaranes Pendientes del mismo Cliente';
 			}
-			echo '<br/>';
-		}	
-		?>
-		</div>
-		
-		
-
-		<?php 
-		if (isset($this->factura))
-		{
-			if (isset($this->movimientos))
-			{
-				$tableview = $this->subtitleView;
-				if ($this->factura['estado'] == '0')
-				{
-					$tableview .= '<a title="Agregar referencia" href="'.$this->url(array('controller' => 'factura', 
-						'action' => 'addmovimiento' , 'idFactura' => $this->factura['idFactura'] )
-						, 'default', true).'"><img src="img/icons/add.png"/></a>';
-				}
-				$acciones = array();
-				$iconos = array();
-				if ($this->factura['estado']=='0')
-				{
-					$acciones = array(
-						array('controller' => 'factura', 'action' => 'editmovimiento','idFactura' => $this->factura['idFactura']),
-						array('controller' => 'factura', 'action' => 'deletemovimiento','idFactura' => $this->factura['idFactura']));
-					$iconos = array('img/icons/edit.png" title="Editar esta referencia',
-									'img/icons/delete.png" title="Eliminar esta referencia');
-				}
-				
-			echo $this->table($tableview ,
-				array(
-					'calidad' => 'Calidad',
-					'color' => 'Color',
-					'tipoenvase' => 'Env.',
-					'tcantidad' => '#',
-					'precio' => 'Euros',
-					'descuento' => '%',
-					'tprecio' => 'Valor',
-					'descripcion' => 'Descripcion'
-				),
-				$this->movimientos ,
-				$acciones,
-				$iconos,
-				'idMovimiento','ASC','idMovimiento'); 
-			}
-			?>	
-			<!-- Tabla para finalizar -->
-			<form method="post" id="finalizardocumento" action="<?php echo $this->url(array('controller' => 'factura', 'action' => 'finalizardocumento', 'idFactura' => $this->factura['idFactura']), 'default', true); ?>">			
-			<table align="center"><tbody><tr>
-			<?php if (isset($this->movimientos) && ($this->movimientos->count() > 0 ) && ( $this->factura['estado'] == '0' ) ) { ?>
-				<td><input type="submit" name="finaldocumento" value="Imprimir & Guardar"/></td>
-				<td><input type="submit" name="finaldocumento" value="Solo Guardar"/></td>
-			<?php } if ( $this->factura['estado'] == '1' ) {?>
-				<td><input type="submit" name="finaldocumento" value="Recalcular & Imprimir"/></td>
-				<td><input type="submit" name="finaldocumento" value="Volver a Imprimir"/></td>
-			<?php 	}	?>	
-			<td><input type="submit" name="finaldocumento" value="Salir"/></td>
-			</tr></tbody></table></form>
-			<?php 
-			
+			echo '<br/></div>';
+			echo $this->partial('base/nuevomovimiento.phtml',$this->paramspartial);
 		}
-	}?>
-	
+		else
+		{
+			echo '</div>';
+		}
+				 
+		echo '<div id="listadomovimientos">'.$this->listadodiv.'</div>';
+	}
+?>
+
+
