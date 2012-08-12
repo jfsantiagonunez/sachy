@@ -1,4 +1,30 @@
-		
+<script type='text/javascript'>
+function calculadescuento() {
+    var original = parseFloat(dojo.byId("preciooriginal").value);
+    var preciofinal = parseFloat(dojo.byId("preciofinal").value);
+    var descuentoelem = dojo.byId("descuento");
+
+    if ((original==0) || (preciofinal==0))
+    {
+        return;
+    }
+    if (original<preciofinal)
+    {
+    	dojo.byId("preciooriginal").value=0;
+        dojo.byId("preciofinal").value=0;
+
+        alert('El precio final es mayor que el original');
+
+        return;
+    }
+   
+   descuentoelem.value = Math.round((original-preciofinal)*10000/original)/100;
+   dojo.byId("preciooriginal").value=0;
+   dojo.byId("preciofinal").value=0;
+
+}
+
+</script>	
 			<div id="login">
 			<?php
 		if(isset($this->error)){
@@ -9,7 +35,14 @@
 				<p>Editar Descuento</p>
 				<p style="clear:both"></p>
 			
-				<?php echo $this->form ?>
-				
+				<?php echo $this->form; 
+echo '<br/>Ayuda Calculo Descuento:<br/>';
+echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody><tr>';
+echo '<td>Precio Original:</td>';
+echo '<td><input id="preciooriginal" type="text" name="preciooriginal" onfocus="javascript:this.value=\'\'" style="width:50px;"/></td>';
+echo '<td>Precio Final:</td>';
+echo '<td><input id="preciofinal" type="text" name="preciofinal" onfocus="javascript:this.value=\'\'" style="width:50px;"/></td>';
+echo '<td><input type="submit" value="Salvar Descuento" onclick="calculadescuento();" ></td></tr></tbody></table>';
+	?>			
 			</div>
 			
