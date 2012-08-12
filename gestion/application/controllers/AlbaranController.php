@@ -165,7 +165,7 @@ class AlbaranController extends BaseController
     }
     
 	
-	/*public function createForm($tableid,$idValue,$fk,$fkvalue)
+	public function createForm($tableid,$idValue,$fk,$fkvalue)
 	{
 		if ($tableid == 'idMovimiento')
 		{
@@ -217,7 +217,7 @@ class AlbaranController extends BaseController
 			
 			return $form;
 		}
-	}*/
+	}
 	
 	public function editAction()
 	{
