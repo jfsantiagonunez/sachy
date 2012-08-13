@@ -83,7 +83,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 					->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblAlbaran.idCliente AND '. $where , array('nombre') )
 					->join(array('deps' => 'TblStockDeposito'), 'deps.idDeposito = TblAlbaran.idDeposito ', array('tienda') )
 					->joinleft(array('facturas' => 'TblFactura'), 'facturas.idFactura = TblAlbaran.idFactura' , array('numerofactura'))
-					->order('TblAlbaran.fecha DESC')
+					->order('TblAlbaran.idAlbaran DESC')
 					->setIntegrityCheck(false);
 					
 			return $this->getTable($tableId)->fetchAll($query);	
@@ -100,7 +100,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 					->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblAlbaran.idCliente ', array('nombre') )
 					->join(array('deps' => 'TblStockDeposito'), 'deps.idDeposito = TblAlbaran.idDeposito ', array('tienda') )
 					->joinleft(array('facturas' => 'TblFactura'), 'facturas.idFactura = TblAlbaran.idFactura' , array('numerofactura'))
-					->order('TblAlbaran.fecha DESC')
+					->order('TblAlbaran.idAlbaran DESC')
 					->limit(20)
 					->setIntegrityCheck(false);
 			return $this->getTable($tableId)->fetchAll($query);	
