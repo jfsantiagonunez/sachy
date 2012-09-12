@@ -116,11 +116,9 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 		{
 			$query = $this->getTable('TblReferencia')
 					->select()
-					->from(array('ref' => 'TblReferencia' ), 
-							array('calidad','color','tipoenvase','precio','idReferencia' ) ) 
+					->from(array('ref' => 'TblReferencia' ) ) 
 					->join(array('calidad' => 'TblCalidad'), 
 							'ref.calidad = calidad.calidad AND ( calidad.calidad like \'%' . $keyword . '%\' OR calidad.descripcion like \'%' . $keyword . '%\' ) ' , array('calidad'))
-					->group('calidad.calidad')
 					->order(array('ref.calidad', 'ref.color' , 'ref.tipoenvase'))
 					->setIntegrityCheck(false);
 			return $this->getTable('TblReferencia')->fetchAll($query);	
