@@ -71,7 +71,7 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 					->select()
 					->from(array('TblCalidad' => 'TblCalidad' ), 
 							array('calidad','descripcion' ) ) 
-					->join(array('marca' => 'TblMarca'), 'marca.idMarca = TblCalidad.idMarca AND TblCalidad.calidad like \'%' . $keyword . '%\'', array('marca') )
+					->join(array('marca' => 'TblMarca'), 'marca.idMarca = TblCalidad.idMarca AND ( TblCalidad.calidad like \'%' . $keyword . '%\' OR TblCalidad.descripcion like \'%' . $keyword . '%\' ) ', array('marca') )
 					->join(array('categoria' => 'TblCategoriaProducto'), 'categoria.idCategoria = TblCalidad.idCategoria' , array('categoria'))
 					->group('TblCalidad.calidad')
 					->setIntegrityCheck(false);
@@ -116,8 +116,13 @@ require_once(APPLICATION_PATH . '/models/ModelBase.php');
 		{
 			$query = $this->getTable('TblReferencia')
 					->select()
-					->where('calidad like \'%' . $keyword . '%\'')
-					->order(array('calidad', 'color' , 'tipoenvase'));
+					->from(array('ref' => 'TblReferencia' ), 
+							array('calidad','color','tipoenvase','precio','idReferencia' ) ) 
+					->join(array('calidad' => 'TblCalidad'), 
+							'ref.calidad = calidad.calidad AND ( calidad.calidad like \'%' . $keyword . '%\' OR calidad.descripcion like \'%' . $keyword . '%\' ) ' , array('calidad'))
+					->group('calidad.calidad')
+					->order(array('ref.calidad', 'ref.color' , 'ref.tipoenvase'))
+					->setIntegrityCheck(false);
 			return $this->getTable('TblReferencia')->fetchAll($query);	
 
 		}
