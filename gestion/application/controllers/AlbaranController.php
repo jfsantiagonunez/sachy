@@ -45,6 +45,7 @@ class AlbaranController extends BaseController
     	$this->view->selectTienda = $this->generateSelect( 'idDeposito','idDeposito' , $depositos , $this->defaultDeposito, 'tienda');
     	$this->view->selectTiendaEntrada = $this->generateSelect( 'idDepositoEntrada','idDeposito' , $depositos , $this->defaultDeposito, 'tienda');
     	
+    	$this->view->imprimirId = 
     	$tipos = array('0'=>'salida','1'=>'entrada');  	
     	$this->view->selectEntrada = $this->generateSelect( 'entrada','entrada' ,$tipos , '0' );
     	
@@ -97,6 +98,7 @@ class AlbaranController extends BaseController
     	}
     	else
     	{
+    		$this->view->imprimirId = $this->getRequest()->getParam('imprimirId');
     		$value = $this->getRequest()->getParam('busqueda');
     		if (isset($value) && ( $value != 'Numero Albaran o Nombre Cliente'))
     		{
@@ -417,17 +419,28 @@ class AlbaranController extends BaseController
 				
 			}
 			
-			if ( $imprimir )
-			{
-				return $this->imprimirAlbaran($albaran);
-			}
+			//if ( $imprimir )
+			//{
+			//	return $this->imprimirAlbaran($albaran);
+			//}
 			
 		}
 		
-		$this->salirAccion('albaran');	
+		$this->salirAccion('albaran',$imprimir,$idAlbaran);	
 	}
 	
-	
+	public function imprimirAction()
+	{
+		$idAlbaran = $this->getRequest()->getParam('idAlbaran');
+
+		if (isset($idAlbaran))
+		{
+			$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
+			return $this->imprimirAlbaran($albaran);
+		}
+		echo "NINGUN ALBARAN QUE IMPRIMIR";
+		return ;
+	}
 
 	
 	

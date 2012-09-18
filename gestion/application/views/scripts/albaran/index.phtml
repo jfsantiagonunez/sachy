@@ -7,6 +7,22 @@
 	else
 	{
 		?>
+		<script> 
+		function ventanaSecundaria (URL){ 
+			if ( URL === "")
+				return false;
+   			printwindow=window.open(URL,"Imprimir Albaran","width=600,height=400,scrollbars=NO") 
+   			
+   			printwindow.focus();
+		} 
+		</script> 
+		
+		<?php 
+			if (isset($this->imprimirId))
+			{
+				echo '<script>ventanaSecundaria("http://'.$_SERVER['SERVER_NAME'].$this->baseUrl().'index.php/albaran/imprimir/idAlbaran/'.$this->imprimirId.'")</script>';
+			}
+		?>
 		<div id="subcontent">
 		<h3>Nuevo Albaran</h3>
 		<form method="post" id="nuevoalbaranquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'albaran', 'action' => 'index'), 'default', true) ?>">			

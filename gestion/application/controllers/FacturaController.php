@@ -78,6 +78,7 @@ class FacturaController extends BaseController
     	else
     	{
     		$value = $this->getRequest()->getParam('busqueda');
+    		$this->view->imprimirId = $this->getRequest()->getParam('imprimirId');
     		if (isset($value) && ( $value != 'Numero factura o Nombre Cliente'))
     		{
     			$this->view->tituloBusqueda .=  ' [' . $value .']';
@@ -207,30 +208,6 @@ class FacturaController extends BaseController
 					'default', true);
 	}
 	
-	public function nuevofactura2Action()
-	{
-		$this->view->titleView='Creando Factura';
-		$this->view->subtitleView = 'Revisar Referencias';
-		
-
-       	// Get movimientos
-       	$idFactura = $this->getRequest()->getParam('idFactura');
-       	
-       	$factura = $this->model->queryID('TblFactura',$idFactura);
-       	$this->view->cliente = $this->modelCliente->queryID($this->modelCliente->getTableId(),$factura['idCliente']);
-       	$this->view->factura = $factura ;
-
-       	$this->view->movimientos = $this->model->queryMovimientos('idFactura',$idFactura);
-       	$this->view->albaranespendientes = $this->model->queryAlbaranesPendientes($factura['idCliente']);
-       	$this->view->albarabesestafactura = $this->model->queryAlbaranesPorFactura($factura['idFactura']);
-       	$this->view->descuentos = $this->modelCliente->queryFK('TblDescuento',$factura['idCliente']);
-
-       	$listtipopago = $this->model->getTipoPago();
-		$vencimientos = $this->model->getDiasPago();
-		
-		$this->view->selectTipopago = $this->generateSelect( 'condicionespago','condicionespago' , $listtipopago , $factura['condicionespago']);
-       	
-	}
     
 	
 	public function nuevofacturaAction()
@@ -472,14 +449,28 @@ class FacturaController extends BaseController
 				$this->model->contabilizarObjeto('idFactura',$factura,$idFactura);
 			}
 			
-			if ( $imprimir )
-			{
-				return $this->imprimirFactura($factura);
-			}
+			//if ( $imprimir )
+			//{
+			//	return $this->imprimirFactura($factura);
+			//}
 			
 		}
 		
-		$this->salirAccion('factura');	
+		$this->salirAccion('factura',$imprimir,$idFactura);	
+	}
+	
+	
+	public function imprimirAction()
+	{
+		$idFactura = $this->getRequest()->getParam('idFactura');
+
+		if (isset($idFactura))
+		{
+			$factura = $this->model->queryID('TblFactura',$idFactura);
+			return $this->imprimirFactura($factura);
+		}
+		echo "NINGUNA FACTURA QUE IMPRIMIR";
+		return ;
 	}
 	
 	

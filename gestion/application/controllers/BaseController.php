@@ -159,12 +159,22 @@ class BaseController extends Zend_Controller_Action
 		}
     }
     
-    public function salirAccion($controller)
+    public function salirAccion($controller,$imprimir=false,$idObject='')
     {
     	$this->salvarDescuento();
-    	return  $this->_helper->redirector->gotoRoute(array(
+    	
+    	if ($imprimir)
+    	{
+    		return  $this->_helper->redirector->gotoRoute(array(
+					'controller' => $controller , 'action' => 'index' , 'imprimirId' => $idObject),
+					'default', true);
+    	}
+    	else
+    	{
+    		return  $this->_helper->redirector->gotoRoute(array(
 					'controller' => $controller , 'action' => 'index' ),
 					'default', true);
+    	}
     }
      
     public function salvarDescuento()

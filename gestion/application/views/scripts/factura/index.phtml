@@ -7,6 +7,24 @@
 	else
 	{
 		?>
+		
+		<script> 
+		function ventanaSecundaria (URL){ 
+			if ( URL === "")
+				return false;
+   			printwindow=window.open(URL,"Imprimir Factura","width=600,height=400,scrollbars=NO") 
+   			
+   			printwindow.focus();
+		} 
+		</script> 
+		
+		<?php 
+			if (isset($this->imprimirId))
+			{
+				echo '<script>ventanaSecundaria("http://'.$_SERVER['SERVER_NAME'].$this->baseUrl().'index.php/factura/imprimir/idFactura/'.$this->imprimirId.'")</script>';
+			}
+		?>
+		
 		<div id="subcontent">
 		<h3>Nueva Factura</h3>
 		<form method="post" id="nuevofacturaquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'factura', 'action' => 'index'), 'default', true) ?>">			
