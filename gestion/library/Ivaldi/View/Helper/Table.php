@@ -38,10 +38,7 @@ class Ivaldi_View_Helper_Table {
 	array $img=array(), $sort='', $order='ASC', $id='id', $controller ='' ) {
 			
 		$url = 'http://'.$_SERVER['SERVER_NAME'].'/gestion/public/';
-		if ($_SERVER['SERVER_NAME']!='localhost')
-		{
-			$url .= 'index.php/';
-		}
+
 		/* get stuff from the url */
 		$req = Zend_Controller_Front::getInstance()->getRequest();
 		/* page we are on */
