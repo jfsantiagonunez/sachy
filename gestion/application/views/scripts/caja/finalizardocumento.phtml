@@ -1,0 +1,7 @@
+<?php
+
+	header("Content-Disposition: inline; filename=ventacaja_".$this->numerofactura.".pdf"); 
+	header("Content-type: application/x-pdf"); 
+	echo $this->pdfData; 
+
+?>

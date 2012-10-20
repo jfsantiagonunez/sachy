@@ -1,0 +1,61 @@
+
+
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		
+		if (isset($this->cliente))
+		{
+			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;margin: 5px 0 5px 0;"><h3><tr>
+			<td id="idCliente">'.$this->cliente['idCliente'].'</td><td>' . $this->cliente['nombre'] . '</td><td align="center">'.$this->entradatext.'-'.$this->tienda.'</td><td align="right">' . $this->albaran['numeroalbaran']  .'</td></tr></table></h3></div>';        
+		}
+					
+		if (isset($this->albaran))
+		{
+			if ($this->albaran['estado'] == '0')
+			{
+				echo $this->partial('base/nuevomovimiento.phtml',$this->paramspartial);
+			}
+			else
+			{
+				//echo '<div id="errorajax"></div>';
+			}
+		 }
+		 echo '<div id="listadomovimientos">'.$this->listadodiv.'</div>';
+		 
+		 if ($this->albaran['estado']=='0')
+		{
+			 echo '<div id="subcontent">'; 	
+			if ( isset($this->descuentos) && ($this->descuentos->count()>0))
+			{
+				echo $this->table('Descuentos Cliente <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente']  )
+						, 'default', true).'" title="Agregar mas Descuentos"><img src="img/icons/add.png"/></a>',
+				array(
+					'descuento' => 'Descuento',
+					'tipoDescuento' => 'Tipo',
+					'descripcion' => 'Aplicable'
+				),
+				$this->descuentos ,
+				array(
+					array('controller' => 'cliente', 'action' => 'editdescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente'] 
+					)
+				),
+				array('img/icons/edit.png" title="Editar descuento'),
+				'idDescuento','ASC','idDescuento','caja'); 
+			}
+			else
+			{
+				echo 'No hay descuentos definidos para este cliente. <a href="'.$this->url(array('controller' => 'cliente', 
+						'action' => 'adddescuento' , 'idAlbaran' => $this->albaran['idAlbaran'],'idCliente' => $this->albaran['idCliente']  )
+						, 'default', true).'"><img src="img/icons/add.png"/></a>';
+			}
+			echo '</div>';
+		}
+	}?>
+	

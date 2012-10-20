@@ -1,0 +1,99 @@
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+		?>
+		<script> 
+		function ventanaSecundaria (URL){ 
+			if ( URL === "")
+				return false;
+   			printwindow=window.open(URL,"Imprimir Albaran","width=600,height=400,scrollbars=NO") 
+   			
+   			printwindow.focus();
+		} 
+		</script> 
+		
+		<?php 
+			if (isset($this->imprimirId))
+			{
+				// Observese el hack tremendo de pedir que imprima la factura. Esto redirige a la factura y evitamos el codigo de impresion en caja controller
+				echo '<script>ventanaSecundaria("http://'.$_SERVER['SERVER_NAME'].$this->baseUrl().'index.php/factura/imprimir/idFactura/'.$this->imprimirId.'")</script>';
+			}
+			$auth = Zend_Auth::getInstance();
+			if ($auth->hasIdentity() && ( $auth->getIdentity()->admin == '1' ) ) {
+		?>
+			<div id="subcontent">		
+			<form method="post" id="seleccioncajaquery" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'caja', 'action' => 'index'), 'default', true) ?>">	
+			<p> Caja 
+			<?php if (isset($this->selectTienda)) echo $this->selectTienda; ?>
+			<input type="submit" name="cajaseleccionada" value="Selecciona Caja"/></p>
+			</form></div>
+		<?php }?>
+		<div id="subcontent">	
+		<h3>Nueva Venta Caja</h3>
+		<form method="post" id="nuevaventacaja" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'caja', 'action' => 'index', 'idDeposito' => $this->idDeposito ), 'default', true) ?>">			
+		<p>Ticket Compra <input type="submit" name="nuevaventacaja" value="Nueva Venta"/></p>
+		</form>
+		<br/>
+		
+		<form method="post" id="clientenuevaventacaja" enctype="application/x-www-form-urlencoded" action="<?php echo $this->url(array('controller' => 'caja', 'action' => 'index', 'idDeposito' => $this->idDeposito ), 'default', true) ?>">			
+		<p>Ticket Cliente				
+		<input type="text" name="cliente" id="cliente" value="Nombre Cliente" style="width:200px" onfocus="javascript:this.value=''" onkeypress="if (event.keyCode == 13) document.getElementById('nuevoalbaranquery').submit();" />
+		<input type="submit" name="clientenuevaventacaja" value="Venta Cliente"/></p>
+		</form>
+		<?php 			
+			echo '<h2>' . $this->subtitleView. '</h2><br/>';
+			
+			$countclientes = count($this->clientes);
+	 		if ($countclientes > 1 )
+    		{
+ 
+				echo $this->table('Clientes',
+					array(
+					'nombre' => 'Nombre',
+					'nif' => 'NIF'
+					),
+					$this->clientes ,
+					array(
+						array('controller' => 'caja', 'action' => 'elegircliente', 'entrada' => $this->entrada, 'idDeposito' => $this->idDeposito)
+					),
+					array('img/icons/cliente.png'),
+					'idCliente','ASC','idCliente'); 
+				echo '<br/>';
+			}
+
+		if (isset($this->messages[0])) echo( $this->messages[0]);
+		?>
+	
+		</div>
+		<br/>
+		<div id="subcontent">
+		<?php 
+		if (isset($this->operacionescaja))
+		{
+			echo $this->table($this->tituloBusqueda,
+				array(
+					'estado' => 'Acc',
+					'numerofactura' => 'Venta',
+					'fecha' => 'Fecha',
+					'nombre' => 'Cliente',
+					'entrada' => 'E/S',
+					'total' => 'Total'
+				),
+				$this->operacionescaja ,
+				array(
+						array('controller' => 'cliente', 'action' => 'index' )
+					),
+				array('img/icons/cliente.png'),
+				'idTblVentaCaja','ASC','idTblVentaCaja','caja'
+				); 
+			echo '<br/>';
+		}
+		echo '</div>';
+	}
+?>
+	
