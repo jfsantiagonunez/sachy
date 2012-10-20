@@ -40,6 +40,10 @@
 	}
 	
 	$url = 'http://'.$_SERVER['SERVER_NAME'].'/gestion/public/';
+	if ($_SERVER['SERVER_NAME']!='localhost')
+	{
+		$url .= 'index.php/';
+	}
 	echo '<div id="subcontent">';
 	echo '<form method="post" action="'.$url.$this->escape($this->controller).'/finalizardocumento/'.
 										$this->escape($this->idKey).'/'.$this->escape($this->idkeyvalue).
