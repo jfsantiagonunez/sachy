@@ -162,7 +162,7 @@ class BaseController extends Zend_Controller_Action
     public function salirAccion($controller,$imprimir=false,$idObject='')
     {
     	$this->salvarDescuento();
-    	
+
     	if ($imprimir)
     	{
     		return  $this->_helper->redirector->gotoRoute(array(
@@ -179,9 +179,14 @@ class BaseController extends Zend_Controller_Action
      
     public function salvarDescuento()
     {
-    	$idKey=$this->getRequest()->getParam($this->_idkey);
+    	$key=$this->_idkey;
+    	if ($this->_idkey == 'idTblVentaCaja')
+    	{
+    		$key='idAlbaran';
+    	}
+    	$idKey=$this->getRequest()->getParam($key);
 
-    	$objeto=$this->model->queryID($this->_idkey,$idKey);
+    	$objeto=$this->model->queryID($key,$idKey);
     	if ($objeto['estado']=='0')
     	{
     		$descuento = $this->getRequest()->getParam('descuento');
@@ -375,9 +380,20 @@ class BaseController extends Zend_Controller_Action
 				$this->view->idKey = 'idFactura';
 				$tabla = 'TblFactura';
 			}
+			else
+			{
+				// Checkear si el albaran es parte de una venta caja
+				// entonces el controller es 'caja'
+				$this->view->idkeyvalue=$data[$this->view->idKey];
+				$ventacaja = $this->model->queryFK('TblVentaCaja',$this->view->idkeyvalue);
+				if (count($ventacaja)>0)
+				{
+					$this->view->controller = 'caja';
+				}
+				
+			}
 			$this->view->idkeyvalue=$data[$this->view->idKey];
 			$this->view->objeto = $this->model->queryID($tabla,$this->view->idkeyvalue);
-			
 			 
 			$this->view->movimientos = $this->model->queryMovimientos($this->view->idKey,$this->view->idkeyvalue);
 			

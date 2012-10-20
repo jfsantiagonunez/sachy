@@ -68,7 +68,7 @@ class FacturaController extends BaseController
     				$this->view->cliente = $this->view->clientes[0];
     				$idCliente = $this->view->cliente['idCliente'];
     				$datafactura = array('idCliente'=>$idCliente);
-    				return $this->generateFactura($datafactura);
+    				return $this->generatefacturaproxy($datafactura);
     				
     			}
     			return;
@@ -250,7 +250,7 @@ class FacturaController extends BaseController
 		$idCliente = $this->getRequest()->getParam('idCliente');
 
 		$datfactura = array('idCliente'=>$idCliente);
-		return $this->generatefactura($datfactura);
+		return $this->generatefacturaproxy($datfactura);
 	}
 	
 	public function elegiralbaranAction()
@@ -261,28 +261,19 @@ class FacturaController extends BaseController
 							'idCliente'=>$albaran['idCliente'],
 							'descuentoaplicartotal'=>$albaran['descuentoaplicartotal']);
 				
-		return $this->generatefactura($datfactura,$albaran);
+		return $this->generatefacturaproxy($datfactura,$albaran);
 	}
 	
-	public function generatefactura($datfactura)
-	{			
-		$idCliente = $datfactura['idCliente'];
-		$cliente = $this->modelCliente->queryID('TblCliente',$idCliente);
+	public function generatefacturaproxy($datfactura)
+	{
+		$idFactura = $this->model->generatefactura($datfactura);
 		
-    	$idFactura = $this->model->createfactura($datfactura,$cliente);
-    	
-    	if ($idFactura>'0')
-    	{
-    		if (isset($datfactura['idAlbaran']))
-    		{
-    			$this->asignarfacturaalbaran($idFactura,$datfactura['idAlbaran']);
-    		}
-    		//echo 'Factura' . $idFactura;
+		if ($idFactura > 0)
+		{
     		return $this->_helper->redirector->gotoRoute(array(
-					'controller' => 'factura' , 'action' => 'nuevofactura', 'idFactura' => $idFactura ),
-					'default', true);
-			
-    	}
+			'controller' => 'factura' , 'action' => 'nuevofactura', 'idFactura' => $idFactura ),
+			'default', true);
+		}
 	}
 	
 	
@@ -293,7 +284,7 @@ class FacturaController extends BaseController
 		
 		if (isset($idAlbaran) && isset($idFactura))
 		{
-			$this->asignarfacturaalbaran($idFactura,$idAlbaran);
+			$this->model->asignarfacturaalbaran($idFactura,$idAlbaran);
 		
 			return $this->_helper->redirector->gotoRoute(array(
 					'controller' => 'factura' , 'action' => 'nuevofactura', 'idFactura' => $idFactura ),
@@ -344,18 +335,7 @@ class FacturaController extends BaseController
     }
 	
 	
-	public function asignarfacturaalbaran($idFactura,$idAlbaran)
-	{
-		// Registrar albaran
-		$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
-		$albaran['idFactura'] = $idFactura;	
-		$albaran->save();
-		//$descuento = $this->modelCliente->getDefaultDescuento($albaran['idCliente']);
-		//echo $descuento;
-		//Registrar movimientos
-		$res = $this->model->updateMovimientosConFactura($idFactura,$idAlbaran,$descuento);
-		
-	}
+
 	
 	
 	public function addmovimientoAction()

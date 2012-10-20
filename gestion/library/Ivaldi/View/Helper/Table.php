@@ -200,7 +200,40 @@ function deleteajax() {
 					}
 					else 
 					{
-						$res .= '<td>' . $entry[$dbname] . "</td>\n";
+						if($dbname == 'entrada') {
+							if($entry[$dbname] == 0) {
+								// Salida
+								$res .= '<td> <img src="img/icons/salida.png" class="logo" align="top"/> </td>';
+							} else if($entry[$dbname] == 1) {
+								$res .= '<td> <img src="img/icons/entrada.png" class="logo" align="top"/> </td>';
+							} else {
+								$res .= '<td>Error</td>';
+							}
+						}
+						else if($dbname == 'estado') {
+							$theUrl ='';
+							
+							$nombretabla='albaran';
+							$theIcon = '';
+							if($entry[$dbname] == 1) {
+								$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'edit', $id => $entry[$id] ), 'default', true);
+								$theIcon ='img/icons/view.png';
+								$res .= '<td><a title="Ver" href="'. $theUrl.'"> <img src="'. $theIcon.'" class="logo" align="top"/> </a></td>';
+							} else {
+								$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'edit', $id => $entry[$id] ), 'default', true);
+								$theIcon ='img/icons/edit.png';
+								$res .= '<td><a title="Editar" href="'. $theUrl.'"> <img src="'. $theIcon.'" class="logo" align="left"/> </a>';
+								
+								$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'delete', $id => $entry[$id] ), 'default', true);
+								$theIcon ='img/icons/delete.png';
+								$res .= '<a title="Borrar" onclick="return confirm(\'Estas seguro que quieres borrar?\');" href="'. $theUrl.'"> <img src="'. $theIcon.' " class="logo" align="right"/> </a></td>';
+							}
+	
+						} 
+						else
+						{
+							$res .= '<td>' . $entry[$dbname] . "</td>\n";
+						}
 					}
 				}
 				/* print links/options */
@@ -225,7 +258,7 @@ function deleteajax() {
 						
 						if(strncmp($option['action'], "delete",6) == 0 ) $res .= ' onclick="return confirm(\'Estas seguro que quieres borrar?\');" ';
 						$res .=	'><img src="'
-								. $this->view->baseUrl()
+								. 'http://'.$_SERVER['SERVER_NAME'].'/gestion/public/'
 								. $img[$i] . '" alt="'
 								. $img[$i] . "\" /></a></td>\n";
 						$i++;

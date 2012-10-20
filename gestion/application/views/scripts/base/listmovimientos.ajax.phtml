@@ -14,7 +14,7 @@
 					array('controller' => $this->controller, 'action' => 'editmovimiento', $this->idKey => $this->idkeyvalue,'idCliente'=>$this->idCliente),
 					array('controller' => $this->controller, 'action' => 'deleteajaxmovimiento',$this->idKey => $this->idkeyvalue,'idCliente'=>$this->idCliente)
 					);
-			$listicons = array();
+			//$listicons = array();
 			$listicons = array('img/icons/edit.png" title="Cambiar Cantidades','img/icons/delete.png" title="Borrar Movimiento');
 		}
 		else
@@ -38,10 +38,16 @@
 				$listicons,
 				'idMovimiento','ASC','idMovimiento'); 
 	}
+	
+	$url = 'http://'.$_SERVER['SERVER_NAME'].'/gestion/public/';
+	echo '<div id="subcontent">';
+	echo '<form method="post" action="'.$url.$this->escape($this->controller).'/finalizardocumento/'.
+										$this->escape($this->idKey).'/'.$this->escape($this->idkeyvalue).
+		        '" id="finalizardocumento">';
 
 ?>
-	<div id="subcontent">
-	<form method="post" id="finalizardocumento" action="<?php echo $this->url(array('controller' => $this->controller, 'action' => 'finalizardocumento', $this->idKey => $this->idkeyvalue), 'default', true); ?>">			
+		
+
 	<table align="center"><tbody><tr>
 	<?php if (isset($this->movimientos) && ($this->movimientos->count() > 0 ) && ( $this->objeto['estado'] == '0' ) ) { ?>
 		<td>Descuento Total: <?php echo $this->selectDescuento; ?></td>

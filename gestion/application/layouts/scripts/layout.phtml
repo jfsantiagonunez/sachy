@@ -75,18 +75,25 @@
 						<a
 						<?php if ($this->escape($this->action) == 'Albaran') echo 'class="active"'; ?> 
 						href="<?php echo $this->url(array('controller' => 'Albaran', 'action' => 'index'), 'default', true); ?>">Albaran</a></li>
-					<li class="li-factura">
-						<a 
-						<?php if ($this->escape($this->action) == 'Factura') echo 'class="active"'; ?>
-						href="<?php echo $this->url(array('controller' => 'Factura', 'action' => 'index'), 'default', true); ?>">Factura</a></li>
 					<li class="li-stock">
 						<a 
 						<?php if ($this->escape($this->action) == 'Stock') echo 'class="active"'; ?>
 						href="<?php echo $this->url(array('controller' => 'Stock', 'action' => 'index'), 'default', true); ?>">Stock</a></li>
+					<?php if($auth->hasIdentity() && ( $auth->getIdentity()->admin == '1' ) ) {?>
+					<li class="li-factura">
+						<a 
+						<?php if ($this->escape($this->action) == 'Factura') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Factura', 'action' => 'index'), 'default', true); ?>">Factura</a></li>
 					<li class="li-factura">
 						<a 
 						<?php if ($this->escape($this->action) == 'Recibo') echo 'class="active"'; ?>
 						href="<?php echo $this->url(array('controller' => 'Recibo', 'action' => 'index'), 'default', true); ?>">Vencimiento</a></li>
+					<?php }?>
+					<li class="li-factura">
+						<a 
+						<?php if ($this->escape($this->action) == 'Caja') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Caja', 'action' => 'index'), 'default', true); ?>">Caja</a></li>
+
 			</ul>
 			</div>
 			

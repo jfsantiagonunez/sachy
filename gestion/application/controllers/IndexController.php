@@ -16,7 +16,14 @@ class IndexController extends Zend_Controller_Action
     	if(!$auth->hasIdentity()){
       		$this->_redirect('/user/index');
     	}else{
-    	  	$this->_redirect('/albaran/index');
+    		if ( $auth->getIdentity()->admin == '1' ) 
+    		{
+    	  		$this->_redirect('/stock/index');
+    		}
+    		else
+    		{
+    			$this->_redirect('/caja/index');
+    		}
     	}
     }
     

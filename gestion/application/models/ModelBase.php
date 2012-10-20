@@ -157,6 +157,33 @@
 			return $vencimientos;
 		}
 		
+		public function createMovimiento(array $data)
+		{
+			
+			$ref = $this->getTable('TblReferencia')->selectPKs($data );
+			
+			if (isset($ref))
+			{
+				$data['idReferencia'] = $ref['idReferencia'];
+			
+				$idMov = $this->getTable('TblMovimiento')->insertData($data);
+				if (isset($idMov))
+				{
+					return $idMov;
+				}
+				else
+				{
+					echo 'NO MOVIMIENTO';
+			
+					return null ;
+				}
+			}
+			else
+			{
+				echo 'NO REFERENCIA';
+				return null;
+			}
+		}
 		
 		
 		public function contabilizarObjeto($key,$objeto,$idObjeto)

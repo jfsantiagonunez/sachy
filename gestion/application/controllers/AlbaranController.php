@@ -45,7 +45,7 @@ class AlbaranController extends BaseController
     	$this->view->selectTienda = $this->generateSelect( 'idDeposito','idDeposito' , $depositos , $this->defaultDeposito, 'tienda');
     	$this->view->selectTiendaEntrada = $this->generateSelect( 'idDepositoEntrada','idDeposito' , $depositos , $this->defaultDeposito, 'tienda');
     	
-    	$this->view->imprimirId = 
+
     	$tipos = array('0'=>'salida','1'=>'entrada');  	
     	$this->view->selectEntrada = $this->generateSelect( 'entrada','entrada' ,$tipos , '0' );
     	
@@ -88,13 +88,11 @@ class AlbaranController extends BaseController
     				$this->view->cliente = $this->view->clientes[0];
     				$idCliente = $this->view->cliente['idCliente'];
     				$datalbaran = array('idCliente'=>$idCliente,'entrada'=>$data['entrada'],'idDeposito'=>$data['idDeposito']);
-    				return $this->generateAlbaran($datalbaran);				
-    				
+    				return $this->generateAlbaran($datalbaran);								
     			}
     			return;
 			}
-				
-    		
+			   		
     	}
     	else
     	{
