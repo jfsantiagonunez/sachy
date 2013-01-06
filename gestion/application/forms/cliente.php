@@ -25,6 +25,11 @@ class HrSeparator extends Zend_Form_Decorator_HtmlTag
 					'required' => true
 			));
 			
+			$this->addElement('text', 'codigocliente', array(
+					'label' => 'Codigo Contable Cliente 4300.xxxx',
+					'required' => false
+			));
+			
 			$list = array();
 			$list['0'] = 'Cliente';
 			$list['1'] = 'Cliente y Proveedor';

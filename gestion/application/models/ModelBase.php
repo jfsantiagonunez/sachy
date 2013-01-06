@@ -153,6 +153,7 @@
 			$vencimientos[70] = '70 dias';
 			$vencimientos[75] = '75 dias';
 			$vencimientos[85] = '85 dias';
+			$vencimientos[90] = '90 dias';
 			$vencimientos[120] = '120 dias';
 			return $vencimientos;
 		}
