@@ -83,6 +83,21 @@
 		
 		}
 		
+		
+		public function updateDataWhereLike(array $data, $fieldwhere, $idmatch ) {
+			$fields = $this->info(Zend_Db_Table_Abstract::COLS);
+			foreach($data as $field => $value) {
+				if(!in_array($field, $fields)) {
+					unset($data[$field]);
+				}
+			}
+
+			$where = $this->getAdapter()->quoteInto( $fieldwhere . ' LIKE ?', $idmatch);
+
+			return $this->update($data, $where);
+		
+		}
+		
 		public function updateDataWhere(array $data, $where ) {
 			$fields = $this->info(Zend_Db_Table_Abstract::COLS);
 			foreach($data as $field => $value) {

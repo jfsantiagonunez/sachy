@@ -25,8 +25,8 @@ class HrSeparator extends Zend_Form_Decorator_HtmlTag
 					'required' => true
 			));
 			
-			$this->addElement('text', 'codigocliente', array(
-					'label' => 'Codigo Contable Cliente 4300.xxxx',
+			$this->addElement('text', 'cuentaventa', array(
+					'label' => 'Cuenta Venta 430.xxxx',
 					'required' => false
 			));
 			
@@ -42,6 +42,11 @@ class HrSeparator extends Zend_Form_Decorator_HtmlTag
 			);
 			$this->addElement('text', 'numrefproveedor', array(
 					'label' => 'Si Cliente, numero proveedor para ellos',
+					'required' => false
+			));
+			
+			$this->addElement('text', 'cuentacompra', array(
+					'label' => 'Cuenta Compra 400.xxxx',
 					'required' => false
 			));
 			

@@ -54,6 +54,10 @@
 			return $this->getTable($tableId)->updateData($data,$id);
 		}
 		
+		public function updateDataWhereLike($tableId,array $data, $fieldwhere, $idmatch) {
+			return $this->getTable($tableId)->updateDataWhereLike($data,$fieldwhere, $idmatch);
+		}
+		
 		public function delete($tableId,$id){
 			
 			/* create where clause */
