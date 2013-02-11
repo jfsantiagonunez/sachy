@@ -543,8 +543,8 @@ class BaseController extends Zend_Controller_Action
 			$page->drawText($unidad, $xu, $y,'UTF-8');
 			$page->drawText($movimiento['descripcion'], $xdes, $y,'UTF-8');
 			$descuento = (int) $movimiento['descuento'];
-			$preciocondescuento=round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,2);
-			$page->drawText(sprintf("%3.02f",$preciocondescuento), $xp, $y,'UTF-8');
+			$preciocondescuento=round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,3);
+			$page->drawText(sprintf("%3.03f",$preciocondescuento), $xp, $y,'UTF-8');
 			
 											
 			$page->drawText(sprintf("%7.02f",(float)$movimiento['tprecio']),$xtp,$y,'UTF-8');

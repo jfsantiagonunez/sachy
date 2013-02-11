@@ -122,12 +122,17 @@
 			$movimientos = $this->getTable($tableId)->fetchAll($query);	
 			foreach ($movimientos as $movimiento)
 			{
-				$preciocondescuento = round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,2);
-				$movimiento['tprecio'] = round(floatval($movimiento['tcantidad']) * $preciocondescuento,2) ;
+				$preciocondescuento = round(floatval($movimiento['precio'] ) * (100-floatval($movimiento['descuento']))/100,3);
+				$cantidadunidades=floatval($movimiento['tcantidad']);
 				if (floatval($movimiento['tipoenvase']) > 1 )
 				{
-					$movimiento['tprecio'] *= floatval($movimiento['tipoenvase']);
+					 $cantidadunidades*= floatval($movimiento['tipoenvase']);
 				}
+				$movimiento['tprecio'] = round( $cantidadunidades * $preciocondescuento,2) ;
+//				if (floatval($movimiento['tipoenvase']) > 1 )
+//				{
+//					$movimiento['tprecio'] *= floatval($movimiento['tipoenvase']);
+//				}
 			}
 			
 			return $movimientos;

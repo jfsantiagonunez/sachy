@@ -152,7 +152,11 @@ class Ivaldi_View_Helper_Table {
 						if($entry[$dbname] == 1) {
 							$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'edit', $id => $entry[$id] ), 'default', true);
 							$theIcon ='img/icons/view.png';
-							$res .= '<td><a title="Ver" href="'. $theUrl.'"> <img src="'. $theIcon.'" class="logo" align="top"/> </a></td>';
+							$res .= '<td><a title="Ver" href="'. $theUrl.'"> <img src="'. $theIcon.'" class="logo" align="top"/> </a>';
+							$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'delete', $id => $entry[$id] ), 'default', true);
+							$theIcon ='img/icons/delete.png';
+							$res .= '<a title="Borrar" onclick="return confirm(\'Estas seguro que quieres borrar?\');" href="'. $theUrl.'"> <img src="'. $theIcon.' " class="logo" align="right"/> </a></td>';
+							
 						} else {
 							$theUrl = $this->view->url(array('controller' => $controller, 'action' => 'edit', $id => $entry[$id] ), 'default', true);
 							$theIcon ='img/icons/edit.png';
