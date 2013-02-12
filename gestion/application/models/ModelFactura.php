@@ -272,7 +272,7 @@ class ModelFactura extends ModelBase {
 	{
 		// Create number factura
 		$sets = $this->getTable('TblSetting')->selectID('factura');
-		$data['numerofactura'] = $sets['value'] . '/' . date('Y');
+		$data['numerofactura'] = sprintf("F/%04d/%d",$sets['value'] , date('y'));
 		$sets['value'] = intval($sets['value']) + 1;
 		$sets->save();
 			

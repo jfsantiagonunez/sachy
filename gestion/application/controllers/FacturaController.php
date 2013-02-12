@@ -512,13 +512,13 @@ class FacturaController extends BaseController
 
 		// Add new page to the document 
 		
-		$page = $this->createPage($pdf,'595:862:');
+		//VIEJO $page = $this->createPage($pdf,'595:862:');
+		$page = $this->createPage($pdf,'595:842:');
 		$cliente = $this->modelCliente->queryID('TblCliente',$documento['idCliente']);
-		$this->imprimirCabecera($documento,$cliente,$page);
+		$this->imprimirCabeceraNuevoFormato($documento,true,$cliente,$page);
 		$page = $this->imprimirMovimientos($documento,$cliente,'idFactura',$page,$pdf);
-		$this->imprimirResumenFactura($documento,$page);
-		//$this->imprimirPaginaReferencia($page);
-		$this->imprimirRecibo($documento,$cliente,$page);
+		$this->imprimirResumenNuevoFormato($documento,$page);
+		$this->imprimirReciboNuevoFormato($documento,true,$cliente,$page);
 		$this->view->pdfData = $pdf->render(); 
 		$this->view->numerofactura = $documento['numerofactura'];	
 			
@@ -526,96 +526,97 @@ class FacturaController extends BaseController
 		
 		
 		
-	function imprimirCabecera($documento,$cliente,$page)
-	{
-		$lh =15;
-		$thy = 740;  //nombre
-		$thx = 350;  // nombre, direccion, codigo postal
-			
-		
-		$direccion = $cliente['direccionfact'];
-		$cp = $cliente['codigopostalfact'];
-		$ciudad = $cliente['ciudadfact'];
-		if ($direccion == '' )
-		{
-			$direccion = $cliente['direccion'];
-			$cp = $cliente['codigopostal'];
-			$ciudad = $cliente['ciudad'];
-		}
-		$page->drawText($cliente['nombre'], $thx, $thy, 'UTF-8'); 			
-		$page->drawText($direccion , $thx, $thy-$lh, 'UTF-8');
-		$page->drawText( $cp. ' ' . $ciudad, $thx, $thy-$lh-$lh, 'UTF-8');
-		
-		$thx2 = 20;
-		$thy2 = 695;
-		$page->drawText($documento['numerofactura'], $thx2, $thy2, 'UTF-8');
-		$date = new Zend_Date($documento['fecha']);
-		$dateprint= $date->toString('dd-MM-YYYY');
-		$page->drawText($dateprint, $thx2 + 75, $thy2, 'UTF-8');
-					
-		if ($cliente['numrefproveedor']!='')
-			$page->drawText( $cliente['numrefproveedor'], 175, $thy2, 'UTF-8'); 
-		
-		$page->drawText($cliente['nif'], 245, $thy2, 'UTF-8');
-		
-	}
-	
+//	function imprimirCabecera($documento,$cliente,$page)
+//	{
+//		$lh =15;
+//		$thy = 740;  //nombre
+//		$thx = 350;  // nombre, direccion, codigo postal
+//			
+//		
+//		$direccion = $cliente['direccionfact'];
+//		$cp = $cliente['codigopostalfact'];
+//		$ciudad = $cliente['ciudadfact'];
+//		if ($direccion == '' )
+//		{
+//			$direccion = $cliente['direccion'];
+//			$cp = $cliente['codigopostal'];
+//			$ciudad = $cliente['ciudad'];
+//		}
+//		$page->drawText($cliente['nombre'], $thx, $thy, 'UTF-8'); 			
+//		$page->drawText($direccion , $thx, $thy-$lh, 'UTF-8');
+//		$page->drawText( $cp. ' ' . $ciudad, $thx, $thy-$lh-$lh, 'UTF-8');
+//		
+//		$thx2 = 20;
+//		// VIEJO $thy2 = 695;
+//		$thy2 = 675;
+//		$page->drawText($documento['numerofactura'], $thx2, $thy2, 'UTF-8');
+//		$date = new Zend_Date($documento['fecha']);
+//		$dateprint= $date->toString('dd-MM-YYYY');
+//		$page->drawText($dateprint, $thx2 + 75, $thy2, 'UTF-8');
+//					
+//		if ($cliente['numrefproveedor']!='')
+//			$page->drawText( $cliente['numrefproveedor'], 175, $thy2, 'UTF-8'); 
+//		
+//		$page->drawText($cliente['nif'], 245, $thy2, 'UTF-8');
+//		
+//	}
+//	
 		
 
 		
-	function imprimirResumenFactura($documento,$page)
-	{
-		$sx = 20;
-		$sy = 315;
-		$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
-		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),110,$sy,'UTF-8');
-		$page->drawText(sprintf("%5.02f",$documento['descuento']),145,$sy,'UTF-8');
-		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),220,$sy,'UTF-8');
-		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),305,$sy,'UTF-8');
-		$page->drawText(sprintf("%5.02f",$documento['iva']),340,$sy,'UTF-8');
-		$page->drawText(sprintf("%6.02f",$documento['total']),515,$sy,'UTF-8');
+//	function imprimirResumenFactura($documento,$page)
+//	{
+//		$sx = 20;
+//		$sy = 315;
+//		$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
+//		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),110,$sy,'UTF-8');
+//		$page->drawText(sprintf("%5.02f",$documento['descuento']),145,$sy,'UTF-8');
+//		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),220,$sy,'UTF-8');
+//		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),305,$sy,'UTF-8');
+//		$page->drawText(sprintf("%5.02f",$documento['iva']),340,$sy,'UTF-8');
+//		$page->drawText(sprintf("%6.02f",$documento['total']),515,$sy,'UTF-8');
+//		
+//	}
 		
-	}
-		
-	function imprimirRecibo($documento,$cliente,$page)
-	{
-		$sx = 130;
-		$sy = 262;
-		$page->drawText($documento['numerofactura'],$sx,$sy,'UTF-8');
-		$page->drawText('VALENCIA',250,$sy,'UTF-8');
-		$page->drawText(sprintf("%6.02f",$documento['total']),425,$sy,'UTF-8');
-		$sy2 = 240;
-		$date = new Zend_Date($documento['fecha']);
-		$dateprint= $date->toString('dd-MM-YYYY');
-		$page->drawText($dateprint,200,$sy2,'UTF-8');
-		$vencimiento = new Zend_Date($documento['vencimiento']);
-		$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
-		$page->drawText($vencimientoprint,400,$sy2,'UTF-8');
-		
-		//$page->drawText($documento['cantidadletra1'],175,203,'UTF-8');
-		//$page->drawText($documento['cantidadletra2'],105,203-12,'UTF-8');
-		
-		$page->drawText($cliente['banco'],200,162,'UTF-8');
-		//$page->drawText('....',433,162,'UTF-8'); //cccc
-		$page->drawText($cliente['sucursal'],160,150,'UTF-8');
-		$page->drawText($cliente['dc'],514,152,'UTF-8');
-		//$page->drawText('---',160,150-12,'UTF-8');  // otra linea de direccion 
-		$page->drawText($cliente['cuentabancaria'],411,150-12,'UTF-8');
-		
-		$page->drawText($cliente['nombre'],$sx,100,'UTF-8');
-		$direccion = $cliente['direccionfact'];
-		$cp = $cliente['codigopostalfact'];
-		$ciudad = $cliente['ciudadfact'];
-		if ($direccion == '' )
-		{
-			$direccion = $cliente['direccion'];
-			$cp = $cliente['codigopostal'];
-			$ciudad = $cliente['ciudad'];
-		}
-		$page->drawText($direccion,$sx,100-12,'UTF-8');
-		$page->drawText($cp .' - '. $ciudad,$sx,100-24,'UTF-8');
-		
-	}
+//	function imprimirRecibo($documento,$cliente,$page)
+//	{
+//		$sx = 130;
+//		$sy = 262;
+//		$page->drawText($documento['numerofactura'],$sx,$sy,'UTF-8');
+//		$page->drawText('VALENCIA',250,$sy,'UTF-8');
+//		$page->drawText(sprintf("%6.02f",$documento['total']),425,$sy,'UTF-8');
+//		$sy2 = 240;
+//		$date = new Zend_Date($documento['fecha']);
+//		$dateprint= $date->toString('dd-MM-YYYY');
+//		$page->drawText($dateprint,200,$sy2,'UTF-8');
+//		$vencimiento = new Zend_Date($documento['vencimiento']);
+//		$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
+//		$page->drawText($vencimientoprint,400,$sy2,'UTF-8');
+//		
+//		//$page->drawText($documento['cantidadletra1'],175,203,'UTF-8');
+//		//$page->drawText($documento['cantidadletra2'],105,203-12,'UTF-8');
+//		
+//		$page->drawText($cliente['banco'],200,162,'UTF-8');
+//		//$page->drawText('....',433,162,'UTF-8'); //cccc
+//		$page->drawText($cliente['sucursal'],160,150,'UTF-8');
+//		$page->drawText($cliente['dc'],514,152,'UTF-8');
+//		//$page->drawText('---',160,150-12,'UTF-8');  // otra linea de direccion 
+//		$page->drawText($cliente['cuentabancaria'],411,150-12,'UTF-8');
+//		
+//		$page->drawText($cliente['nombre'],$sx,100,'UTF-8');
+//		$direccion = $cliente['direccionfact'];
+//		$cp = $cliente['codigopostalfact'];
+//		$ciudad = $cliente['ciudadfact'];
+//		if ($direccion == '' )
+//		{
+//			$direccion = $cliente['direccion'];
+//			$cp = $cliente['codigopostal'];
+//			$ciudad = $cliente['ciudad'];
+//		}
+//		$page->drawText($direccion,$sx,100-12,'UTF-8');
+//		$page->drawText($cp .' - '. $ciudad,$sx,100-24,'UTF-8');
+//		
+//	}
 	
 	
  }

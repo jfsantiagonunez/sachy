@@ -455,16 +455,113 @@ class BaseController extends Zend_Controller_Action
 		return $page;
 	}
 		
+	function imprimirCabeceraNuevoFormato($documento,$esfactura, $cliente,$page)
+	{
+		$lh =15;
+		$thy = 740;  //nombre
+		$thx = 350;  // nombre, direccion, codigo postal
+			
+		
+		$direccion = $cliente['direccionfact'];
+		$cp = $cliente['codigopostalfact'];
+		$ciudad = $cliente['ciudadfact'];
+		if ($direccion == '' )
+		{
+			$direccion = $cliente['direccion'];
+			$cp = $cliente['codigopostal'];
+			$ciudad = $cliente['ciudad'];
+		}
+		$page->drawText($cliente['nombre'], $thx, $thy, 'UTF-8'); 			
+		$page->drawText($direccion , $thx, $thy-$lh, 'UTF-8');
+		$page->drawText( $cp. ' ' . $ciudad, $thx, $thy-$lh-$lh, 'UTF-8');
+		
+		$thx2 = 20;
+		// VIEJO $thy2 = 695;
+		$thy2 = 675;
+		$numerodocumento='';
+		if ($esfactura)
+		{
+			$numerodocumento = $documento['numerofactura'];
+		}
+		else
+		{
+			$numerodocumento = $documento['numeroalbaran'];
+		}
+		$page->drawText($numerodocumento, $thx2, $thy2, 'UTF-8');
+		$date = new Zend_Date($documento['fecha']);
+		$dateprint= $date->toString('dd-MM-YYYY');
+		$page->drawText($dateprint, $thx2 + 75, $thy2, 'UTF-8');
+					
+		if ($cliente['numrefproveedor']!='')
+			$page->drawText( $cliente['numrefproveedor'], 175, $thy2, 'UTF-8'); 
+		
+		$page->drawText($cliente['nif'], 245, $thy2, 'UTF-8');
+		
+	}
+	
+	function imprimirResumenNuevoFormato($documento,$page)
+	{
+		$sx = 20;
+		$sy = 175;
+		$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
+		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),110,$sy,'UTF-8');
+		$page->drawText(sprintf("%5.02f",$documento['descuento']),145,$sy,'UTF-8');
+		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),220,$sy,'UTF-8');
+		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),305,$sy,'UTF-8');
+		$page->drawText(sprintf("%5.02f",$documento['iva']),340,$sy,'UTF-8');
+		$page->drawText(sprintf("%6.02f",$documento['total']),515,$sy,'UTF-8');
+		
+	}
+	
+	
+	function imprimirReciboNuevoFormato($documento,$esfactura,$cliente,$page)
+	{
+		$sx = 135;
+		
+		// Total factura
+		$page->drawText($cliente['condicionespago'],$sx,155,'UTF-8');
+		
+		// Vencimiento
+		$vencimientoprint='';
+		if ($esfactura)
+		{
+			$vencimiento = new Zend_Date($documento['vencimiento']);
+			$vencimientoprint= $vencimiento->toString('dd-MM-YYYY');
+		}
+		else
+		{
+			if ($cliente['vencimiento'] > 0 )
+			{
+				$vencimientoprint= $cliente['vencimiento'] . ' DIAS';
+			}
+			else
+			{
+				$vencimientoprint= 'FECHA FACTURA';
+			}
+		}
+		$page->drawText($vencimientoprint,$sx,138,'UTF-8');
+
+		// Total factura
+		$page->drawText(sprintf("%6.02f EUROS",$documento['total']),$sx,119,'UTF-8');
+		
+		// Datos Bancarios:
+		$page->drawText($cliente['banco'] .
+						' ('. $cliente['sucursal'] . ') DC ['. $cliente['dc']. 
+						'] CC {'.$cliente['cuentabancaria'].'}',$sx,100,'UTF-8');		
+	}
+	
+	
 	function imprimirMovimientos($documento,$cliente,$key, $page,$pdf)
 	{
 			
-		$yinit = 655;	  $ymin = 350;
+		// VIEJO $yinit = 655;	  $ymin = 350;
+		$yinit = 631;	  $ymin = 190;
 		$esfactura = true;
 		if ($key == 'idAlbaran')
 		{
 			$esfactura = false;
-			$yinit = 500;
-			$ymin = 25;
+			// VIEJO $yinit = 500;
+			// VIEJO $ymin = 25;
 		}
 		$y = $yinit; 
 			
@@ -481,11 +578,11 @@ class BaseController extends Zend_Controller_Action
 			$albaranes = $this->model->queryAlbaranesPorFactura($documento['idFactura']);
 			$numeromovimentos += $albaranes->count();
 		}
-		else
-		{
+		// VIEJO else
+		//{
 			// anadir 2 lineas para albaran para incluir valoracion
-			$numeromovimentos +=3;
-		}
+			// VIEJO $numeromovimentos +=3;
+		//}
 		
 		$numeropaginas = ceil( $numeromovimentos / $movimientosporpagina);
 		$pagina = 1;
@@ -556,14 +653,14 @@ class BaseController extends Zend_Controller_Action
 				$pagina++;
 				$size = $page->getWidth() . ':' . $page->getHeight() .':';
 				$page = $this->createPage($pdf,$size);
-				$this->imprimirCabecera($documento,$cliente,$page);
+				$this->imprimirCabeceraNuevoFormato($documento,$esfactura,$cliente,$page);
 				$y = $yinit;
 			}
 		}
-		if (!$esfactura)
-		{
-			$this->imprimirValoracionAlbaran($documento,$page,$y);
-		}
+//		if (!$esfactura)
+//		{
+//			$this->imprimirValoracionAlbaran($documento,$page,$y);
+//		}
 		$page->drawText('Pagina '.$pagina.'/'.$numeropaginas /*.'/'.$numeromovimentos*/, $xdes, $ymin,'UTF-8');
 		
 		

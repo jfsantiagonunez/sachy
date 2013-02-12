@@ -539,13 +539,14 @@ class AlbaranController extends BaseController
 			$pdf = new Zend_Pdf(); 
 
 			// Add new page to the document 
-			$page = $this->createPage($pdf,"595:800:");
-			
+			// VIEJO $page = $this->createPage($pdf,"595:800:");
+			$page = $this->createPage($pdf,'595:842:');
 			$cliente = $this->modelCliente->queryID('TblCliente',$albaran['idCliente']);
-			$this->imprimirCabeceraAlbaran($albaran,$cliente,$page);
+			//$this->imprimirCabeceraAlbaran($albaran,$cliente,$page);
+			$this->imprimirCabeceraNuevoFormato($albaran,false,$cliente,$page);
 			$this->imprimirMovimientos($albaran,$cliente,'idAlbaran',$page,$pdf);
-			//$this->imprimirPaginaReferencia($page);
-			// $this->imprimirValoracionAlbaran($albaran); Esto es imprimido desde imprimirMovimientos
+			$this->imprimirResumenNuevoFormato($albaran,$page);
+			$this->imprimirReciboNuevoFormato($albaran,false,$cliente,$page);
 			$this->view->pdfData = $pdf->render(); 
 			$this->view->numeroalbaran = $albaran['numeroalbaran'];	
 			
@@ -553,54 +554,54 @@ class AlbaranController extends BaseController
 		
 		
 		
-		function imprimirCabeceraAlbaran($albaran,$cliente,$page)
-		{
-			$thy = 740;  //fecha, numero
-			$thx = 425;  //fecha, nif, telefono
-			$thy2 = 605; // nombre, nif		
-			$thx2= 25;   //nombre,domicilio
-			
-			$thx3 = 185 ; //comentario, orden cliente
-			$thy3 = 535; // orden cliente
-			$lh = 12;
-			$date = new Zend_Date($albaran['fecha']);
-			$dateprint= $date->toString('dd-MM-YYYY');
-			$page->drawText($dateprint, $thx, $thy, 'UTF-8');
-			$page->drawText($albaran['numeroalbaran'], $thx + 85, $thy, 'UTF-8');
-			
-			$page->drawText($cliente['nombre'], $thx2, $thy2, 'UTF-8'); 
-			$page->drawText($cliente['nif'], $thx, $thy2, 'UTF-8');
-			$page->drawText($cliente['direccion'] . ' - ('.$cliente['codigopostal'].') ' . $cliente['ciudad'], $thx2, $thy2-30, 'UTF-8');
-			$page->drawText($cliente['telefono'], $thx, $thy2-30, 'UTF-8');
-			if ($albaran['ordencliente']!='')
-				$page->drawText('Orden Cliente:'. $albaran['ordencliente'], $thx3, $thy3, 'UTF-8'); 
-			if ($cliente['numrefproveedor']!='')
-				$page->drawText('Proveedor:'. $cliente['numrefproveedor'], $thx3, $thy3+150, 'UTF-8'); 
-			$page->drawText( $albaran['comentario'], $thx3, $thy3-$lh, 'UTF-8');
-		}
+//		function imprimirCabeceraAlbaran($albaran,$cliente,$page)
+//		{
+//			$thy = 740;  //fecha, numero
+//			$thx = 425;  //fecha, nif, telefono
+//			$thy2 = 605; // nombre, nif		
+//			$thx2= 25;   //nombre,domicilio
+//			
+//			$thx3 = 185 ; //comentario, orden cliente
+//			$thy3 = 535; // orden cliente
+//			$lh = 12;
+//			$date = new Zend_Date($albaran['fecha']);
+//			$dateprint= $date->toString('dd-MM-YYYY');
+//			$page->drawText($dateprint, $thx, $thy, 'UTF-8');
+//			$page->drawText($albaran['numeroalbaran'], $thx + 85, $thy, 'UTF-8');
+//			
+//			$page->drawText($cliente['nombre'], $thx2, $thy2, 'UTF-8'); 
+//			$page->drawText($cliente['nif'], $thx, $thy2, 'UTF-8');
+//			$page->drawText($cliente['direccion'] . ' - ('.$cliente['codigopostal'].') ' . $cliente['ciudad'], $thx2, $thy2-30, 'UTF-8');
+//			$page->drawText($cliente['telefono'], $thx, $thy2-30, 'UTF-8');
+//			if ($albaran['ordencliente']!='')
+//				$page->drawText('Orden Cliente:'. $albaran['ordencliente'], $thx3, $thy3, 'UTF-8'); 
+//			if ($cliente['numrefproveedor']!='')
+//				$page->drawText('Proveedor:'. $cliente['numrefproveedor'], $thx3, $thy3+150, 'UTF-8'); 
+//			$page->drawText( $albaran['comentario'], $thx3, $thy3-$lh, 'UTF-8');
+//		}
 
 	
-		public function imprimirValoracionAlbaran($documento,$page,$sy)
-		{
-			$sx = 50;
-			$page->drawText("------------------------------------------------------------------------------------",$sx,$sy,'UTF-8');
-			$sy -=12;
-			$page->drawText("Bruto",$sx,$sy,'UTF-8');
-			$page->drawText("%",125,$sy,'UTF-8');
-			$page->drawText("Descuento",180,$sy,'UTF-8');
-			$page->drawText("Base Imponible",250,$sy,'UTF-8');
-			$page->drawText("Iva %",350,$sy,'UTF-8');
-			$page->drawText("Total Iva",400,$sy,'UTF-8');
-			$page->drawText("Total",500,$sy,'UTF-8');	
-			
-			$sy -=12;
-			$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
-			$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']).' %',125,$sy,'UTF-8');
-			$page->drawText(sprintf("%5.02f",$documento['descuento']),180,$sy,'UTF-8');
-			$page->drawText(sprintf("%6.02f",$documento['baseimponible']),250,$sy,'UTF-8');
-			$page->drawText(sprintf("%2.0f",$documento['tipoiva']).' %',350,$sy,'UTF-8');
-			$page->drawText(sprintf("%5.02f",$documento['iva']),400,$sy,'UTF-8');
-			$page->drawText(sprintf("%6.02f",$documento['total']),500,$sy,'UTF-8');		
-		}
+//		public function imprimirValoracionAlbaran($documento,$page,$sy)
+//		{
+//			$sx = 50;
+//			$page->drawText("------------------------------------------------------------------------------------",$sx,$sy,'UTF-8');
+//			$sy -=12;
+//			$page->drawText("Bruto",$sx,$sy,'UTF-8');
+//			$page->drawText("%",125,$sy,'UTF-8');
+//			$page->drawText("Descuento",180,$sy,'UTF-8');
+//			$page->drawText("Base Imponible",250,$sy,'UTF-8');
+//			$page->drawText("Iva %",350,$sy,'UTF-8');
+//			$page->drawText("Total Iva",400,$sy,'UTF-8');
+//			$page->drawText("Total",500,$sy,'UTF-8');	
+//			
+//			$sy -=12;
+//			$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
+//			$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']).' %',125,$sy,'UTF-8');
+//			$page->drawText(sprintf("%5.02f",$documento['descuento']),180,$sy,'UTF-8');
+//			$page->drawText(sprintf("%6.02f",$documento['baseimponible']),250,$sy,'UTF-8');
+//			$page->drawText(sprintf("%2.0f",$documento['tipoiva']).' %',350,$sy,'UTF-8');
+//			$page->drawText(sprintf("%5.02f",$documento['iva']),400,$sy,'UTF-8');
+//			$page->drawText(sprintf("%6.02f",$documento['total']),500,$sy,'UTF-8');		
+//		}
 }
 ?>

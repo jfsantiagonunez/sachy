@@ -195,7 +195,7 @@ class ModelAlbaran extends ModelBase {
 	{
 		$data['fecha'] = date('Y-m-d');
 		$sets = $this->getTable('TblSetting')->selectID('albaran');
-		$data['numeroalbaran'] = $sets['value'] . '/' . date('Y');
+		$data['numeroalbaran'] = sprintf("A/%04d/%d",$sets['value'] , date('y'));
 		$sets['value'] = intval($sets['value']) + 1;
 		$sets->save();
 
