@@ -355,7 +355,7 @@ $ventas[1922] = 'AYUNTAMIENTO DE ALMASSERA';
 $ventas[1923] = 'CASH & CARRY';
 $ventas[1924] = 'ROPER CATALU„A,SL';
 $ventas[1925] = 'VO-EVENT';
-$ventas[1926] = 'EMILIO LLOSA FERRANDIS';*/
+$ventas[1926] = 'EMILIO LLOSA FERRANDIS';
 	$ventas[691] = 'SERVICIO MARITIMO PROVINCIAL G.C.';
 
 $ventas[783] = 'VALENCIANA DE SERVICIOS I.T.V.,S.A.';
@@ -719,7 +719,149 @@ $ventas[1924] = 'ROPER CATALUÌÔA,SL';
 
 $ventas[1925] = 'VO-EVENT';
 
-$ventas[1926] = 'EMILIO LLOSA FERRANDIS';
+$ventas[1926] = 'EMILIO LLOSA FERRANDIS';*/
+    	
+    	
+    	$ventas[4] = 'FLUIMED,S.L.';
+
+$ventas[105] = 'VALENCIA CONTAINER DEPOT,S.L.';
+
+$ventas[108] = 'MERCADONA,S.A.';
+
+$ventas[122] = 'AJUNTAMENT D\\\\\\\' ALDAIA';
+
+$ventas[136] = 'FRIOPUERTO VALENCIA,S.L.';
+
+$ventas[150] = 'GARCIA SANJAIME,S.L.';
+
+$ventas[155] = 'ISTOBAL,S.A.';
+
+$ventas[158] = 'PAVASAL,S.A.';
+
+$ventas[163] = 'BRONCES LEVANTE,S.L.';
+
+$ventas[170] = 'PROMOTEST,S.L.';
+
+
+$ventas[197] = 'SOLDAGAS,S.L.';
+
+$ventas[207] = 'CHEMA BALLESTER,S.A.';
+
+$ventas[209] = 'J.L.GANDARA Y CIA.S.A.';
+
+$ventas[216] = 'SUMINISTROS NAVALES PALONES,S.L.';
+
+$ventas[222] = 'PINTURAS HEMPEL,S.A.U.';
+
+$ventas[226] = 'SENDRA FONT, JUAN ANTONIO';
+
+$ventas[275] = 'RECOMAR,S.A.';
+
+$ventas[277] = 'EXCMA.DIPUTACION PROVINCIAL';
+
+$ventas[280] = 'FRANCISCO JUST,S.L.';
+
+$ventas[352] = 'CARDYFREN,S.L.';
+
+$ventas[375] = 'SAME SHIPSUPPLIERS,S.L.';
+
+$ventas[385] = 'TALLERES MUROS,S.L.';
+
+$ventas[439] = 'VENTAS MOSTRADOR VISA';
+
+$ventas[443] = 'CONTADOS NAVE';
+
+$ventas[508] = 'CONSTRUCCIONES MECANICAS ROYPA,SL';
+
+$ventas[529] = 'PLAZAS DE TOROS DE LA RIBERA,S.L.';
+
+$ventas[556] = 'BOUS AL CARRER,S.L.';
+
+$ventas[562] = 'COINMAQ,S.L.';
+
+$ventas[573] = 'AMARRADORES DEL PUERTO VCIA.S.L';
+
+$ventas[586] = 'SERVICIO Y COLOR ONDARA,S.L.';
+
+$ventas[616] = 'COVALSUM,S.L.';
+
+$ventas[639] = 'ASCENSORES CARBONELL,S.A.';
+
+$ventas[670] = 'FERRER BONAFONT, VICENTE';
+
+
+$ventas[783] = 'VALENCIANA DE SERVICIOS I.T.V.,S.A.';
+
+$ventas[813] = 'MIGUEL RIVERA AUTOCARES,S.L.';
+
+$ventas[834] = 'RECAMBIOS COLON CATARROJA,S.A.';
+
+$ventas[837] = 'SELEV NAVAL,S.L.';
+
+$ventas[890] = 'DELTA VALENCIA,S.L.';
+
+$ventas[908] = 'FORJA GARCIA,S.L.U.';
+
+$ventas[1042] = 'HERRAJES LA COSTERA,S.L.';
+
+$ventas[1051] = 'PACHICHA,C.B.';
+
+$ventas[1076] = 'UNION NAVAL CONTAINERS,S.L.';
+
+$ventas[1116] = 'CAVERO ANGULO, JOSE LUIS';
+
+
+$ventas[1197] = 'SOLDAGAS,S.L.';
+
+$ventas[1200] = 'Moya Peå±arubia Jose';
+
+$ventas[1204] = 'TALLERES DE LA GUIA,S.L.';
+
+$ventas[1221] = 'ESTELLES , EMILIO (INOXTEAM)';
+
+$ventas[1230] = 'GARBAPORT, S.L.';
+
+
+$ventas[1252] = 'TRANSBELLES,S.L.';
+
+$ventas[1284] = 'COFRADIA DE PESCADORES DE VCIA.';
+
+$ventas[1312] = 'CASAR DE BRUBIA,S.L.';
+
+$ventas[1387] = 'GARAGE RICARD,S.A.';
+
+$ventas[1392] = 'NAUTICA AZA,S.L.U.';
+
+$ventas[1393] = 'FERRETERIA LIMAR,S.L.';
+
+$ventas[1399] = 'RMN DISTRIBUCION Y ALMACENAJE, S.L.';
+
+$ventas[1401] = 'PRAMA MANTEN.Y SERV.IND.,S.L.';
+
+$ventas[1420] = 'NIXEL 2005,S.L.';
+
+$ventas[1489] = 'TALLERES CERVERî,S.L.';
+
+$ventas[1502] = 'TECDEMAR PROMOTORA NAVAL,S.L.';
+
+$ventas[1530] = 'PASCUAL ARNANDIS MARTINEZ';
+
+$ventas[1561] = 'Ferbol Pintores SL';
+
+$ventas[1575] = 'TRANSPORTS,S.A.';
+
+$ventas[1581] = 'SOL LLUNA Y MAR ,C.B.';
+
+$ventas[1590] = 'TERMINALES PORTUARIAS,S.A.';
+
+$ventas[1614] = 'LABERINTUS DESIGN,S.L.';
+
+$ventas[1636] = 'FRANCISCO RUEDA,S.L.';
+
+$ventas[1637] = 'COPISTERIA SANCHIS,S.L.';
+
+$ventas[1641] = 'REAMAR,S.L.';
+    	
 		$totals = 0;
 		$failed = 0;
 		$keyvalueformat = "%04d";
