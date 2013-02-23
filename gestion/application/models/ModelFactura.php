@@ -191,7 +191,7 @@ class ModelFactura extends ModelBase {
 		$query = $this->getTable($tableId)
 		->select()
 		->from(array($tableId => $tableId ),
-		array('idAlbaran','numeroalbaran','fecha','entrada','estado' ) )
+		array('idAlbaran','numeroalbaran','fecha','entrada','estado','ordencliente' ) )
 		->join(array('clientes' => 'TblCliente'),
 						'clientes.idCliente = TblAlbaran.idCliente AND TblAlbaran.estado = \'1\' and (TblAlbaran.idFactura is null) and TblAlbaran.facturable = \'1\'' . $where , array('nombre') )
 		->join(array('deps' => 'TblStockDeposito'), 'deps.idDeposito = TblAlbaran.idDeposito ', array('tienda') )
@@ -210,7 +210,7 @@ class ModelFactura extends ModelBase {
 		$query = $this->getTable($tableId)
 		->select()
 		->from(array($tableId => $tableId ),
-		array('idAlbaran','numeroalbaran','fecha','entrada','estado' ) )
+		array('idAlbaran','numeroalbaran','fecha','entrada','estado','ordencliente' ) )
 		->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblAlbaran.idCliente AND TblAlbaran.idFactura = \''.$idFactura .'\'' , array('nombre') )
 		->join(array('deps' => 'TblStockDeposito'), 'deps.idDeposito = TblAlbaran.idDeposito ', array('tienda') )
 		->joinleft(array('facturas' => 'TblFactura'), 'facturas.idFactura = TblAlbaran.idFactura' , array('numerofactura'))

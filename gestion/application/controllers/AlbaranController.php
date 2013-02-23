@@ -289,6 +289,9 @@ class AlbaranController extends BaseController
        		if ( $albaran['entrada'] == '1' )
        			$this->view->entradatext = 'entrada';  
 
+       		if ( $albaran['estado'] == '1' )
+       			$this->view->titleView='Albaran';
+       			
        		$this->view->tienda = $this->modelCatalogo->getTienda($albaran['idDeposito']);
        		$this->view->movimientos = $this->model->queryMovimientos('idAlbaran',$idAlbaran);
        		

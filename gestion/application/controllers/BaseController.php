@@ -475,9 +475,9 @@ class BaseController extends Zend_Controller_Action
 		$page->drawText($direccion , $thx, $thy-$lh, 'UTF-8');
 		$page->drawText( $cp. ' ' . $ciudad, $thx, $thy-$lh-$lh, 'UTF-8');
 		
-		$thx2 = 20;
+		$thx2 = 25;
 		// VIEJO $thy2 = 695;
-		$thy2 = 675;
+		$thy2 = 650;
 		$numerodocumento='';
 		if ($esfactura)
 		{
@@ -492,24 +492,39 @@ class BaseController extends Zend_Controller_Action
 		$dateprint= $date->toString('dd-MM-YYYY');
 		$page->drawText($dateprint, $thx2 + 75, $thy2, 'UTF-8');
 					
-		if ($cliente['numrefproveedor']!='')
-			$page->drawText( $cliente['numrefproveedor'], 175, $thy2, 'UTF-8'); 
+		
+		$codigocliente = '430.'.$cliente['cuentaventa'];
+		
+		if (!$esfactura) 
+		{				
+			if ($documento['entrada']=='1')
+			{
+				$codigocliente = '400.'.$cliente['cuentacompra'];
+			}
+		}
+		$page->drawText( $codigocliente, 175, $thy2, 'UTF-8'); 
 		
 		$page->drawText($cliente['nif'], 245, $thy2, 'UTF-8');
+		
+		if ($cliente['numrefproveedor']!='')
+			$page->drawText( 'PRV:'. $cliente['numrefproveedor'], 350, $thy2, 'UTF-8');
+
+		if ($documento['ordencliente']!='')
+			$page->drawText( 'PEDIDO:'.$documento['ordencliente'], 450, $thy2, 'UTF-8');
 		
 	}
 	
 	function imprimirResumenNuevoFormato($documento,$page)
 	{
-		$sx = 20;
-		$sy = 175;
+		$sx = 50;
+		$sy = 185;
 		$page->drawText(sprintf("%6.02f",$documento['bruto']),$sx,$sy,'UTF-8');
-		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),110,$sy,'UTF-8');
-		$page->drawText(sprintf("%5.02f",$documento['descuento']),145,$sy,'UTF-8');
-		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),220,$sy,'UTF-8');
-		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),305,$sy,'UTF-8');
-		$page->drawText(sprintf("%5.02f",$documento['iva']),340,$sy,'UTF-8');
-		$page->drawText(sprintf("%6.02f",$documento['total']),515,$sy,'UTF-8');
+		$page->drawText(sprintf("%2.0f",$documento['descuentoaplicartotal']),125,$sy,'UTF-8');
+		$page->drawText(sprintf("%5.02f",$documento['descuento']),175,$sy,'UTF-8');
+		$page->drawText(sprintf("%6.02f",$documento['baseimponible']),290,$sy,'UTF-8');
+		$page->drawText(sprintf("%2.0f",$documento['tipoiva']),345,$sy,'UTF-8');
+		$page->drawText(sprintf("%5.02f",$documento['iva']),400,$sy,'UTF-8');
+		$page->drawText(sprintf("%6.02f",$documento['total']),520,$sy,'UTF-8');
 		
 	}
 	
@@ -539,15 +554,15 @@ class BaseController extends Zend_Controller_Action
 				$vencimientoprint= 'FECHA FACTURA';
 			}
 		}
-		$page->drawText($vencimientoprint,$sx,138,'UTF-8');
+		$page->drawText($vencimientoprint,$sx,135,'UTF-8');
 
 		// Total factura
-		$page->drawText(sprintf("%6.02f EUROS",$documento['total']),$sx,119,'UTF-8');
+		$page->drawText(sprintf("%6.02f EUROS",$documento['total']),$sx,115,'UTF-8');
 		
 		// Datos Bancarios:
 		$page->drawText($cliente['banco'] .
 						' ('. $cliente['sucursal'] . ') DC ['. $cliente['dc']. 
-						'] CC {'.$cliente['cuentabancaria'].'}',$sx,100,'UTF-8');		
+						'] CC {'.$cliente['cuentabancaria'].'}',$sx,95,'UTF-8');		
 	}
 	
 	
@@ -555,7 +570,7 @@ class BaseController extends Zend_Controller_Action
 	{
 			
 		// VIEJO $yinit = 655;	  $ymin = 350;
-		$yinit = 631;	  $ymin = 190;
+		$yinit = 619;	  $ymin = 210;
 		$esfactura = true;
 		if ($key == 'idAlbaran')
 		{
@@ -565,8 +580,8 @@ class BaseController extends Zend_Controller_Action
 		}
 		$y = $yinit; 
 			
-		$lh = 12; $xc = 20;	$xcl = 60;	$xct = 97;	$xte = 135;
-		$xctt = 195;	$xu = 250;	$xdes = 278;	$xp = 452;	$xtp = 525;
+		$lh = 12; $xc = 25;	$xcl = 65;	$xct = 100;	$xte = 135;
+		$xctt = 195;	$xu = 225;	$xdes = 250;	$xp = 452;	$xtp = 525;
 		
 		$movimientosporpagina = floor( ($yinit-$ymin-$lh)  / $lh ); // Approx 2 lineas cada 25. Tamano fuente. Reseva una linea para imprimir numero linea
 		
@@ -615,7 +630,7 @@ class BaseController extends Zend_Controller_Action
 					$y-=$lh;
 					if ($y<($ymin+$lh))
 					{
-						$page->drawText('Pagina '.$pagina.'/'.$numeropaginas , $xdes, $y,'UTF-8');
+						$page->drawText('Pagina '.$pagina.'/'.$numeropaginas , 450, 50,'UTF-8');
 						$pagina++;
 						$size = $page->getWidth() . ':' . $page->getHeight() .':';
 						$page = $this->createPage($pdf,$size);
@@ -649,7 +664,7 @@ class BaseController extends Zend_Controller_Action
 			$y-=$lh;
 			if ($y<($ymin+$lh))
 			{
-				$page->drawText('Pagina '.$pagina.'/'.$numeropaginas , $xdes, $y,'UTF-8');
+				$page->drawText('Pagina '.$pagina.'/'.$numeropaginas , 450, 50,'UTF-8');
 				$pagina++;
 				$size = $page->getWidth() . ':' . $page->getHeight() .':';
 				$page = $this->createPage($pdf,$size);
@@ -661,7 +676,7 @@ class BaseController extends Zend_Controller_Action
 //		{
 //			$this->imprimirValoracionAlbaran($documento,$page,$y);
 //		}
-		$page->drawText('Pagina '.$pagina.'/'.$numeropaginas /*.'/'.$numeromovimentos*/, $xdes, $ymin,'UTF-8');
+		$page->drawText('Pagina '.$pagina.'/'.$numeropaginas /*.'/'.$numeromovimentos*/, 450, 50,'UTF-8');
 		
 		
 		return $page;

@@ -212,7 +212,7 @@ class FacturaController extends BaseController
 	
 	public function nuevofacturaAction()
 	{
-		$this->view->titleView='Creando Factura';
+		
 		$this->view->subtitleView = 'Revisar Referencias';
 		
 
@@ -228,7 +228,7 @@ class FacturaController extends BaseController
        	$this->view->albarabesestafactura = $this->model->queryAlbaranesPorFactura($factura['idFactura']);
        	$this->view->descuentos = $this->modelCliente->queryFK('TblDescuento',$factura['idCliente']);
        	$this->view->idCliente = $factura['idCliente'];
-
+       	
        	$listtipopago = $this->model->getTipoPago();
 		$vencimientos = $this->model->getDiasPago();
 		
@@ -259,7 +259,8 @@ class FacturaController extends BaseController
 		$albaran = $this->model->queryID('TblAlbaran',$idAlbaran);
 		$datfactura = array('idAlbaran'=>$idAlbaran,
 							'idCliente'=>$albaran['idCliente'],
-							'descuentoaplicartotal'=>$albaran['descuentoaplicartotal']);
+							'descuentoaplicartotal'=>$albaran['descuentoaplicartotal'],
+							'ordencliente'=>$albaran['ordencliente']);
 				
 		return $this->generatefacturaproxy($datfactura,$albaran);
 	}

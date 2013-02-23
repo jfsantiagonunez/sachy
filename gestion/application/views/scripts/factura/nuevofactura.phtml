@@ -10,15 +10,21 @@
 	{	
 		if (isset($this->cliente))
 		{
-			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;
-	margin: 5px 0 5px 0;"><h3><tr><td id="idCliente">'.$this->cliente['idCliente'].'</td><td>' . $this->cliente['nombre'] . '</td><td align="right">' . $this->factura['numerofactura']  .'</td></tr></table></h3>';
-			echo '<br/>';
+		
+			$this->titleView='Factura ['. $this->factura['numerofactura'] .']';
+			echo '<h3><table width="95%"><tr><td align="left"> 430.' .$this->cliente['cuentaventa'].'</td><td align="center">' .
+			 	$this->cliente['nombre'] . '</td><td>' .  
+			 	'</td><td id="idCliente" align="right"> ' .$this->cliente['idCliente'].'</td></tr></table></h3>';
+			echo 'Orden Cliente ['.$this->factura['ordencliente'].']';
+			
+			echo '<div id="subcontent">';
 			if ($this->factura['estado']=='0')
 			{
-		
+				
 				echo '<form method="post" id="cambiopago"  action="'.$this->url(array('controller' => 'factura', 'action' => 'cambiopagofactura','idFactura'=>$this->factura['idFactura']), 'default', true) .'">';			
-				echo '<table class="dbtableref"><tr>'; 		
-				echo '<td><input id="fecha" type="text" value="'. $this->factura['fecha'].'" name="fecha" style="width:110px" name="posterior" dojoType="dijit.form.DateTextBox" /></td>';
+				echo '<table class="dbtableref">'; 	
+					
+				echo '<tr><td><input id="fecha" type="text" value="'. $this->factura['fecha'].'" name="fecha" style="width:110px" name="posterior" dojoType="dijit.form.DateTextBox" /></td>';
 				
 			
 				if (isset($this->selectTipopago)) echo '<td>'.$this->selectTipopago.'</td>';
@@ -92,7 +98,7 @@
 				array(
 					'numeroalbaran' => 'Albaran',
 					'fecha' => 'Fecha',
-					'nombre' => 'Cliente',
+					'ordencliente' => 'Orden Cliente',
 					'entrada' => 'E/S',
 					'tienda' => 'Tienda'
 				),
@@ -116,7 +122,7 @@
 				array(
 					'numeroalbaran' => 'Albaran',
 					'fecha' => 'Fecha',
-					'nombre' => 'Cliente',
+					'ordencliente' => 'Orden Cliente',
 					'entrada' => 'E/S',
 					'tienda' => 'Tienda'
 				),

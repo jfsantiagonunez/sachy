@@ -29,57 +29,6 @@ function addclienteordenalbaran() {
 }
 dojo.addOnLoad(addclienteordenalbaran);
 
-function addcomentarioalbaran() {
-    var form = dojo.byId("comentarioalbaran");
-
-    if (form == null ) return;
-    
-    dojo.connect(form, "onsubmit", function(event) {
-        //Stop the submit event since we want to control form submission.
-        dojo.stopEvent(event);
-
-        //The parameters to pass to xhrPost, the form, how to handle it, and the callbacks.
-        //Note that there isn't a url passed.  xhrPost will extract the url to call from the form's
-        //'action' attribute.  You could also leave off the action attribute and set the url of the xhrPost object
-        //either should work.
-        var xhrArgs = {
-            form: dojo.byId("comentarioalbaran"),
-            handleAs: "text",
-            load: function(data) {
-        		dojo.byId("errorajax").innerHTML = data;
-            },
-            error: function(error) {
-                dojo.byId("errorajax").innerHTML = "Error agregando comentartio cliente ...";
-            }
-        };
-        //Call the asynchronous xhrPost
-        dojo.byId("errorajax").innerHTML = "Salvando Comentario...";
-        var deferred = dojo.xhrPost(xhrArgs);
-    });
-    dojo.connect(form, "onblur", function(event) {
-        //Stop the submit event since we want to control form submission.
-        dojo.stopEvent(event);
-
-        //The parameters to pass to xhrPost, the form, how to handle it, and the callbacks.
-        //Note that there isn't a url passed.  xhrPost will extract the url to call from the form's
-        //'action' attribute.  You could also leave off the action attribute and set the url of the xhrPost object
-        //either should work.
-        var xhrArgs = {
-            form: dojo.byId("comentarioalbaran"),
-            handleAs: "text",
-            load: function(data) {
-        		dojo.byId("errorajax").innerHTML = data;
-            },
-            error: function(error) {
-                dojo.byId("errorajax").innerHTML = "Error agregando comentartio cliente ...";
-            }
-        };
-        //Call the asynchronous xhrPost
-        dojo.byId("errorajax").innerHTML = "Salvando Comentario...";
-        var deferred = dojo.xhrPost(xhrArgs);
-    });
-}
-dojo.addOnLoad(addcomentarioalbaran);
 </script>
 
 
@@ -94,11 +43,19 @@ dojo.addOnLoad(addcomentarioalbaran);
 		
 		if (isset($this->cliente))
 		{
-			echo '<div id="subcontent"><table width="100%" border="0" style="color:#ff0099;margin: 5px 0 5px 0;"><h3><tr>
-			<td id="idCliente">'.$this->cliente['idCliente'].'</td><td>' . $this->cliente['nombre'] . '</td><td align="center">'.$this->entradatext.'-'.$this->tienda.'</td><td align="right">' . $this->albaran['numeroalbaran']  .'</td></tr></table></h3>';
-	
-			// Annadir form para comentario y orden pedido
+			$codigocliente = '430.' . $this->cliente['cuentaventa'];
+			if ($this->albaran['entrada']=='1')
+			{
+				$codigocliente = '400.'. $this->cliente['cuentacompra'];	
+			}
 			
+			$this->titleView='Albaran ['. $this->albaran['numeroalbaran'] .']';
+			echo '<h3><table width="95%"><tr><td align="left">'.$codigocliente.'</td><td align="center">' .
+			 	$this->cliente['nombre'] . '</td><td>' .  
+			 	'</td><td id="idCliente" align="right"> ' .$this->cliente['idCliente'].'</td></tr></table></h3>';
+			
+			echo '<div id="subcontent">';
+			// Annadir form para comentario y orden pedido
 			
 			if ($this->albaran['estado']=='0')
 			{
@@ -112,26 +69,16 @@ dojo.addOnLoad(addcomentarioalbaran);
 				echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody><tr>';
 				echo '<td><input id="ordencliente" type="text" value="'.$ordencliente.'" name="ordencliente" onfocus="javascript:this.value=\'\'" style="width:500px;"/></td>';
 				echo '<td><input type="submit" value="Salvar OC"></td></tr></tbody></table></form>';
- 
-				$comentario = $this->albaran['comentario'];
-				if ($comentario == '')
-				{
-					$comentario='Escribe Comentario y Pulsa en Salvar C';
-				}
-	        	echo '<form action="'.$url.'albaran/adddatatoobject/idAlbaran/'.$this->albaran['idAlbaran'].'" id="comentarioalbaran" >';	
-	        	echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody><tr>';
-				echo '<td><input id="comentario" type="text" value="'.$comentario.'" name="comentario" onfocus="javascript:this.value=\'\'" style="width:500px;"/></td>';						
-				echo '<td><input type="submit" value="Salvar C"></td></tr></tbody></table></form>';
-				
+ 				
 				echo '<div id="errorajax"></div>';
 			}
 			else
 			{
-	        	echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody>';
-				echo '<tr><td>Orden Cliente : </td><td>'.$this->albaran['ordencliente'].'</td></tr>';
-				echo '<tr><td>Comentario : </td><td>'.$this->albaran['comentario'].'</td></tr>';
-				echo '<tr><td>Descuento : </td><td>'.$this->albaran['descuentoaplicartotal'].'</td></tr>';
-				echo '</tbody></table>';
+	        	echo '<table border="0" style="margin: 5px 0 5px 0;"><tbody><tr>';
+	        	echo '<td>Num Proveedor : </td><td>'.$this->cliente['numrefproveedor'].'</td>';
+				echo '<td>Orden Cliente : </td><td>'.$this->albaran['ordencliente'].'</td>';
+				echo '<td>Descuento : </td><td>'.$this->albaran['descuentoaplicartotal'].'</td>';
+				echo '</tr></tbody></table>';
 			}	
 	        echo '</div>';
 	        
