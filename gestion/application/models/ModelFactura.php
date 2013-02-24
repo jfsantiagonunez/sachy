@@ -158,7 +158,10 @@ class ModelFactura extends ModelBase {
 		$query = $this->getTable($tableId)
 		->select()
 		->from(array($tableId => $tableId ),
-		array('numerofactura','fecha','ordencliente','condicionespago','vencimiento','baseimponible','tipoiva','iva','total' ) )
+		array('numerofactura','ffecha'=>new Zend_Db_Expr('DATE_FORMAT(fecha,\'%d-%m-%y\')'),'ordencliente','condicionespago',
+			 //'fvencimiento'=>new Zend_Db_Expr('DATE_FORMAT(vencimiento,\'%d-%m-%y\')'),
+			 'vencimiento',
+			 'baseimponible','tipoiva','iva','total' ) )
 		->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblFactura.idCliente AND '. $where ,
 		array('cuenta'=> new Zend_Db_Expr( 'CONCAT(\'430\' , LPAD(cuentaventa,4,\'0\'))' ),'nombre','banco','cuentabancaria','dc','sucursal') )
 		->order('TblFactura.fecha DESC')
