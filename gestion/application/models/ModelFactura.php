@@ -126,6 +126,47 @@ class ModelFactura extends ModelBase {
 		return $this->getTable($tableId)->fetchAll($query);
 	}
 
+	public function getLatestAsientos($anterior,$posterior)
+	{
+		$tableId = 'TblFactura';
+		$tablawhere = $tableId;
+
+		$where = $tablawhere.'.fecha >= \''. $anterior . '\' AND ';
+		$where.= $tablawhere.'.fecha <= \''. $posterior . '\' ';
+			
+		$query = $this->getTable($tableId)
+		->select()
+		->from(array($tableId => $tableId ),
+		array('idFactura','numerofactura','fecha','total','condicionespago','vencimiento','iva','tipoiva','bruto' ) )
+		->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblFactura.idCliente AND '. $where ,
+		array('nombre','dc','banco','cuentabancaria','sucursal','cuentaventa','cuentacompra') )
+		->order('TblFactura.fecha DESC')
+		->setIntegrityCheck(false);
+			
+		return $this->getTable($tableId)->fetchAll($query);
+	}
+	
+	
+	public function getLatestAsientosExportarCsv($anterior,$posterior)
+	{
+		$tableId = 'TblFactura';
+		$tablawhere = $tableId;
+
+		$where = $tablawhere.'.fecha >= \''. $anterior . '\' AND ';
+		$where.= $tablawhere.'.fecha <= \''. $posterior . '\' ';
+			
+		$query = $this->getTable($tableId)
+		->select()
+		->from(array($tableId => $tableId ),
+		array('numerofactura','fecha','ordencliente','condicionespago','vencimiento','baseimponible','tipoiva','iva','total' ) )
+		->join(array('clientes' => 'TblCliente'), 'clientes.idCliente = TblFactura.idCliente AND '. $where ,
+		array('cuenta'=> new Zend_Db_Expr( 'CONCAT(\'430.\' , LPAD(cuentaventa,4,\'0\'))' ),'nombre','banco','cuentabancaria','dc','sucursal') )
+		->order('TblFactura.fecha DESC')
+		->setIntegrityCheck(false);
+			
+		return $this->getTable($tableId)->fetchAll($query);
+	}
+	
 	public function queryUltimosFacturas()
 	{
 		$tableId = 'TblFactura';

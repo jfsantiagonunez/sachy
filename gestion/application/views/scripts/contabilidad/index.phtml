@@ -1,0 +1,45 @@
+<script>
+        dojo.require("dijit.form.DateTextBox");
+</script>
+
+	<?php
+	if (isset($this->NoLoginMessage))
+	{
+		echo $this->NoLoginMessage;
+	}
+	else
+	{
+
+		echo '<form method="post" id="cambiopago"  action="'.$this->url(array('controller' => 'contabilidad', 'action' => 'index'), 'default', true) .'">';			
+		echo '<table class="dbtableref"><tr>'; 
+		echo '<td>De fecha</td>';		
+		echo '<td><input id="anterior" type="text" value="'. $this->anterior.'" style="width:110px" name="anterior" dojoType="dijit.form.DateTextBox" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td>A fecha</td>';	
+		echo '<td><input id="posterior" type="text" value="'. $this->posterior.'" style="width:110px" name="posterior" dojoType="dijit.form.DateTextBox" onfocus="javascript:this.value=\'\'" style="width:90px"/></td>';
+		echo '<td><input type="submit" value="Cambiar"/></td></tr></table></form><br/><br/>';	
+	}		
+
+	if (isset($this->asientos))
+	{
+			echo $this->table('Asientos Contables <a title="Imprimir este listado de asientos" href="'.$this->url(array('controller' => 'contabilidad', 
+				'action' => 'imprimir', 'anterior' => $this->anterior , 'posterior' => $this->posterior )
+				, 'default', true).'"><img src="img/icons/imprimir.png"/></a>',
+				array(
+					'numerofactura' => 'Factura',
+					'fecha' => 'Fecha',
+					'cuentaventa' => '430.#',
+					'nombre' => 'Cliente',
+					'total' => 'Importe'
+				),
+				$this->asientos ,
+				array(array('controller' => 'factura', 'action' => 'nuevofactura' )),
+				array('img/icons/view.png" title="Ver Factura'),
+				'idFactura','ASC','idFactura'); 
+			
+	}
+	else
+	{
+		echo 'No hay Asientos Contables en esas fechas. Prueba otro rango de fechas';
+	}
+?>
+	

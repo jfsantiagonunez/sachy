@@ -86,6 +86,11 @@
 						href="<?php echo $this->url(array('controller' => 'Factura', 'action' => 'index'), 'default', true); ?>">Factura</a></li>
 					<li class="li-factura">
 						<a 
+						<?php if ($this->escape($this->action) == 'Contabilidad') echo 'class="active"'; ?>
+						href="<?php echo $this->url(array('controller' => 'Contabilidad', 'action' => 'index'), 'default', true); ?>">Contabilidad</a></li>
+
+					<li class="li-factura">
+						<a 
 						<?php if ($this->escape($this->action) == 'Recibo') echo 'class="active"'; ?>
 						href="<?php echo $this->url(array('controller' => 'Recibo', 'action' => 'index'), 'default', true); ?>">Vencimiento</a></li>
 					<?php }?>
@@ -137,7 +142,7 @@
 			<!-- Marketing -->
 			<div id="legenda" style="padding-bottom:3px;" >
 				<h3 style="font-size:14px;">Gestion Pinturas Santiago</h3>
-				<p style="font-size:11px; margin:0">Version 1.3 Agosto 2012 | Desarrollado por <a href="mailto:jfsantiagonunez@gmail.com">Jose Santiago</a></p>
+				<p style="font-size:11px; margin:0">Version 1.4 Feb 2013 | Desarrollado por <a href="mailto:jfsantiagonunez@gmail.com">Jose Santiago</a></p>
 			</div>
 		</div>
 	</div>

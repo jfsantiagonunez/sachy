@@ -34,7 +34,7 @@ class ReciboController extends BaseController
     		}
     		else
     		{
-    			$this->view->anterior = $this->fecha('0');
+    			$this->view->anterior = $this->fecha(-1);
     		}
        		if ( isset($data['posterior'] ) )
     		{
@@ -42,13 +42,13 @@ class ReciboController extends BaseController
     		}
     		else
     		{
-    			$this->view->posterior = $this->fecha('1');
+    			$this->view->posterior = $this->fecha(1);
     		}
        	}
        	else
        	{
-    		$this->view->anterior = $this->fecha('0');
-    		$this->view->posterior = $this->fecha('1');
+    		$this->view->anterior = $this->fecha(-1);
+    		$this->view->posterior = $this->fecha(1);
        	}
     	$this->view->recibos = $this->model->getLatestRecibos($this->view->anterior,$this->view->posterior);
     }
@@ -71,38 +71,23 @@ class ReciboController extends BaseController
 					'default', true);
     }
     
-    function fecha($rango)
+   function fecha($rango)
     {
+    	$time = time();
     	
-	$valor = time();
-    	if ( $rango == '0')
+    	$day = (int) date('d',$time);
+    	
+    	
+    	$seg = $day % 5;
+    	if ($rango == 1)
     	{
-    		//$hoy->sub( DateInterval::createFromDateString( '5 days'));
+    		$seg = 5 - $seg;
+    	}
+    	$offset = $rango * $seg;
     		
-    	}
-    	else
-    	{
-	// Sumar 5 dias
-	    		$valor += (5*24*60*60);
-    	}
+    	$fecha = date("Y-m-d", mktime(0, 0, 0, date("m")  , date("d") + $offset, date("Y")));
 
-       	
-    	$day = (int) date('d',$valor);
-       	$seg = round($day/5);
-       	if ($seg==0)
-       		$day = 1;
-       	else
-       		$day = 5*$seg;
-       	
-       	if ( $rango == '0')
-       	{
-       		$day++;
-       	}
-       	
-			
-    $hoy = date("Y-m-d", mktime(0, 0, 0, date("m")  , $day, date("Y")));
-
-    		return $hoy;	
+    	return $fecha;
     }
     
 	public function imprimirAction()

@@ -1,0 +1,9 @@
+<?php
+	header("Content-Description: File Transfer");
+	header("Content-Disposition: inline; filename=".$this->fname); 
+	header("Content-type: application/csv"); 
+	header("Content-Transfer-Encoding: binary");
+	header("Cache-Control: public");
+	readfile ($this->fname); 
+	//echo $this->content;
+?>
