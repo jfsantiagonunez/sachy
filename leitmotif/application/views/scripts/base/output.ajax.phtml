@@ -1,0 +1,147 @@
+<script>
+
+	var divid = "<?php echo "#".$this->placeholder?>";
+	function scrollToElement() {
+		$("<?php echo $this->headerlevel ?>", "<?php echo '#'.$this->accordion ?>").each(function() {
+			if ( $(this).next().hasClass('ui-accordion-content-active') && ($(this).next().children().length > 0)) {
+				$('html, body').animate({
+			        scrollTop: $(this).offset().top
+		        }, 500);
+		        return false;
+			}
+		});
+	}
+	$(function() {
+//		deleteOldEditors();
+		deleteajaxactionClick();
+		addajaxactionClick();
+		newajaxactionFocus();
+		optionselectChange();
+		newajaxactionBlur();
+		newajaxactionEnter();
+		editajaxactionBlur();
+		editajaxactionEnter();
+
+		$("<?php echo '#'.$this->accordion ?>").accordion({          
+	        header: "<?php echo $this->headerlevel ?>",
+	        active: false,
+	        heightStyle: "content",
+	        collapsible: true
+	    });
+	    
+	    $("<?php echo $this->headerlevel ?>", "<?php echo '#'.$this->accordion ?>").click(function(e) {
+		    if ( ! ($(this).closest('.ui-accordion').accordion('option', 'active') === false)) { // Fill contents only on expand, not on collapse
+		    	$(function() {
+		    		setTimeout(scrollToElement, 500);
+		        });
+		        var contentDiv = $(this).next("div");
+		        contentDiv.load($(this).find("a").attr("href"));
+		    }
+	    });
+
+	    $(".topictext").click( function() {
+		    var value = $(this).html();
+		    var parenttext = $(this).parent();
+		    var contentDiv = parenttext.parent();
+		    var editor = document.createElement('textarea');
+		    var url= $(this).attr("action");
+		    
+		    editor.className="editor";
+	        parenttext.empty();   
+		    parenttext.append(editor);
+		    
+		    $(editor).jqte({blur: function(){
+		    	var texto=escape($(".editor").val());
+		    	var textarea = $(".editor").parents(".texttopiccontainer");
+		    	//alert(url);
+	    		var posting = $.post( url, { texttopic: texto} );
+   		
+	    		// Put the results in a div
+	    		posting.done(function( data ) {
+	      				contentDiv.empty().append( data );
+      				    //alert(data);
+      				    //alert(url);
+	      				return false;
+	    			});
+    			
+		    	}} );
+		    $(editor).jqteVal(value);
+		    //$(editor).focus();
+		    
+	    });
+	    
+	    
+	});
+ 	
+</script>
+
+
+
+<?php
+echo '<div id="'.$this->accordion.'">';
+
+if ( !empty($this->thisItem)  && isset($this->thisItem)) {
+	$option = array(	'controller' => $this->controller,
+						 'action' => 'deleteajax',
+	                     'namePk' => $this->namePk,
+	                     'idValue' => $this->thisItem[$this->namePk],
+	                     'idParent' => $this->thisItem['idParent']);
+		
+	$link = $this->url($option, 'default', true);
+
+	echo '<td><a class="deleteajaxaction" href="'.$link.'">'.
+					 ' <img src="images/cancel.png" alt="Delete"></a></td>';
+	
+	$optionUpdate= array(	'controller' => $this->controller,
+						 'action' => 'updateajax',
+	                     $this->namePk => $this->thisItem[$this->namePk],
+	                     'idParent' => $this->thisItem['idParent'],
+						 'param'=>$this->textField);
+	
+		
+	$linkUpdate = $this->url($optionUpdate, 'default', true);
+	
+	echo '<div class="texttopiccontainer" ><div class="topictext" action="'.$linkUpdate.'" >'.$this->thisItem[$this->textField].'</div></div>';
+	
+	//echo '<textarea class="editor" action="'.$linkUpdate.'" name="'.$this->thisItem[$this->namePk].'">'.$this->thisItem['leitmotif'].'</textarea>';
+}
+
+if ( !empty($this->data)  && isset($this->data)) {
+	foreach( $this->data as $dataItem )
+	{
+		echo '<div><'.$this->headerlevel.'>';
+			
+		$link = array(	'controller' => $this->controller,
+					'action' => 'indexajax',
+					'idParent' => $dataItem[$this->namePk]);
+
+		// Adding Header
+		$pos = strpos($dataItem['title'], '<br>');
+		$title = '';
+		if ($pos === false ) {
+			$pos = strpos($dataItem['title'], '<p>');
+		}
+		if ($pos === false ) {
+			$title = $dataItem['title'];
+		} else {
+			$title = substr($dataItem['title'],0,$pos);
+		}
+		echo '<a href="'. $this->url($link,
+					'default', true) . '">'. $title. '</a></'.$this->headerlevel.'><div></div>';
+		echo '</div>';
+	}
+}
+echo '</div>';
+
+if ($this->canaddnew=='1')
+{
+	$option = array(	'controller' => $this->controller,
+					'action' => 'newajax',
+					'idParent' => $this->idParent);
+
+	$link = $this->url($option, 'default', true);
+	echo '<td><form action="'.$link.'"><input type="text" name="texttopic" class="newajaxaction" value="Add new"></form>';
+}
+
+?>
+<!-- http://stackoverflow.com/questions/9173493/jquery-ui-accordion-how-to-put-a-button-link-to-header-with-another-function -->

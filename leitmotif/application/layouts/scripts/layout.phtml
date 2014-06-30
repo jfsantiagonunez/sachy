@@ -1,23 +1,80 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title>Leitmotif</title>
-	<base href="<?php echo 'http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';?>" />
-	<?php
-		echo $this->headLink()->appendStylesheet('css/main.css', 'screen, projection');
-
-	?>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script src="custom/leitmotif.js"></script> 
+<?php 
+	$thisBase='http://'.$_SERVER['SERVER_NAME'].':' . $_SERVER['SERVER_PORT'] . $this->baseUrl().'/';
+?>
+<title>Leitmotif</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet"	href="<?php echo $thisBase?>css/main.css" />
+<link rel="shortcut icon" href="<?php echo $thisBase?>images/MFM.ico" />
+<script src="<?php echo $thisBase?>js/jquery-1.10.2.min.js"></script>
+<script src="<?php echo $thisBase?>js/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
+<link rel="stylesheet"
+	href="<?php echo $thisBase?>js/jquery-ui-1.10.3/themes/smooth/jquery-ui.css" />
+<script src="<?php echo $thisBase?>js/utils.js"></script>
+<script src="<?php echo $thisBase?>js/jquery-te-1.4.0.min.js"></script>
+<link rel="stylesheet"
+	href="<?php echo $thisBase?>js/jquery-te-1.4.0.css" />
+<script src="<?php echo $thisBase?>js/qtip/imagesloaded.pkgd.js"></script>
+<link rel="stylesheet"	href="<?php echo $thisBase?>css/qtip/jquery.qtip.css" />
+<script src="<?php echo $thisBase?>js/qtip/jquery.qtip.js"></script>
+<script>
+  fix_urls();
+  $(function() {
+    $( "#tabs" ).tabs({
+      beforeLoad: function( event, ui ) {
+        ui.jqXHR.error(function() {
+          ui.panel.html(
+            "Couldn't load this tab. We'll try to fix this as soon as possible. ");
+        });
+      }
+    });
+  });
+</script>
 </head>
-<body>
-	<header><h1>Leitmotif</h1></header>
-	
-	<div>
-		<?php echo $this->layout()->content;?>
-	</div>
 
+<body>
+
+   <?php 
+       $auth = Zend_Auth::getInstance();
+       ?>
+       	<div id="menu">
+		<div id="menu-content-wrapper">
+			<div class="left">
+				<p>Leitmotif</p>
+			</div>
+			<div class="right">
+				<p>
+				<?php	
+				if($auth->hasIdentity()) { ?>
+					<?php echo $auth->getIdentity()->lastname . ' , ' . $auth->getIdentity()->firstname ; ?> - 
+					<a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout'), 'default', true) ?>">Log out</a>
+				<?php } ?> 						
+				</p>
+			</div>
+		</div>
+	</div>
+    <?php 
+	   if($auth->hasIdentity()) {
+	?>			
+	<div id="tabs">
+		<ul>
+		    <li><a class="main-tab" href="<?php echo $this->url(array('controller' => 'Leitmotif', 'action' => 'indexajax' ), 'default', true); ?>">Leitmotif</a></li>
+			<li><a class="main-tab" href="<?php echo $this->url(array('controller' => 'Diary', 'action' => 'indexajax' ), 'default', true); ?>">Diary</a></li>
+			<li><a class="main-tab" href="help.html">Help</a></li>
+		</ul>
+	</div>
+	<?php
+		} else {  
+		  echo $this->layout()->content;
+		} 
+		?>
+	<div id="legenda" style="padding-bottom: 3px;" align="center">
+		<h3 style="font-size: 14px;">Leitmotif</h3>
+		<p style="font-size: 11px; margin: 0">Version 1.0 14092013 | Developed by <a href="mailto:infosachy@gmail.com">Jose Santiago</a> for Sachy</p>
+	</div>
 </body>
+
 
 </html>

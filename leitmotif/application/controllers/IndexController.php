@@ -6,31 +6,18 @@ class IndexController extends Zend_Controller_Action
 	
     public function init()
     {
-        /* Load DB_model */
-
+    	require_once(APPLICATION_PATH . '/models/ModelLeitmotif.php');
+    	$this->model = new ModelLeitmotif();
+    	   
     }
-    
+
     public function indexAction()
     {
-   		$auth       = Zend_Auth::getInstance(); 
+      	$auth   = Zend_Auth::getInstance(); 
     	if(!$auth->hasIdentity()){
       		$this->_redirect('/user/index');
-    	}else{
-    	  	$this->_redirect('/leitmotif/index');
     	}
     }
-    
-    
-    public function loginAction()
-    {
-    	$request = $this->getRequest();  
-    	$auth       = Zend_Auth::getInstance(); 
-    	if(!$auth->hasIdentity()){
-      		$this->_redirect('/user/loginform');
-    	}else{
-    	  	$this->_redirect('/user/userpage');
-    	}
-    }
-}
 
+}
 ?>

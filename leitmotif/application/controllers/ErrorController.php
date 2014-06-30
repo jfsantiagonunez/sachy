@@ -5,9 +5,7 @@ class ErrorController extends Zend_Controller_Action
 
     public function errorAction()
     {
-
-    	$this->_helper->layout()->disableLayout();
-    	$errors = $this->_getParam('error_handler');
+        $errors = $this->_getParam('error_handler');
         
         switch ($errors->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
@@ -15,12 +13,12 @@ class ErrorController extends Zend_Controller_Action
         
                 // 404 error -- controller or action not found
                 $this->getResponse()->setHttpResponseCode(404);
-                $this->view->message = 'Page not found';
+                $this->view->message = 'LA CAGASTE BURTLANCASTER - Page not found';
                 break;
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $this->view->message = 'Application error';
+                $this->view->message = 'LA CAGASTE BURTLANCASTER - Application error';
                 break;
         }
         
@@ -30,4 +28,4 @@ class ErrorController extends Zend_Controller_Action
 
 
 }
-
+?>

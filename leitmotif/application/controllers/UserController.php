@@ -60,24 +60,21 @@ class UserController extends BaseController
 				$auth = Zend_Auth::getInstance();
 
 				$result = $auth->authenticate($adapter);
-	
+
 				if($result->isValid()) {
 					try{
-						
 						$user = (array)$adapter->getResultRowObject(array(
 							'idUser',
 							'username',
 							'password',
 							'firstname',
-							'lastname',
-							'admin'
+							'lastname'
 						));
 						
 						if ($user['password'] == $data['password'])
 						{
 							$storage = $auth->getStorage();
 							$storage->write((object)$user);
-
 							return $this->_helper->redirector->gotoRoute(array('controller' => 'index', 'action' => 'index'),'default', true);
 						}
 						else
@@ -90,7 +87,6 @@ class UserController extends BaseController
 						$this->errorlogin = 'Loggin Failure';
 					}
 				}else{
-
 					$this->errorlogin = 'user does not exist!';	
 					return $this->_helper->redirector->gotoRoute(array('controller' => 'user', 'action' => 'index'),'default', true);	    		
 				}
@@ -105,6 +101,7 @@ class UserController extends BaseController
     
 	public function logoutAction() {
 		Zend_Auth::getInstance()->clearIdentity();
+		
 		return $this->_helper->redirector->gotoRoute(array(
 						'controller' => 'index', 'action' => 'index'),
 						'default', true);

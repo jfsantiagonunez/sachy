@@ -1,14 +1,15 @@
 <?php
 
 	class TblBase extends Zend_Db_Table_Abstract {
-		
 		/* table name */
 		protected $_name = 'TblBase';
 		protected $_pk = 'pk';  // unique name
 		protected $_NumeroPk = 1;
+		protected $_NumeroFk = 1;
 		protected $_fk = 'fk';  // external reference
 		protected $_id = 'id';  //internal Id
 		protected $_checkduplicateswhencreate = 1;
+		protected $_textField = 'text';
 		
 		public function getName() {
 			return $this->_name;
@@ -24,6 +25,10 @@
 
 		public function getId() {
 			return $this->_id; 
+		}
+		
+		public function getTextField() {
+			return $this->_textField; 
 		}
 		
 		public function selectID($id){
@@ -50,13 +55,41 @@
 			return $this->fetchRow($select);
 		}
 		
+		public function selectFKs(array $id){
+			$where = $this->_fk . ' = \'' . $id[$this->_fk] . '\'';
+				
+			if ($this->_NumeroFk > 1 )
+				$where .= ' AND ' . $this->_fk2 . ' = \'' . $id[$this->_fk2] . '\'';
+			if ($this->_NumeroFk > 2 )
+				$where .= ' AND ' . $this->_fk3 . ' = \'' . $id[$this->_fk3] . '\'';
+				
+			$select = $this->select()->where( $where );
+		
+			return $this->fetchRow($select);
+		}
+		
+		
 		public function selectFK($id){
 			$select = $this->select()->where( $this->_fk . ' = ?',$id);
 			return $this->fetchAll($select);
 		}
 		
+		public function selectFKOrderBy($id,$orderId){
+			$select = $this->select()->where( $this->_fk . ' = ?',$id)->order($orderId);
+			return $this->fetchAll($select);
+		}
+		
+		public function selectFKOrderByWhere($id,$orderId,$where){
+			$select = $this->select()->where( $this->_fk . ' = ?'. ' AND '. $where,$id)->order($orderId);
+			return $this->fetchAll($select);
+		}
+		
 		public function selectWhere($where){
 			$select = $this->select()->where( $where );
+			return $this->fetchAll($select);
+		}
+		public function selectWhereOrderBy($where,$orderBy){
+			$select = $this->select()->where( $where )->order($orderBy);
 			return $this->fetchAll($select);
 		}
 		
@@ -74,7 +107,7 @@
 			}
 			if (!isset($fieldwhere))
 			{
-				$fieldwhere = $this->_id;
+				$fieldwhere = $this->_pk;
 
 			}
 
@@ -108,7 +141,7 @@
 		// Returns Id if succesfull
 		public function insertData(array $data)
 	    {
-			
+
 			if ($this->_checkduplicateswhencreate == 1)
 			{
 				$exists = $this->selectPKs($data);
@@ -118,7 +151,7 @@
 					return null;
 				}
 			}
-			$data[$this->_id] = $this->uuid();
+			
 			/* check if all the posted fields are valid db fiels */
 			$fields = $this->info(Zend_Db_Table_Abstract::COLS);
 			foreach($data as $field => $value) {
@@ -144,18 +177,6 @@
 			$where = $this->getAdapter()->quoteInto($this->_id . ' = ?', $id);
 
 			return $this->delete($where);
-		}
-		
-		function uuid($prefix = '')
-		{
-			$chars = md5(uniqid(mt_rand(), true));
-			$uuid  = substr($chars,0,8) . '-';
-			$uuid .= substr($chars,8,4) . '-';
-			$uuid .= substr($chars,12,4) . '-';
-			$uuid .= substr($chars,16,4) . '-';
-			$uuid .= substr($chars,20,12);
-			//print($uuid . '<br/>');
-			return $prefix . $uuid;
 		}
 		
 	}

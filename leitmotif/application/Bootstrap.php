@@ -17,10 +17,12 @@
 	/* set doctype, needed for automatic forms etc. */
 	$view = Zend_Layout::getMvcInstance()->getView();
 	$view->doctype('XHTML11');
-	$view->addHelperPath(APPLICATION_PATH . '/../library/Ivaldi/View/Helper/',
-			'Ivaldi_View_Helper');
-	$view->addHelperPath(APPLICATION_PATH . '/../library/Zend/Dojo/View/Helper/', 'Zend_Dojo_View_Helper');
-
+	
+		// Add MfmViewHelper
+//	require_once APPLICATION_PATH.'/../library/MfmViewLib/Zend/View.php';
+	
+//	$mfmview = new MfmHelperView();
+	
 	$viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer(); 
 	$viewRenderer->setView($view); 
 	Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
