@@ -108,8 +108,8 @@ class ModelLeitmotif extends ModelBase {
 		->select()
 		->from(array('lm' => $tableId ),
 		array('*',' substr(leitmotif,1,50) as title'))
-		->where($where);
-		//->order('lm.priority');
+		->where($where)
+		->order('fecha asc');
 		return $this->getTable($tableId)->fetchAll($query);
 	}
 
@@ -125,7 +125,8 @@ class ModelLeitmotif extends ModelBase {
 		->select()
 		->from(array('diary' => $tableId ),
 		array('*',' substr(diary,1,50) as title'))
-		->where($where);
+		->where($where)
+		->order('fecha desc');
 		return $this->getTable($tableId)->fetchAll($query);
 	}
 	
@@ -140,243 +141,31 @@ class ModelLeitmotif extends ModelBase {
         $this->create($table, $data);
 	}
 	
-	
-	public function createLeitmotif(array $data)
+	public function queryUsersSharingWithUser($idUser)
 	{
-			
-		// We need to add stuff to the data:
-			
-		$auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity())
-		{
-			$data['idLeitmotif'] = uniqid();
-			$data['fecha'] = date('Y-m-d h:m:s');
-			$textLeitmotif = urldecode($data['textleitmotif']);
-			$data['leitmotif'] = $textLeitmotif;
-			unset($data['textLeitmotif']);
-			if ( !isset($data['idParent']) || empty($data['idParent'])) {
-				$data['idParent']='top';
-			}
-			
-			$data['idLeitmotif'] = $this->create('idLeitmotif', $data);
-		}
-	}
-
-	
-	public function createDiary(array $data)
-	{
-			
-		// We need to add stuff to the data:
-			
-		$auth = Zend_Auth::getInstance();
-		if($auth->hasIdentity())
-		{
-			$data['idTblDiary'] = uniqid();
-			$data['fecha'] = date('Y-m-d h:m:s');
-			$textLeitmotif = urldecode($data['textdiary']);
-			$data['diary'] = $textLeitmotif;
-			unset($data['textdiary']);
-			
-			$data['idTblDiary'] = $this->create('TblDiary', $data);
-		}
+		$query = $this->getTable('TblShare')->select()
+				->from(	array('Share' => 'TblShare' ),
+				array('idSharedUser','fkidLeitmotif','idOwner'))
+				->join(array('User' => 'TblUser'),
+						'Share.idOwner = User.idUser AND Share.idSharedUser = \''.$idUser.'\'' ,
+						array('username','firstname','lastname as title' ) )
+						->order('username asc')
+						->setIntegrityCheck(false);
+		return $this->getTable('TblShare')->fetchAll($query);
 	}
 	
-//	public function createUpdateLeitmotif(array $data)
-//	{
-//		//print_r($data);
-//		// See leimotif.js
-//		$idLeitmotif = $data['idLeitmotif'];
-//			
-//		$textLeitmotif = urldecode($data['textLeitmotif']);
-//		$data['leitmotif'] = $textLeitmotif;
-//		unset($data['textLeitmotif']);
-//			
-//		// Maybe it is new
-//			
-//		$tokensize = strlen($this->_newleitmotiftoken);
-//		$new = false;
-//		$level = '0';
-//			
-//		if (strncmp($idLeitmotif,$this->_newleitmotiftoken,$tokensize) == 0 )
-//		{
-//			// It is a new element
-//			// We need to add stuff to the data:
-//			$data['fecha'] = date('Y-m-d h:m:s');
-//				
-//			$auth = Zend_Auth::getInstance();
-//			if($auth->hasIdentity())
-//			{
-//				$data['owner'] = $auth->getIdentity()->idUser;
-//				$data['idUser'] = $auth->getIdentity()->idUser;
-//			}
-//
-//			// Create a Share & Vinculo
-//			$data['idShare'] = $this->create('idShare', $data);
-//			$this->create('idVinculo',$data);
-//
-//			$data['idLeitmotif'] = $this->create('idLeitmotif', $data);
-//
-//			$new=true;
-//
-//		}
-//		else
-//		{
-//			// It is an update
-//			$this->update('idLeitmotif', $data, $idLeitmotif);
-//		}
-//			
-//		$output = $this->buildOutputLeitmotif($data,false);
-//
-//		if ($new)
-//		{
-//			$output .= $this->buildOutputLeitmotifNew($level);
-//		}
-//		print($output);
-//		return $output;
-//	}
-		
-	public function buildOutput(array $data,$level,$parent)
+	public function querySharedLeitmotifPerUser($idParent,$idUser)
 	{
-		$output = '<div class="leitmotifList" id="'.$parent.'">';
-		$output .= $this->getTextTitle($level);
-
-		foreach ($data as $rowdata)
-		{
-			$output .= $this->buildOutputLeitmotif($rowdata,false);
-		}
-			
-		$output .= $this->buildOutputLeitmotifNew($level);
-		$output .= "</div>"; //leitmotifsList
-
-		return $output;
-	}
-
-	public function buildOutputLeitmotif(array $data,$isNew)
-	{
-		//print_r($rowdata);
-		$id = $data['idLeitmotif'];
-		$leitmotiftext = $data['leitmotif'];
-			
-		$output = '<div class="leitmotifItem" id="'.$id.'"><div class="leitmotifFrame">';
-
-		// Add Text Areas
-		$output .= $this->buildText($id, $leitmotiftext,$isNew);
-
-		// Add Icons
-		//
-
-		$output .= '<div class="leitmotifActions"><table><tr>';
-			
-		// Add extra levels
-		$levelnum=(int)$data['level'];
-			
-		if ($levelnum > 0 )
-		{
-			$output .= '<td><a title="Go to Upper Level" href="#" onclick="return leitmotifGotoLevel(\''.$id.'\', \'-1\');"><img src="img/icons/arrow_left.png"/></a></td>';
-		}
-
-		if (!$isNew)
-		{
-			$output .= '<td><a title="Delete" href="#" onclick="return leitmotifDelete(\''.$id.'\');"><img src="img/icons/delete.png"/></a></td>';
-				
-			// State
-			$output .= '<td>'.$this->getTextForComplete($data['complete']).'</td>';
-				
-
-			if ($levelnum < 4 )
-			{
-				$output .= '<td><a title="Go to Lower Level" href="#" onclick="return leitmotifGotoLevel(\''.$id.'\', \'1\');"><img src="img/icons/arrow_right.png"/></a></td>';
-			}
-			$output .= '</tr></table></div>'; //leitmotifActions
-		}
-			
-		// Closing
-		$output .= '</div></div>'; // leitmotifItem
-
-		return $output;
-	}
-		
-	public function buildOutputLeitmotifNew($level)
-	{
-		$newitem = array (	'idLeitmotif'=>$this->_newleitmotiftoken . $level ,
-								'leitmotif'=>'Add new ... ',
-								'level' => $level );
-
-		return $this->buildOutputLeitmotif($newitem,true);
-
-	}
-		
-	public function buildText($id,$leitmotiftext,$isNew)
-	{
-
-		$lenghttitle  = strpos($leitmotiftext,"<br>");
-		if ($lenghttitle===false)
-		{
-			// No break line found. Use total lenght
-			$lenghttitle = strlen($leitmotiftext);
-		}
-
-		if ( $lenghttitle > $this->lenghttitle )
-		{
-			$lenghtttile = $this->lenghttitle;
-		}
-
-		// Show title
-		$output = '<div class="leitmotifText" onClick="return leitmotifSelect( \''.$id.'\')";>';
-
-		$output .= '<div class="leitmotifTitle" id="'.$id.'-Title" style="display:block" >'.substr($leitmotiftext,0,$lenghttitle) . '</div>';
-		if ($isNew)
-		{
-			$leitmotiftext = '';
-		}
-		$output .= '<div class="leitmotifTextEdit" id="'.$id.'-Edit" style="display:none" contenteditable="true" onBlur="return leitmotifUpdate(\''.$id.'\');">' . $leitmotiftext . '</div>';
-			
-		$output .= "</div>"; //leitmotifText
-			
-		return $output;
-			
-	}
-
-	public function getTextTitle($value)
-	{
-		$output  ='';
-		switch ($value)
-		{
-			/*0 - To Do
-			 1 - In Progress
-				2 - Done
-				3 - Abandoned
-				4 - Not Need*/
-			case '0' : $output .= 'Mision';break;
-			case '1' : $output .= 'Goals'; break;
-			case '2' : $output .= 'Strategies'; break;
-			case '3' : $output .= 'Tasks'; break;
-			case '4' :
-			default :
-				$output .= 'Subtasks'; break;
-		}
-
-		return $output;
-
-	}
-
-	public function getTextForComplete($value)
-	{
-		$output  ='';
-		switch ($value)
-		{
-			/*0 - To Do
-			 1 - In Progress
-			 2 - Done
-				3 - Abandoned
-				4 - Not Need*/
-			case '0' : $output .= 'To Do';break;
-			case '1' : $output .= 'In Progress'; break;
-			case '2' : $output .= 'Done'; break;
-			case '3' : $output .= 'Abandoned'; break;
-			case '4' : $output .= 'Not Need'; break;
-		}
-		return $output;
+		$query = $this->getTable('TblShare')->select()
+				->from(	array('Share' => 'TblShare' ),
+				array('idSharedUser','fkidLeitmotif'))
+				->join(array('Leitmotif' => 'TblLeitmotif'),
+						'Share.fkidLeitmotif = Leitmotif.idLeitmotif AND Share.idSharedUser = \''.$idUser.'\''.
+				        'AND Share.idOwner = \''.$idParent.'\'' ,
+						array('*',' substr(leitmotif,1,50) as title'))
+						->order('fecha asc')
+						->setIntegrityCheck(false);
+		return $this->getTable('TblShare')->fetchAll($query);
 	}
 
 	public function get($key)

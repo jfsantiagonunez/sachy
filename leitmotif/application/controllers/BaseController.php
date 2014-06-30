@@ -46,6 +46,11 @@ class BaseController extends Zend_Controller_Action
 		 
 	}
 
+	public function localQueryTopic($idParent)
+	{
+		$this->view->thisItem =  $this->model->queryID($this->_mainTable,$idParent)->toArray();
+	}
+	
 	public function queryTopics($idParent,$idUser)
 	{
 
@@ -54,8 +59,17 @@ class BaseController extends Zend_Controller_Action
 		}
 		else
 		{
-			$this->view->thisItem = $this->model->queryID($this->_mainTable,$idParent)->toArray();
+			$this->localQueryTopic($idParent);
 		}
+
+		//print_r($this->view->data);
+		$this->view->headerlevel = 'h2';
+		$this->view->canaddnew=true;
+		$this->view->idParent=$idParent;
+		$this->view->accordion = 'accordion-'.$this->_controllername.'-'.$idParent;
+		$this->view->controller = $this->_controllername;
+		$this->view->namePk = $this->model->getTable($this->_mainTable)->getPK();
+		$this->view->textField = $this->model->getTable($this->_mainTable)->getTextField();
 		
 		$rows = $this->localQueryTopics($idParent,$idUser);
 		
@@ -63,14 +77,6 @@ class BaseController extends Zend_Controller_Action
 		{
 			$this->view->data = $rows->toArray();
 		}
-		//print_r($this->view->data);
-		$this->view->headerlevel = 'h2';
-		$this->view->canaddnew='1';
-		$this->view->idParent=$idParent;
-		$this->view->accordion = 'accordion-Topic-'.$this->_controllername.'-'.$idParent;
-		$this->view->controller = $this->_controllername;
-		$this->view->namePk = $this->model->getTable($this->_mainTable)->getPK();
-		$this->view->textField = $this->model->getTable($this->_mainTable)->getTextField();
 		
 		echo $this->view->render('base/output.ajax.phtml');
 	}

@@ -5,9 +5,9 @@
 	class TblShare extends TblBase {
 		/* table name */
 		protected $_name = 'TblShare';
-		protected $_pk = 'idShare';
-		protected $_fk = '';
-		protected $_id = 'idShare';
+		protected $_pk = 'fkidLeitmotif';
+		protected $_fk = 'idSharedUser';
+		protected $_id = 'fkidLeitmotif';
 		protected $_checkduplicateswhencreate=0;
 	
 	}

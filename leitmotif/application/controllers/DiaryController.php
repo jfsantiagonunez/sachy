@@ -21,6 +21,7 @@ class DiaryController extends BaseController
 	}
 	
 	public function localQueryTopics($idParent,$idUser) {
+		$this->view->useDateInTitle = true;
 		return $this->model->queryDiaryPerUser($idParent,$idUser);
 	}
 

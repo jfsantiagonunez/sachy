@@ -1,15 +1,15 @@
 <?php
 require_once(APPLICATION_PATH . '/controllers/BaseController.php');
 
-class LeitmotifController extends BaseController
+class ShareController extends BaseController
 {
 	var $model;
 	var $errorlogin;
 	var $titleView;
 
 	protected $_idkey = 'notodefine';
-	protected $_controllername = 'Leitmotif';
-	protected $_mainTable='TblLeitmotif';
+	protected $_controllername = 'Share';
+	protected $_mainTable='TblShare';
 
 	public function init()
 	{
@@ -23,9 +23,22 @@ class LeitmotifController extends BaseController
 
 	public function localQueryTopics($idParent,$idUser) {
 		$this->view->useDateInTitle = false;
-		return $this->model->queryLeitmotifPerUser($idParent,$idUser);
+		
+		if ($idParent==='top') {
+			$this->view->canaddnew=false;
+			return $this->model->queryUsersSharingWithUser($idUser);
+		} else {
+			$this->view->controller='Leitmotif';
+			$this->view->namePk = $this->model->getTable('TblLeitmotif')->getPK();
+		    $this->view->textField = $this->model->getTable('TblLeitmotif')->getTextField();
+			return $this->model->querySharedLeitmotifPerUser($idParent,$idUser);
+		}
 	}
 	
+	public function localQueryTopic($idParent)
+	{
+		// Do nothing
+	}
 
 
 	public function testAction()
