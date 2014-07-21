@@ -144,7 +144,7 @@ class ModelLeitmotif extends ModelBase {
 	public function queryUsersSharingWithUser($idUser)
 	{
 		$query = $this->getTable('TblShare')->select()
-				->from(	array('Share' => 'TblShare' ),
+				->from(	array('Share' => 'TblShared' ),
 				array('idSharedUser','fkidLeitmotif','idOwner'))
 				->join(array('User' => 'TblUser'),
 						'Share.idOwner = User.idUser AND Share.idSharedUser = \''.$idUser.'\'' ,
@@ -157,7 +157,7 @@ class ModelLeitmotif extends ModelBase {
 	public function querySharedLeitmotifPerUser($idParent,$idUser)
 	{
 		$query = $this->getTable('TblShare')->select()
-				->from(	array('Share' => 'TblShare' ),
+				->from(	array('Share' => 'TblShared' ),
 				array('idSharedUser','fkidLeitmotif'))
 				->join(array('Leitmotif' => 'TblLeitmotif'),
 						'Share.fkidLeitmotif = Leitmotif.idLeitmotif AND Share.idSharedUser = \''.$idUser.'\''.
