@@ -70,8 +70,9 @@
 		    
 	    });
 	    
-	    $("<?php echo '#editornew-'.$this->parent ?>").jqte({blur: function(){ 
-		    var theEditor = $("<?php echo '#editornew-'.$this->parent ?>");
+	    $("<?php echo '#editornew-'.$this->controller.'-'.$this->idParent ?>").jqte({blur: function(){ 
+
+		    var theEditor = $("<?php echo '#editornew-'.$this->controller.'-'.$this->idParent ?>");
 		    var texto = escape(theEditor.val());
 		    var url = theEditor.attr("action");
 		    var posting = $.post( url, { texttopic: texto} );
@@ -180,7 +181,7 @@ if ($this->canaddnew) {
 	$link = $this->url($option, 'default', true);
 
 	echo '<div><'.$this->headerlevel.'>Add new</'.$this->headerlevel.'><div>'.
-	        '<textarea class="editornew" id="editornew-"'.$this->idParent.' action="'.$link.'" name="texttopic"> </textarea>';
+	        '<textarea class="editornew" id="editornew-'.$this->controller.'-'.$this->idParent.'" action="'.$link.'" name="texttopic"> </textarea>';
 	       '</div></div>';
 }
 echo '</div>';
