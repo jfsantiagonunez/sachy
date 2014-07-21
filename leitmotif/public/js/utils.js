@@ -1,4 +1,16 @@
 
+function fix_urlsOld() { // Incluse index.php if missing
+    $(document).ready(function() {
+        var path = window.location.pathname;
+        $('a').each(function (key, item) {
+            var original_url = $(item).attr('href');
+            if ((original_url.indexOf(path) != -1) && (original_url.indexOf("#") == -1) && (original_url.indexOf("index.php") == -1)) { // Only urls on this host, without the # character and missing the index.php, add it
+                var url_elements = original_url.split(path);
+                $(item).attr('href',path + 'index.php/' + url_elements[1]);
+            }
+        });
+    });    
+}
 function fix_urls() { // Incluse index.php if missing
     $(document).ready(function() {
         var path = window.location.pathname;
@@ -11,7 +23,6 @@ function fix_urls() { // Incluse index.php if missing
         });
     });    
 }
-
 
 function deleteOldEditors() {
     var graphs_to_remove = new Array();
