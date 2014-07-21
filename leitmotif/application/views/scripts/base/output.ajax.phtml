@@ -13,7 +13,7 @@
 	}
 	$(function() {
 //		deleteOldEditors();
-		deleteajaxactionClick();
+		onlydeleteajaxactionClick();
 		addajaxactionClick();
 		newajaxactionFocus();
 		optionselectChange();
@@ -70,18 +70,17 @@
 		    
 	    });
 	    
-	    $(".editornew").jqte({blur: function(){ 
-		    var theEditor = $(".editornew");
+	    $("<?php echo '#editornew-'.$this->parent ?>").jqte({blur: function(){ 
+		    var theEditor = $("<?php echo '#editornew-'.$this->parent ?>");
 		    var texto = escape(theEditor.val());
-
 		    var url = theEditor.attr("action");
-		    //alert( url );
 		    var posting = $.post( url, { texttopic: texto} );
-		    
 		    posting.done(function( data ) {
-  				//contentDiv.empty().append( data );
-				    //alert(data);
-				    //alert(url);
+			    var theContentDiv=$("<?php echo '#'.$this->accordion ?>");
+			    var theParent = theContentDiv.parent();
+			    
+			    theParent.empty().append(data);
+
   				return false;
 			});
 		
@@ -167,31 +166,25 @@ if ( !empty($this->data)  && isset($this->data)) {
 					'default', true) . '">'. $title. '</a></'.$this->headerlevel.'><div></div>';
 			echo '</div>';
 		}
-		// Add new
-		if ($this->canaddnew) {
-			$option = array(	'controller' => $this->controller,
+		
+	}
+	
+}
+
+// Add new
+if ($this->canaddnew) {
+	$option = array(	'controller' => $this->controller,
 					'action' => 'newajax',
 					'idParent' => $this->idParent);
 
-			$link = $this->url($option, 'default', true);
-			 
-			echo '<div><'.$this->headerlevel.'>Add new</'.$this->headerlevel.'><div>'.
-	        '<textarea class="editornew" action="'.$link.'" name="texttopic"> </textarea>';
+	$link = $this->url($option, 'default', true);
+
+	echo '<div><'.$this->headerlevel.'>Add new</'.$this->headerlevel.'><div>'.
+	        '<textarea class="editornew" id="editornew-"'.$this->idParent.' action="'.$link.'" name="texttopic"> </textarea>';
 	       '</div></div>';
-		}
-	}
 }
 echo '</div>';
 
-//if ($this->canaddnew=='1')
-//{
-//	$option = array(	'controller' => $this->controller,
-//					'action' => 'newajax',
-//					'idParent' => $this->idParent);
-//
-//	$link = $this->url($option, 'default', true);
-//	echo '<td><form action="'.$link.'"><input type="text" name="texttopic" class="newajaxaction" value="Add new"></form>';
-//}
 
 ?>
 <!-- http://stackoverflow.com/questions/9173493/jquery-ui-accordion-how-to-put-a-button-link-to-header-with-another-function -->

@@ -285,7 +285,7 @@ function editajaxactionEnter()
   
 }
 
-function deleteajaxactionClick()
+function deleteajaxactionOldClick()
 {
   $(".deleteajaxaction").click(function(e){
     var contentDiv = $(this).closest("div");
@@ -293,6 +293,28 @@ function deleteajaxactionClick()
     if ( confirm("Confirm Deletion?" ) )
     {      
         contentDiv.load($(this).attr("href"));    
+    }
+    return false;
+  });
+}
+
+function onlydeleteajaxactionClick()
+{
+    //This function does not update the parent with the content. 
+	// It just execute the call and then remove the existing content.   
+  $(".deleteajaxaction").click(function(e){
+    var contentDiv = $(this).closest("div");
+    
+	  //alert(contentDiv.parent().parent().html());
+    if ( confirm("Confirm Deletion?" ) )
+    {      
+    	var jqxhr = $.ajax( $(this).attr("href") )
+    	  .done(function() {
+    		  contentDiv.parent().parent().empty();
+    	  })
+    	  .fail(function() {
+    	    alert( "Error Deleting" );
+    	  });
     }
     return false;
   });
