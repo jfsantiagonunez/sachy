@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Review last import for <%= @account.name%></h1>
+<% #link_to "Reset Categories" , resetcategory_url( id: @account.id ), class: "label label-primary" , rel: "tooltip" , title: "Reset categories for all transactions" %>
+
+<% @grupos.each do |grupo|%>
+<h2><%= grupo.name%></h2>
+<% categories = findCategories(grupo.id) 
+   categories.each do |category|%>
+
+     <%transactions = queryTransactionsPerCategory(category.id,@account.id)
+       sum=0
+       transactions.each do |transaction|
+         sum+=transaction.amount
+       end
+       suma=sum.abs
+       label="label-success"
+       if suma>category.budget
+       	label="label-danger"
+       end%>
+       <h3><%= category.name%> </h3><span class="label <%=label%>"><%=sum%></span>
+       <% if transactions.empty?%>
+       	 None
+       <%else%>
+        
+       	<%= render :partial => "transactions/transactions" , :locals => { :theTransactions => transactions, :theAccounts => nil , :theCategories => @categories , :theCategoryId => category.id }%>	
+      <%end%>
+  <% end%>
+<% end %>
+<script>
+$('.category_selector').change(function(){
+    theUrl = "/transactions/"+$(this).attr('id')+"/updatecategory"
+    theData = $(this).attr('name')+"="+$(this).find('option:selected').attr('value');
+  	$.ajax( {url: theUrl,
+  		    data: theData } )
+      .done(function( data ) {
+        //do nothing. It will be handle by updatecategory.js.erb
+      })
+      .fail(function( jqxhr, textStatus, error ) {
+        var err = textStatus + ", " + error;
+        alert( "Request Failed: " + err );
+      }); 
+});
+</script>

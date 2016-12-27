@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account_number: MyString
+  name: MyString
+  last_import: 2016-12-19 12:30:36
+  last_transaction: 2016-12-19 12:30:36
+
+two:
+  account_number: MyString
+  name: MyString
+  last_import: 2016-12-19 12:30:36
+  last_transaction: 2016-12-19 12:30:36

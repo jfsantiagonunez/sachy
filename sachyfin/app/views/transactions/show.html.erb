@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Account:</strong>
+  <%= @transaction.account_id %>
+</p>
+
+<p>
+  <strong>Transaction date:</strong>
+  <%= @transaction.transaction_date %>
+</p>
+
+<p>
+  <strong>Start saldo:</strong>
+  <%= @transaction.start_saldo %>
+</p>
+
+<p>
+  <strong>End saldo:</strong>
+  <%= @transaction.end_saldo %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @transaction.amount %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @transaction.description %>
+</p>
+
+<%= link_to 'Edit', edit_transaction_path(@transaction) %> |
+<%= link_to 'Back', transactions_path %>

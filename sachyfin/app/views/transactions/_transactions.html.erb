@@ -1,0 +1,44 @@
+
+<table class="table">
+  <thead>
+    <tr>
+      <% if theAccounts %>
+      <th>Account</th>
+      <% end %>
+      <th>Transaction date</th>
+      <th>Start saldo</th>
+      <th>End saldo</th>
+      <th>Amount</th>
+      <% if theCategories %>
+      <th>Category</th>
+      <th>-</th>
+      <% end %>
+      <th>Description</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <% theTransactions.each do |transaction| %>
+      <tr>
+      	<% if theAccounts %>
+        <td><%= theAccounts[transaction.account_id].name %></td>
+        <% end %>
+        <td><%= transaction.transaction_date %></td>
+        <td><%= transaction.start_saldo %></td>
+        <td><%= transaction.end_saldo %></td>
+        <td><%= transaction.amount %></td>
+        <% if theCategories %>
+        <td>
+           <%= select_tag(:category_id, options_for_select(theCategories, theCategoryId), {:class=>"category_selector",:id=>transaction.id}) %>
+        </td>
+        <td><div id="update_select_<%=transaction.id%>"></td>
+         <% end %>
+        <td><%= transaction.description %></td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

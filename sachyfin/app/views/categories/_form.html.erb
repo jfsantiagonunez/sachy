@@ -1,0 +1,15 @@
+<%= simple_form_for(@category) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :budget %>
+    <%= f.label "Grupo" %><br/>
+    <%= f.select :grupo_id, options_for_select(@grupos, @grupo_id) %>
+    <br/>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
