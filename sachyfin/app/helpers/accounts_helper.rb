@@ -44,16 +44,18 @@ module AccountsHelper
           next
         end
         accountId=cachedId
-        if (row[0]!=cachedName)
-          accountId=findAccount(accounts,row[0])
+        theAccountId=row[0].to_i
+        if (theAccountId!=cachedName)
+          puts("#########Account name #{theAccountId}")
+          accountId=findAccount(accounts,theAccountId)
           if accountId.nil?
             next
           else
             cachedId=accountId
-            cachedName=row[0]
+            cachedName=theAccountId
           end
         end
-        
+        puts(accounts)
         Transaction.where( account_id: accountId, transaction_date: row[2], description: row[7] ).first_or_create(  ) do |transaction|
           transaction.start_saldo = row[4]
           transaction.end_saldo = row[5]
