@@ -10,7 +10,6 @@
   <thead>
     <tr>
       <th>Account number</th>
-      <th>Name</th>
       <th>Last import</th>
       <th>Last transaction</th>
       <th>Last imported count</th>
@@ -21,12 +20,12 @@
   <tbody>
     <% @accounts.each do |account| %>
       <tr>
-        <td><%= account.account_number %></td>
-        <td><%= account.name %></td>
+        <td><%= link_to "#{account.account_number} - #{account.name}", account %></td>
+       
         <td><%= link_to account.last_import , review_path( id: account.id) %></td>
         <td><%= account.last_transaction %></td>
         <td><%= account.last_amount_import %></td>
-        <td><%= link_to 'Show', account %></td>
+        
         <td><%= link_to 'Edit', edit_account_path(account) %></td>
         <td><%= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

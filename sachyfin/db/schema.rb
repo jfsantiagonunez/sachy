@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161221102540) do
+ActiveRecord::Schema.define(version: 20170727222901) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "account_number",     limit: 255
@@ -25,11 +25,19 @@ ActiveRecord::Schema.define(version: 20161221102540) do
 
   create_table "categories", force: :cascade do |t|
     t.string   "name",       limit: 255
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.integer  "grupo_id",   limit: 4
     t.decimal  "budget",                 precision: 8, scale: 2
-    t.string   "rule",       limit: 255
+    t.integer  "ctype",      limit: 4,                           default: 0
+  end
+
+  create_table "category_accounts", force: :cascade do |t|
+    t.integer  "category_id", limit: 4
+    t.integer  "account_id",  limit: 4
+    t.decimal  "budget",                precision: 10
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
   create_table "grupos", force: :cascade do |t|
@@ -37,6 +45,13 @@ ActiveRecord::Schema.define(version: 20161221102540) do
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
     t.decimal  "budget",                 precision: 8, scale: 2
+  end
+
+  create_table "rules", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.integer  "category_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "transactions", force: :cascade do |t|

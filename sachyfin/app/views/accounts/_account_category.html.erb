@@ -1,0 +1,18 @@
+<h2>Category Budget for this account</h2>
+<table class="table">
+	<tr><th>Name</th><th>Default Budget</th><th>This Account Budget</th></tr>
+	<%Category.all.order('name').each do |category|%>
+	<tr><td><%=category.name%></td>
+		<% thisBudget = category.budget.nil?? '200':category.budget%>
+		<td><%= thisBudget %></td>
+		<% thisAC = CategoryAccount.find_by(category_id:category.id, account_id:@account.id)%>
+		<td><% thisACBudget = thisAC.nil?? thisBudget : thisAC.budget%>
+		<%= form_tag( {:controller => "accounts", :action=> "setbudget",:id=> @account.id, :category_id=>category.id },{:class=>"form-inline", :method=>:get, :remote => true}) do  %>
+      		<%= text_field_tag :budget, thisACBudget %>
+   		<%= submit_tag "Update",class: 'btn btn-default btn-mini btn-import' %>
+		<% end %>
+		</td>
+	</tr>
+	
+	<%end%>
+</table>

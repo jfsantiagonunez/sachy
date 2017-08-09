@@ -6,6 +6,8 @@
     <%= f.input :budget %>
     <%= f.label "Grupo" %><br/>
     <%= f.select :grupo_id, options_for_select(@grupos, @grupo_id) %>
+    <br/><%= f.label "Type" %><br/>
+    <%= f.select :ctype, options_for_select(getCategoryTypes, @category.nil?? 0: @category.ctype) %>
     <br/>
   </div>
 

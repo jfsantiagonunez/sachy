@@ -2,7 +2,7 @@ class AccountsController < ApplicationController
   
   include AccountsHelper
   
-  before_action :set_account, only: [:show, :edit, :update, :destroy]
+  before_action :set_account, only: [:show, :edit, :update, :destroy, :showmonth,:setbudget]
 
   before_action :all_accounts, only: [:index, :create, :update, :destroy,:upload]
 
@@ -97,9 +97,17 @@ class AccountsController < ApplicationController
     @categories = getCategoriesForSelect()
   end
   
+  def showmonth
+    @month = params['month']
+  end
+  
   def resetcategory
     resetCategory
     redirect_to review_path
+  end
+  
+  def setbudget
+    setBudget(params,@account.id)
   end
   
   private

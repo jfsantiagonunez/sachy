@@ -1,4 +1,6 @@
-
+<% if theTransactions.empty?%>
+       	 No Transactions
+<%else%>
 <table class="table">
   <thead>
     <tr>
@@ -29,8 +31,14 @@
         <td><%= transaction.end_saldo %></td>
         <td><%= transaction.amount %></td>
         <% if theCategories %>
+
         <td>
-           <%= select_tag(:category_id, options_for_select(theCategories, theCategoryId), {:class=>"category_selector",:id=>transaction.id}) %>
+           <%= simple_form_for transaction, :remote => true do |f| %>
+           	  <%= f.select :category_id,
+           	                options_for_select(theCategories, transaction.category_id), 
+           	                {},
+           	                { "data-remote" => true, "data-url" => "/transactions/#{transaction.id}/updatecategory" } %>
+           <% end %>
         </td>
         <td><div id="update_select_<%=transaction.id%>"></td>
          <% end %>
@@ -40,5 +48,5 @@
     <% end %>
   </tbody>
 </table>
-
+<% end %>
 <br>

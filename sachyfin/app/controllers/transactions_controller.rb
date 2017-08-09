@@ -1,6 +1,8 @@
 class TransactionsController < ApplicationController
+  include TransactionsHelper
+  
   before_action :set_transaction, only: [:show, :edit, :update, :destroy, :updatecategory]
-
+  
   # GET /transactions
   # GET /transactions.json
   def index
@@ -66,7 +68,7 @@ class TransactionsController < ApplicationController
   # to edit category
   def updatecategory
     respond_to do |format|
-      if @transaction.update(transaction_params)
+      if updateCategory(params)
         #format.js { render :text => params[:id]}
         format.js
       else

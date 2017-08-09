@@ -33,4 +33,73 @@ module CategoriesHelper
   def getCategoriesForSelect()
     return Category.all.pluck(:name,:id)
   end
+  
+  TAG_CATEGORY_GASTO_TYPE = 0
+  TAG_CATEGORY_GASTO = "GASTO"
+  TAG_CATEGORY_INCOME_TYPE = 1
+  TAG_CATEGORY_INCOME = "INGRESO"
+  TAG_CATEGORY_AHORRO_TYPE = 2
+  TAG_CATEGORY_AHORRO = "AHORRO"
+  
+  def getCategoryTypes
+    return [[TAG_CATEGORY_GASTO,TAG_CATEGORY_GASTO_TYPE],
+          [TAG_CATEGORY_INCOME,TAG_CATEGORY_INCOME_TYPE],
+          [TAG_CATEGORY_AHORRO,TAG_CATEGORY_AHORRO_TYPE]]
+  end
+  
+  TAG_CATEGORY_TYPES={ TAG_CATEGORY_GASTO_TYPE =>TAG_CATEGORY_GASTO,
+                       TAG_CATEGORY_INCOME_TYPE => TAG_CATEGORY_INCOME ,
+                       TAG_CATEGORY_AHORRO_TYPE => TAG_CATEGORY_AHORRO}
+  def getCategoryTypeName(ctype)
+    return TAG_CATEGORY_TYPES[ctype]
+  end
+  
+  def getCategoryHistoryAllAccounts(category)
+    months={}
+    backInTime = Date.today - 11.months
+    @lastMonth=Date.new(backInTime.year, backInTime.month,1)
+    @oldMonth=nil
+    for i in 1..12  
+      theDate = Date.new(backInTime.year, backInTime.month,1)
+      months[theDate.strftime('%b %Y')]=theDate
+      backInTime += 1.month
+    end
+    data={}
+    vectorAccounts={}
+    
+    Account.all.each do |account|
+      name="#{account.name}-#{account.account_number}"
+      data[account.id]={}
+      vectorAccounts[account.id]={'name'=>name,'total'=>0}
+    end
+
+    months.each do |nameMonth,thisMonthDate|
+      datasMonth = Transaction.where('category_id = ? AND transaction_date >= ? AND transaction_date < ?',category.id,thisMonthDate,thisMonthDate + 1.month).group(:account_id).sum(:amount)
+      datasMonth.each do |keyAcc,value|
+        vectorAccounts[keyAcc]['total']+=value
+        data[keyAcc][nameMonth]=value
+      end
+      if !datasMonth.empty?
+        if @lastMonth < thisMonthDate
+          @lastMonth = thisMonthDate
+        end
+        if @oldMonth.nil?
+          @oldMonth = thisMonthDate
+        elsif thisMonthDate < @oldMonth
+          @oldMonth = thisMonthDate
+        end
+      end
+    end 
+    dataOut={}
+    data.each do |keyAcc,dataMonth|
+      dataOut[vectorAccounts[keyAcc]['name']]=data[keyAcc]
+      
+      if !@oldMonth.nil? 
+        numberMonths = ((@lastMonth - @oldMonth).to_i / 30.0).round + 1
+        dataOut[vectorAccounts[keyAcc]['name']]["Avg #{numberMonths} m"]=vectorAccounts[keyAcc]['total']/numberMonths
+        dataOut[vectorAccounts[keyAcc]['name']]["Total"]=vectorAccounts[keyAcc]['total']
+      end
+    end
+    return dataOut
+  end
 end

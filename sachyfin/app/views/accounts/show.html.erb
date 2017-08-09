@@ -1,14 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Account number:</strong>
-  <%= @account.account_number %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @account.name %>
-</p>
+<h1>
+  <%= "[#{@account.name} - #{@account.account_number}] History" %>
+</h1>
 
 <p>
   <strong>Last import:</strong>
@@ -19,6 +13,110 @@
   <strong>Last transaction:</strong>
   <%= @account.last_transaction %>
 </p>
+<% data,vectorCategory=getCategoryHistoryPerAccount(@account) %>
 
+<h2>Balance [<%=@oldMonth.strftime('%b %Y')%>-<%=@lastMonth.strftime('%b %Y')%>]</h2>
+<table class="table">
+	<thead><th>Name</th><th>Total</th><th>Average Month</th><th>Budget</th><th>Delta</th></thead>
+<% firstkey, firstvalue = vectorCategory.first
+   currentGrupo=firstvalue['grupo_id']
+   totalGrupo=0
+   totalDeviation=0
+   totalBudget=0
+   totalAverage=0
+   cash=0
+   cashBudget=0
+   vectorCategory.each do |key,catData|
+     if catData['grupo_id'] != currentGrupo %>
+       <%= render :partial => "balance_grupo",
+                  :locals => {:currentGrupo => currentGrupo,
+                  	          :totalGrupo => totalGrupo,
+                  	          :totalAverage=>totalAverage,
+                  	          :totalBudget=>totalBudget,
+                  	          :totalDeviation=>totalDeviation}	%>
+   <%   currentGrupo = catData['grupo_id']
+        totalGrupo=0
+        totalDeviation=0
+        totalBudget=0
+        totalAverage=0
+      end 
+      thisTotal = catData['total'] 
+      thisAverage = catData['average']
+      thisBudget=catData['budget'].nil?? 200 : catData['budget']
+      cash += thisTotal
+      if catData['ctype'] != 1
+      	thisTotal *= -1
+      	thisAverage *= -1
+      	cashBudget -=thisBudget
+      else
+      	cashBudget +=thisBudget
+      end
+      
+      totalGrupo+=thisTotal     
+      totalAverage+=thisAverage
+      deviation = thisAverage - thisBudget
+      totalDeviation+=deviation
+      totalBudget+=thisBudget
+      %>
+   <tr><td><%= catData['name'] %></td>
+   	   <td><%= thisTotal %></td>
+   	   <td><%= thisAverage %></td>
+   	   <td><%= thisBudget%></td>
+   	   <td><%= deviation%></td>
+   	   </tr>
+<% end %>
+<%= render :partial => "balance_grupo",
+                  :locals => {:currentGrupo => currentGrupo,
+                  	          :totalGrupo => totalGrupo,
+                  	          :totalAverage=>totalAverage,
+                  	          :totalBudget=>totalBudget,
+                  	          :totalDeviation=>totalDeviation}%>
+ <% cashAverage = cash*1.0/@numberMonths%>
+ <thead><th>Posible cash</th>
+	   	   <th><%= cash %></th>
+	   	   <th><%= cashAverage %></th>
+	   	   <th><%= cashBudget%></th>
+	   	   <th><%= cashAverage-cashBudget %></th>
+	   	   </thead>
+</table>
+<%= render :partial => "display", :locals => { :title => "Saldo Evolution", 
+	                                           :data => getSaldoEvolution12Months(@account),
+	                                           :type => 0,
+	                                           :percentage => 0,
+	                                           :yLegend => "Euros",
+	                                           :theHeight => 200}%>
+<strong>Click month to view month history</strong>
+<table class="table">
+	<tr>
+	<% getLast12Months.each do |key,month| %>
+	<td><%= link_to month, showmonth_url(id: @account.id, month: key)%></td>
+	<% end%>
+</table>
+	                                           
+<%= render :partial => "display", :locals => { :title => "Groups", 
+	                                           :data => getGroupCategoryData(@account),
+	                                           :type => 5,
+	                                           :percentage => 0,
+	                                           :yLegend => "Euros",
+	                                           :theHeight => 350}%>
+
+<%= render :partial => "display", :locals => { :title => "Category", 
+	                                           :data => getCategoryData(@account),
+	                                           :type => 5,
+	                                           :percentage => 0,
+	                                           :yLegend => "Euros",
+	                                           :theHeight => 350}%>
+
+
+<h2>History from [<%=@oldMonth.strftime('%b %Y')%>-<%=@lastMonth.strftime('%b %Y')%>]</h2>
+
+   <%data.each do |categoryName,values| %>
+   <h3><%=categoryName%></h3>
+   <% if values.empty?%>
+     <p>No values for this category </p>
+   <%else%>
+   <%= column_chart values, ytitle: "Euros", height: "200px", stacked: false %>
+   <% end %>
+<% end %>	 
 <%= link_to 'Edit', edit_account_path(@account) %> |
 <%= link_to 'Back', accounts_path %>

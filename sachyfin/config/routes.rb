@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   resources :accounts
   post 'accounts/upload' => 'accounts#upload', as: :upload
   get 'accounts/:id/review' => 'accounts#review', as: :review
+  get 'accounts/:id/showmonth' => 'accounts#showmonth', as: :showmonth
   get 'accounts/:id/resetcategory' => 'accounts#resetcategory', as: :resetcategory
+  get 'accounts/:id/setbudget' => 'accounts#setbudget', as: :setbudget
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

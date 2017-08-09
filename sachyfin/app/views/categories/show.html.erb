@@ -1,15 +1,13 @@
 <p id="notice"><%= notice %></p>
 
-<h2>Category</h2>
+<h2><%= @category.name %></h2>
   <dl class="dl-horizontal"> 
-
-  <dt><strong>Name:</strong></dt>
-  <dd><%= @category.name %></dd>
   <dt><strong>Budget:</strong>
   <dd><%= @category.budget %></dd>
   <dt><strong>Grupo:</strong>
   <dd><%= Grupo.find(@category.grupo_id).name %></dd>
 </dl>
+
 
 <%= link_to 'Edit', edit_category_path(@category) %> |
 <%= link_to 'Back', categories_path %>
@@ -30,3 +28,22 @@
 <% end %>
 </tr>
 </table>
+
+
+
+<% data=getCategoryHistoryAllAccounts(@category) 
+   oldMonth = ''
+   if @oldMonth
+   	 oldMonth= @oldMonth.strftime('%b %Y')
+   	end
+%>
+<h2>History from [<%=oldMonth%>-<%=@lastMonth.strftime('%b %Y')%>]</h2>
+
+<% data.each do |accountName,values| %>
+   <h3><%=accountName%></h3>
+   <% if values.empty?%>
+     <p>No values for this account </p>
+   <%else%>
+   <%= column_chart values, ytitle: "Euros", height: "200px", stacked: false %>
+   <% end %>
+<% end %>	                                           

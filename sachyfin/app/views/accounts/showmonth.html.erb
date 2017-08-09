@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>
+  <%= "[#{@account.name} - #{@account.account_number}] [#{@month}] Movements" %>
+</h1>
+<%= link_to 'Back',  @account %>
+<% dataCategory, dataGroup = getCategoryDataPerMonth(@account,@month)%>
+<%= render :partial => "display", :locals => { :title => "Category Groups", 
+	                                           :data => dataGroup,
+	                                           :type => 2,
+	                                           :percentage => 0,
+	                                           :yLegend => "Euros",
+	                                           :theHeight => 350}%>
+<%= render :partial => "display", :locals => { :title => "Categories", 
+	                                           :data => dataCategory,
+	                                           :type => 2,
+	                                           :percentage => 0,
+	                                           :yLegend => "Euros",
+	                                           :theHeight => 350}%>
+
+
+<h2>Transactions</h2>
+<% transactions = getTransactionsForMonth(@account,@month) %>
+
+<%= render :partial => "transactions/transactions" , :locals => { :theTransactions => transactions, :theAccounts => nil , :theCategories => getCategoriesForSelect }%>	

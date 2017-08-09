@@ -1,0 +1,27 @@
+<h2><%= title %></h2>
+
+<% if data.nil? || data.size == 0 %>
+     <p> No Data available for this account <%=@account.name %></p>	
+<% else
+     case type
+        when 0 %>
+        <%= line_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: false %>
+    <%  when 1 %>
+   	    <%= line_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: true %>
+    <%  when 2 %>
+        <%= column_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: false %>
+    <%  when 3 %>
+        <%= bar_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: false %>
+    <%  when 4 %>
+        <%= pie_chart data, ytitle: yLegend, height: "#{theHeight}px" %>
+    <%  when 5 
+          if percentage == 1 %>
+            <%= column_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: true , min: 0, max: 100%>
+          <% else %>
+            <%= column_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: true %>
+          <% end %>
+    <%  when 6 %>
+        <%= bar_chart data, ytitle: yLegend, height: "#{theHeight}px", stacked: true %>
+    <%  end
+ end %>
+

@@ -19,26 +19,7 @@
        	label="label-danger"
        end%>
        <h3><%= category.name%> </h3><span class="label <%=label%>"><%=sum%></span>
-       <% if transactions.empty?%>
-       	 None
-       <%else%>
-        
-       	<%= render :partial => "transactions/transactions" , :locals => { :theTransactions => transactions, :theAccounts => nil , :theCategories => @categories , :theCategoryId => category.id }%>	
-      <%end%>
+       <%= render :partial => "transactions/transactions" , :locals => { :theTransactions => transactions, :theAccounts => nil , :theCategories => @categories  }%>	
+
   <% end%>
 <% end %>
-<script>
-$('.category_selector').change(function(){
-    theUrl = "/transactions/"+$(this).attr('id')+"/updatecategory"
-    theData = $(this).attr('name')+"="+$(this).find('option:selected').attr('value');
-  	$.ajax( {url: theUrl,
-  		    data: theData } )
-      .done(function( data ) {
-        //do nothing. It will be handle by updatecategory.js.erb
-      })
-      .fail(function( jqxhr, textStatus, error ) {
-        var err = textStatus + ", " + error;
-        alert( "Request Failed: " + err );
-      }); 
-});
-</script>
