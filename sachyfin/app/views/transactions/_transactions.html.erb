@@ -13,9 +13,11 @@
       <th>Amount</th>
       <% if theCategories %>
       <th>Category</th>
+      <th>Notes</th>
       <th>-</th>
       <% end %>
-      <th>Description</th>
+      <th class="col-md-3">Description</th>
+      
 
     </tr>
   </thead>
@@ -30,6 +32,7 @@
         <td><%= transaction.start_saldo %></td>
         <td><%= transaction.end_saldo %></td>
         <td><%= transaction.amount %></td>
+        
         <% if theCategories %>
 
         <td>
@@ -40,10 +43,16 @@
            	                { "data-remote" => true, "data-url" => "/transactions/#{transaction.id}/updatecategory" } %>
            <% end %>
         </td>
+        <td>
+           <%= form_tag({:controller => "transactions", :action=> "updatefield" , :id => transaction.id, :field => "note"}, method: 'get', remote: true ) do %>
+			<%= text_field_tag :note , transaction.note, maxlength: 50, size: 55 , class: 'form-control', onblur: "$(this).parent('form').submit();" %>
+			<% end %>
+           
+        </td>
         <td><div id="update_select_<%=transaction.id%>"></td>
          <% end %>
         <td><%= transaction.description %></td>
-
+        
       </tr>
     <% end %>
   </tbody>

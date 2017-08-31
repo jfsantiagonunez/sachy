@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   root 'accounts#index'
   resources :transactions
   get 'transactions/:id/updatecategory' => 'transactions#updatecategory', as: :updatecategory
+  get 'transactions/:id/updatefield' => 'transactions#updatefield', as: :updatefield
+
 
   resources :accounts
   post 'accounts/upload' => 'accounts#upload', as: :upload

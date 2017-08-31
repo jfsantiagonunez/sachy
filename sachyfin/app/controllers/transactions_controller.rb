@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
   include TransactionsHelper
   
-  before_action :set_transaction, only: [:show, :edit, :update, :destroy, :updatecategory]
+  before_action :set_transaction, only: [:show, :edit, :update, :destroy, :updatecategory, :updatefield]
   
   # GET /transactions
   # GET /transactions.json
@@ -65,6 +65,11 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def updatefield
+    @transaction[params[:field]]=params[params[:field]]
+    @transaction.save
+  end
+  
   # to edit category
   def updatecategory
     respond_to do |format|

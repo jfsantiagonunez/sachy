@@ -4,16 +4,24 @@
   <%= "[#{@account.name} - #{@account.account_number}] History" %>
 </h1>
 
+<% data,vectorCategory=getCategoryHistoryPerAccount(@account) %>
+
+<% if @oldMonth.nil?%>
+<P> No transactions </P>
+<% else%>
+	
+  
 <p>
   <strong>Last import:</strong>
   <%= @account.last_import %>
 </p>
 
+
 <p>
   <strong>Last transaction:</strong>
   <%= @account.last_transaction %>
 </p>
-<% data,vectorCategory=getCategoryHistoryPerAccount(@account) %>
+
 
 <h2>Balance [<%=@oldMonth.strftime('%b %Y')%>-<%=@lastMonth.strftime('%b %Y')%>]</h2>
 <table class="table">
@@ -117,6 +125,7 @@
    <%else%>
    <%= column_chart values, ytitle: "Euros", height: "200px", stacked: false %>
    <% end %>
-<% end %>	 
+<% end %>	
+<% end %>
 <%= link_to 'Edit', edit_account_path(@account) %> |
 <%= link_to 'Back', accounts_path %>

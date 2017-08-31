@@ -45,6 +45,9 @@ gem 'simple_form' # See  https://github.com/plataformatec/simple_form . Install 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+#gem "passenger", ">= 5.0.25", require: "phusion_passenger/rack_handler"
+
+
 ############################
 # OKR specific gems required:
 # For schedulled tasks, as jira import
