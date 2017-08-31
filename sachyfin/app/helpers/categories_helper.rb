@@ -13,11 +13,20 @@ module CategoriesHelper
   end
   
   def applyRule(rule)
-    like_rule = "%#{rule.name}%"
-    transactions = Transaction.where('description like ?', like_rule)
+    like_rule = "%#{rule.name}%".downcase
+    transactions = Transaction.where('lower(description) like ? AND category_id=1', like_rule)
     transactions.each do |transaction|
       transaction.category_id = rule.category_id
       transaction.save
+    end
+  end
+  
+  def reapplyAllRules()
+    categories = Category.all  
+    categories.each do |category|    
+      category.rules.each do |rule|
+        applyRule(rule)
+      end
     end
   end
   
