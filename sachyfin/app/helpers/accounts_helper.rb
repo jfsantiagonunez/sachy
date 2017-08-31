@@ -30,7 +30,7 @@ module AccountsHelper
     # "category_id",      
     
   def importTransactionsFile(filename)
-    categories = Category.all
+    rules = Rule.all
     accounts={}
     numberTrans=0
     book = Spreadsheet.open filename
@@ -60,7 +60,7 @@ module AccountsHelper
           transaction.start_saldo = row[4]
           transaction.end_saldo = row[5]
           transaction.amount = row[6]
-          transaction.category_id = setCategory(categories,row[7])
+          transaction.category_id = setCategory(rules,row[7])
         end
         accounts[cachedName][:number] +=1
         accounts[cachedName][:lastdate]=row[2]
@@ -101,7 +101,7 @@ module AccountsHelper
       if rules.name.nil?
         next
       end
-      result=description.scan(/#{rule.name}/)
+      result=description.lowercase.scan(/#{rule.name.lowercase}/)
       if !result.empty?
         return rule.category_id
       end
