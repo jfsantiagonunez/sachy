@@ -61,6 +61,7 @@ module AccountsHelper
           transaction.end_saldo = row[5]
           transaction.amount = row[6]
           transaction.category_id = setCategory(rules,row[7])
+          transaction.save
         end
         accounts[cachedName][:number] +=1
         accounts[cachedName][:lastdate]=row[2]
@@ -319,7 +320,9 @@ module AccountsHelper
     return months
   end
   
+  
   def getCategoryDataPerMonth(account,month)
+    dataCategory={}
     nextMonth = month.to_date + 1.month
     values = Transaction.where('account_id = ? AND transaction_date >= ? AND transaction_date < ?',account.id,month,nextMonth).group(:category_id).sum(:amount)
     categories = Category.all
@@ -327,6 +330,10 @@ module AccountsHelper
     dataGroup={"Start Saldo"=>{},"Balance"=>{},"End Saldo"=>{},"actual"=>{},"budget"=>{}}
     groupCategories={}
     saldo = 0 
+    
+    totalActual=0
+    totalBudget=0
+    
     categories.each do |category|
       actual = values[category.id].nil?? 0 : values[category.id]
       saldo += actual
@@ -334,9 +341,30 @@ module AccountsHelper
       if category.ctype == 0 || category.ctype == 2
         toDisplay=actual * -1
       end
+      
+      
       data["actual"][category.name] = toDisplay
-      data["budget"][category.name] = category.budget 
-   
+      thisCatBudget=getCategoryBudget(category,account)
+      data["budget"][category.name] = thisCatBudget 
+      
+      # Info for table
+      deviation = thisCatBudget - toDisplay
+      totalActual += actual
+      
+      if category.ctype == 1
+        deviation = toDisplay - thisCatBudget
+        totalBudget += thisCatBudget
+        percentage = toDisplay != 0 ? ((thisCatBudget) * 100 / toDisplay).round(1).abs : 0
+      else
+        totalBudget -= thisCatBudget
+        percentage = thisCatBudget != 0 ? ((toDisplay )* 100 / thisCatBudget).round(1).abs : 0
+      end
+             
+      dataCategory[category.name]={"actual"=>toDisplay,"budget"=>thisCatBudget,
+                                   "deviation"=>deviation, "percentage" => percentage}
+      
+      
+      # Group data
       theGroupId = Category.find(category).grupo_id
       
       if groupCategories.include?(theGroupId) 
@@ -352,11 +380,15 @@ module AccountsHelper
                
     end
     
+    dataCategory["Total"]={"actual"=>totalActual,"budget"=>totalBudget,
+                                   "deviation"=>totalBudget - totalActual, 
+                                   "percentage" => "-"}
+    
     dataGroup["Balance"]["Summary"]=saldo    
     dataGroup["End Saldo"]["Summary"]=getLastSaldoForMonth(account,month,nextMonth)
     dataGroup["Start Saldo"]["Summary"]=getStartSaldoForMonth(account,month,nextMonth)
     
-    return formatData(data),formatData(dataGroup)
+    return formatData(data),formatData(dataGroup),dataCategory
   end
   
   def getStartSaldoForMonth(account,startMonth,endMonth)
@@ -389,6 +421,15 @@ module AccountsHelper
     return data
   end
   
+  def getCategoryBudget(category,account)
+    thisCatBudget=category.budget.nil?? '0' : category.budget
+    thisAccCat = CategoryAccount.find_by(category_id:category.id, account_id:account.id)
+    if !thisAccCat.nil? && !thisAccCat.budget.nil?
+      thisAccCat = thisAccCat.budget
+    end
+    return thisCatBudget
+  end
+  
   def getCategoryHistoryPerAccount(account)
     months={}
     backInTime = Date.today - 11.months
@@ -405,11 +446,8 @@ module AccountsHelper
     Category.all.order(:ctype,:grupo_id).each do |category|
       name=category.name
       data[category.id]={}
-      thisCatBudget=category.budget.nil?? '200' : category.budget
-      thisAccCat = CategoryAccount.find_by(category_id:category.id, account_id:account.id)
-      if !thisAccCat.nil? && !thisAccCat.budget.nil?
-        thisAccCat = thisAccCat.budget
-      end
+      thisAccCat=getCategoryBudget(category,account)
+      
       vectorCategory[category.id]={'name'=>name,
                                    'total'=>0,
                                    'ctype'=>category.ctype,

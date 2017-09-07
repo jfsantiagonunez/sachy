@@ -24,10 +24,14 @@ module CategoriesHelper
   def reapplyAllRules()
     categories = Category.all  
     categories.each do |category|    
-      category.rules.each do |rule|
+      reapplyCategory(category)
+    end
+  end
+  
+  def reapplyCategory(category)
+    category.rules.each do |rule|
         applyRule(rule)
       end
-    end
   end
   
   def untagCategory(category_id)
@@ -37,6 +41,7 @@ module CategoriesHelper
       transaction.category_id = default
       transaction.save
     end
+    reapplyCategory(Category.find(category_id))
   end
   
   def getCategoriesForSelect()

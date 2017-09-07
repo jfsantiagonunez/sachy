@@ -50,7 +50,7 @@
       end 
       thisTotal = catData['total'] 
       thisAverage = catData['average']
-      thisBudget=catData['budget'].nil?? 200 : catData['budget']
+      thisBudget=catData['budget'].nil?? 0 : catData['budget']
       cash += thisTotal
       if catData['ctype'] != 1
       	thisTotal *= -1
@@ -62,11 +62,18 @@
       
       totalGrupo+=thisTotal     
       totalAverage+=thisAverage
-      deviation = thisAverage - thisBudget
+      deviation = thisAverage - thisBudget  
+      if catData['ctype'] == 0
+      	deviation *= -1
+      end
       totalDeviation+=deviation
       totalBudget+=thisBudget
+      color="green"
+	  if deviation<0
+	    color ="red"
+	  end
       %>
-   <tr><td><%= catData['name'] %></td>
+   <tr style="color:<%=color%>"><td><%= catData['name'] %></td>
    	   <td><%= thisTotal %></td>
    	   <td><%= thisAverage %></td>
    	   <td><%= thisBudget%></td>

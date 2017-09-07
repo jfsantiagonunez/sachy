@@ -4,7 +4,26 @@
   <%= "[#{@account.name} - #{@account.account_number}] [#{@month}] Movements" %>
 </h1>
 <%= link_to 'Back',  @account %>
-<% dataCategory, dataGroup = getCategoryDataPerMonth(@account,@month)%>
+<% dataCategoryToDisplay, dataGroup, dataCategory = getCategoryDataPerMonth(@account,@month)%>
+<table class="table">
+	<thead><th>Category</th><th>Actual</th><th>Budget</th>
+		   <th>Deviation</th><th>Percentage</th>
+	</thead>
+<% dataCategory.each do |key,categoryData|
+    color="green"
+    if categoryData["deviation"]<0
+      color ="red"
+    end%>
+	
+	<tr style="color:<%=color%>">
+		<td><%=key%></td>
+		<td><%=categoryData["actual"]%></td>
+		<td><%=categoryData["budget"]%></td>
+		<td ><%=categoryData["deviation"]%></td>
+		<td><%=categoryData["percentage"]%>%</td>
+	</tr>
+<% end %>
+</table>
 <%= render :partial => "display", :locals => { :title => "Category Groups", 
 	                                           :data => dataGroup,
 	                                           :type => 2,
@@ -12,7 +31,7 @@
 	                                           :yLegend => "Euros",
 	                                           :theHeight => 350}%>
 <%= render :partial => "display", :locals => { :title => "Categories", 
-	                                           :data => dataCategory,
+	                                           :data => dataCategoryToDisplay,
 	                                           :type => 2,
 	                                           :percentage => 0,
 	                                           :yLegend => "Euros",

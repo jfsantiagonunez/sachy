@@ -3,7 +3,7 @@
 	<tr><th>Name</th><th>Default Budget</th><th>This Account Budget</th></tr>
 	<%Category.all.order('name').each do |category|%>
 	<tr><td><%=category.name%></td>
-		<% thisBudget = category.budget.nil?? '200':category.budget%>
+		<% thisBudget = category.budget.nil?? '0':category.budget%>
 		<td><%= thisBudget %></td>
 		<% thisAC = CategoryAccount.find_by(category_id:category.id, account_id:@account.id)%>
 		<td><% thisACBudget = thisAC.nil?? thisBudget : thisAC.budget%>
